@@ -1,0 +1,88 @@
+{
+    "jid": "2d966bebd813d4fc453e7505ba297640",
+    "name": "lance-stress-1777362390464",
+    "isStoppable": false,
+    "state": "CANCELLING",
+    "start-time": 1777362390874,
+    "end-time": -1,
+    "duration": 846667,
+    "maxParallelism": -1,
+    "now": 1777363237541,
+    "timestamps": {
+        "FINISHED": 0,
+        "RECONCILING": 0,
+        "CANCELLING": 1777363232532,
+        "SUSPENDED": 0,
+        "FAILED": 0,
+        "INITIALIZING": 1777362390874,
+        "CANCELED": 0,
+        "CREATED": 1777362390876,
+        "FAILING": 0,
+        "RESTARTING": 1777363184034,
+        "RUNNING": 1777363207970
+    },
+    "vertices": [
+        {
+            "id": "cbc357ccb763df2852fee8c4fc7d55f2",
+            "name": "Source: datagen -> Sink: LanceSink",
+            "maxParallelism": 128,
+            "parallelism": 4,
+            "status": "CANCELING",
+            "start-time": 1777363207971,
+            "end-time": -1,
+            "duration": 29570,
+            "tasks": {
+                "RECONCILING": 0,
+                "FINISHED": 0,
+                "CREATED": 0,
+                "DEPLOYING": 0,
+                "FAILED": 0,
+                "INITIALIZING": 0,
+                "CANCELED": 3,
+                "SCHEDULED": 0,
+                "RUNNING": 0,
+                "CANCELING": 1
+            },
+            "metrics": {
+                "read-bytes": 0,
+                "read-bytes-complete": false,
+                "write-bytes": 0,
+                "write-bytes-complete": false,
+                "read-records": 0,
+                "read-records-complete": false,
+                "write-records": 0,
+                "write-records-complete": false,
+                "accumulated-backpressured-time": 0,
+                "accumulated-idle-time": 0,
+                "accumulated-busy-time": "NaN"
+            }
+        }
+    ],
+    "status-counts": {
+        "RECONCILING": 0,
+        "FINISHED": 0,
+        "CREATED": 0,
+        "DEPLOYING": 0,
+        "FAILED": 0,
+        "INITIALIZING": 0,
+        "CANCELED": 0,
+        "SCHEDULED": 0,
+        "RUNNING": 0,
+        "CANCELING": 1
+    },
+    "plan": {
+        "jid": "2d966bebd813d4fc453e7505ba297640",
+        "name": "lance-stress-1777362390464",
+        "type": "STREAMING",
+        "nodes": [
+            {
+                "id": "cbc357ccb763df2852fee8c4fc7d55f2",
+                "parallelism": 4,
+                "operator": "",
+                "operator_strategy": "",
+                "description": "Source: datagen<br/>+- Sink: LanceSink<br/>",
+                "optimizer_properties": {}
+            }
+        ]
+    }
+}

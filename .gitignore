@@ -1,0 +1,14 @@
+*.class
+*.jar
+target/
+logs/
+flink-1.16.3/
+*.env
+aws.env
+credentials.json
+.idea/
+.vscode/
+*.iml
+__pycache__/
+*.pyc
+.DS_Store

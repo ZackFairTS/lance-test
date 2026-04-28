@@ -1,0 +1,27 @@
+--- src/main/java/org/apache/flink/connector/lance/LanceSink.java.bak	2026-04-28 05:19:32.014014571 +0000
++++ src/main/java/org/apache/flink/connector/lance/LanceSink.java	2026-04-28 06:07:20.242838036 +0000
+@@ -117,7 +117,7 @@
+         }
+         
+         Path path = Paths.get(datasetPath);
+-        this.datasetExists = Files.exists(path);
++        this.datasetExists = true; // PATCH: assume exists for S3 paths
+         
+         // If overwrite mode and dataset exists, delete first
+         if (datasetExists && options.getWriteMode() == LanceOptions.WriteMode.OVERWRITE) {
+@@ -183,9 +183,13 @@
+                     dataset = overwrite.commit(allocator, datasetPath, Optional.empty(), Collections.emptyMap());
+                     isFirstWrite = false;
+                 } else {
+-                    // Append mode
++                    // Append mode - PATCH: fetch current version, pass as read_version
++                    long readVersion;
++                    try (Dataset existing = Dataset.open(datasetPath, allocator)) {
++                        readVersion = existing.version();
++                    }
+                     FragmentOperation.Append append = new FragmentOperation.Append(fragments);
+-                    dataset = append.commit(allocator, datasetPath, Optional.empty(), Collections.emptyMap());
++                    dataset = append.commit(allocator, datasetPath, Optional.of(readVersion), Collections.emptyMap());
+                 }
+             }
+             

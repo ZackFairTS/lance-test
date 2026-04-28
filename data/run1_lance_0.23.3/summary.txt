@@ -1,0 +1,6 @@
+=== Run main-v2-064711
+Dataset: s3://lance-benchmark-<ACCOUNT_ID>-ap-northeast-1/stress-test/20260428-050427/main-v2-064711/dataset
+Parallelism=4 rate=10000 batch=1024
+Phases: baseline=120s concurrent=420s recovery=120s
+JobID=0574ab7f6c0738143ee370585dfa0247
+PHASE2_START_MANUAL=1777359270
