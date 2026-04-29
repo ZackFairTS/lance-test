@@ -1,0 +1,52 @@
+{
+  "base_path": "s3://lance-benchmark-<ACCOUNT_ID>-ap-northeast-1/read-bench/20260429-133705/dataset",
+  "E_version": 5001,
+  "E_fragments": 5000,
+  "E_rows": 10000000,
+  "compactions": [
+    {
+      "tag": "D",
+      "target_rows_per_fragment": 10000,
+      "fragments_after": 1000,
+      "version_after": 5003,
+      "elapsed_s": 37.23495531082153,
+      "fragments_removed": 5000,
+      "fragments_added": 1000,
+      "files_removed": 5000,
+      "files_added": 1000
+    },
+    {
+      "tag": "C",
+      "target_rows_per_fragment": 100000,
+      "fragments_after": 100,
+      "version_after": 5005,
+      "elapsed_s": 12.637958288192749,
+      "fragments_removed": 1000,
+      "fragments_added": 100,
+      "files_removed": 1000,
+      "files_added": 100
+    },
+    {
+      "tag": "B",
+      "target_rows_per_fragment": 1000000,
+      "fragments_after": 10,
+      "version_after": 5007,
+      "elapsed_s": 5.793882608413696,
+      "fragments_removed": 100,
+      "fragments_added": 10,
+      "files_removed": 100,
+      "files_added": 10
+    },
+    {
+      "tag": "A",
+      "target_rows_per_fragment": 10000000,
+      "fragments_after": 1,
+      "version_after": 5009,
+      "elapsed_s": 17.541687965393066,
+      "fragments_removed": 10,
+      "fragments_added": 1,
+      "files_removed": 10,
+      "files_added": 1
+    }
+  ]
+}

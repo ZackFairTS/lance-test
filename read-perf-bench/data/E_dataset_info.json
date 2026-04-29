@@ -1,0 +1,8 @@
+{
+  "path": "s3://lance-benchmark-<ACCOUNT_ID>-ap-northeast-1/read-bench/20260429-133705/dataset",
+  "total_rows": 10000000,
+  "fragments": 5000,
+  "version": 5001,
+  "build_elapsed_s": 2158.4198186397552,
+  "target_fragments": 5000
+}
