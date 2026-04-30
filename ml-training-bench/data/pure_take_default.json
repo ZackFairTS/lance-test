@@ -1,0 +1,84 @@
+{
+  "config": {
+    "n_total": 20000,
+    "n_batches": 50,
+    "batch_size": 256,
+    "uri": "s3://lance-benchmark-<ACCOUNT_ID>-ap-northeast-1/ml-bench/20260430-035632/lance-v22",
+    "env_lance_io_threads": "default(64)"
+  },
+  "runs": {
+    "take_meta_only": {
+      "mode": "take_meta_only",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 2.0503072689753026,
+      "total_rows": 12800,
+      "throughput_rows_s": 6242.966697570727,
+      "p50_batch_ms": 30.526599002769217,
+      "p99_batch_ms": 111.4923240384087
+    },
+    "lance_take_blobs_serial": {
+      "mode": "serial",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 850.1384435769869,
+      "total_rows": 12800,
+      "throughput_rows_s": 15.056371226012974,
+      "total_mb": 2543.65444,
+      "mb_per_s": 2.992047306198136,
+      "p50_batch_ms": 17075.922252523014,
+      "p99_batch_ms": 21954.058936971705
+    },
+    "lance_take_blobs_threads_8": {
+      "mode": "threads_8",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 52.29364128096495,
+      "total_rows": 12800,
+      "throughput_rows_s": 244.77163353815334,
+      "total_mb": 2543.65444,
+      "mb_per_s": 48.6417540965138
+    },
+    "lance_take_blobs_threads_16": {
+      "mode": "threads_16",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 27.427616671018768,
+      "total_rows": 12800,
+      "throughput_rows_s": 466.68291137104325,
+      "total_mb": 2543.65444,
+      "mb_per_s": 92.74062965477192
+    },
+    "lance_take_blobs_threads_32": {
+      "mode": "threads_32",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 14.129857446008828,
+      "total_rows": 12800,
+      "throughput_rows_s": 905.8831661189573,
+      "total_mb": 2543.65444,
+      "mb_per_s": 180.01982325154242
+    },
+    "raw_s3_serial": {
+      "mode": "raw_s3_serial",
+      "n_batches": 20,
+      "batch_size": 256,
+      "total_time": 330.5860748210107,
+      "total_rows": 5120,
+      "throughput_rows_s": 15.487645699450962,
+      "total_mb": 1017.470342,
+      "mb_per_s": 3.0777773762881244,
+      "p50_batch_ms": 16488.706829521107
+    },
+    "raw_s3_threads_32": {
+      "mode": "raw_s3_threads_32",
+      "n_batches": 50,
+      "batch_size": 256,
+      "total_time": 29.800392041972373,
+      "total_rows": 12800,
+      "throughput_rows_s": 429.5245506157045,
+      "total_mb": 2543.65444,
+      "mb_per_s": 85.35640861426886
+    }
+  }
+}

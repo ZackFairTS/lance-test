@@ -119,3 +119,8 @@ MIT, 原始测试数据按 AS-IS 提供。
 - v2.2 不再接受旧的 `lance-encoding:blob=true` metadata
 
 详见 [ml-training-bench/REPORT.md](ml-training-bench/REPORT.md)。
+
+**另外验证了 Lance 官方声称的 "20-25K rows/s on S3" 数字** (见 [REPORT_pure_take.md](ml-training-bench/REPORT_pure_take.md)): 
+- 纯 `take_blobs` (256 per-row workers) 最高 **4,391 rows/s**，是官方数字 ~20%
+- Lance 比 raw S3 files 快 10x（真实价值范围）
+- 官方 "20-25K" 对应的可能是小记录（KB 级 embedding），不是图片 blob

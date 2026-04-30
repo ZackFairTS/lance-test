@@ -1,35 +1,43 @@
 # Lance ML 训练场景压测
 
-验证 Lance 作为 ML 训练数据源（图片 blob + 随机 batch sampling）是否真的是一个好选择。
+验证 Lance 作为 ML 训练数据源（图片 blob + 随机 batch sampling）的真实性能。
 
-## 对比对象
+## 两份报告
 
-| 方案 | 代表 |
-|---|---|
-| Lance v2.2 with Blob V2 | 被测主角 |
-| Raw S3 files + boto3 + DataLoader | 生产最常见 baseline |
-| Parquet on S3 | Lance 官方比较对象（宣称快 100-2000x）|
+### [REPORT.md](REPORT.md) — 完整 PyTorch DataLoader pipeline 对比
 
-## 实测结果（稳态 img/s）
+模拟真实训练场景: 20K × 200KB JPEG, batch=256, num_workers=8, 2 epochs。
 
-| 方案 | img/s | 相对 |
+| 方案 | Epoch 2 稳态 | 相对 Lance |
 |---|---|---|
-| **Lance v2.2** | **237** ⭐ | 1.00x |
-| Raw S3 | 159 | 0.67x |
+| Lance v2.2 (Blob V2) | **237 img/s** ⭐ | 1.00x |
+| Raw S3 files | 159 | 0.67x |
 | Parquet | 111 | 0.47x |
 
-**Lance 比 Parquet 快 2.13x, 比 raw files 快 1.49x** — 真实的 ML 训练 pipeline 里，和 Lance 官方声称的 100-2000x 有显著差距。
+### [REPORT_pure_take.md](REPORT_pure_take.md) — 纯 `take_blobs` 吞吐（验证官方声称数字）
+
+排除 DataLoader + JPEG decode 开销，纯 I/O 吞吐。
+
+| 方法 | rows/s | MB/s |
+|---|---|---|
+| Lance batched (64 workers) | 1,075 | 214 |
+| **Lance per-row (256 workers)** ⭐ | **4,391** | **873** |
+| Raw S3 (32 workers) | 430 | 85 |
+
+**对官方声称的 "20-25K rows/s on S3" 未能达到**（最高 4,391 = 20%）。差距原因分析见报告。
+
+## 核心结论
+
+1. **真实 ML 训练场景下 Lance vs Parquet 快 2.13x**（不是官方的 100-2000x）
+2. **纯 take_blobs 极限吞吐比 raw S3 files 快 10x**（这才是 Lance 真正的价值范围）
+3. **官方"20-25K rows/s"对应的应该是小记录（KB 级 embedding），不是图片 blob**
 
 ## 发现的 Bug
 
-1. **pylance 4.0.1 `take_blobs` 不接受乱序 indices** — 必须 sort
-2. **`SafeLanceDataset` 对 blob 列只返回 descriptor** — 不能直接用于训练
-3. **v2.2 不接受旧的 `lance-encoding:blob=true` metadata** — 必须用 `lance.blob.blob_field()`
+1. **pylance 4.0.1 `take_blobs` 不接受乱序 indices** — DataLoader(shuffle=True) 直接坏
+2. **`SafeLanceDataset` 对 blob 列只返回 descriptor** 不返回 bytes
+3. **v2.2 不再支持 `lance-encoding:blob=true` metadata**
 
-详见 [REPORT.md](REPORT.md)。
+## 复现
 
-## 快速查看
-
-- [REPORT.md](REPORT.md) — 完整报告
-- `scripts/` — 复现脚本
-- `data/` — 原始 JSON 结果
+`scripts/` 下有完整脚本，数据在 `data/`。
