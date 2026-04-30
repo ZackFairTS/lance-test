@@ -1,0 +1,35 @@
+{
+  "method": "lance_take_blobs",
+  "config": {
+    "batch_size": 256,
+    "num_workers": 8,
+    "prefetch": 2,
+    "epochs": 2,
+    "n_images": 20000,
+    "image_sample_bytes": 198567
+  },
+  "epochs": [
+    {
+      "name": "lance_take_blobs",
+      "epoch": 0,
+      "total_s": 94.4246745610144,
+      "ttfb_s": 17.719159514002968,
+      "n_images": 20000,
+      "throughput": 211.8090434834022,
+      "batch_p50_ms": 29.121441999450326,
+      "batch_p99_ms": 29.67973001068458,
+      "batch_count": 79
+    },
+    {
+      "name": "lance_take_blobs",
+      "epoch": 1,
+      "total_s": 84.27855598699534,
+      "ttfb_s": 8.171532765001757,
+      "n_images": 20000,
+      "throughput": 237.30828994134774,
+      "batch_p50_ms": 29.21670299838297,
+      "batch_p99_ms": 29.818851995514706,
+      "batch_count": 79
+    }
+  ]
+}

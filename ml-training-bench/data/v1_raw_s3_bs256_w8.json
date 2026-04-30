@@ -1,0 +1,35 @@
+{
+  "method": "raw_s3",
+  "config": {
+    "batch_size": 256,
+    "num_workers": 8,
+    "prefetch": 2,
+    "epochs": 2,
+    "n_images": 20000,
+    "image_sample_bytes": 198567
+  },
+  "epochs": [
+    {
+      "name": "raw_s3",
+      "epoch": 0,
+      "total_s": 186.3882001650054,
+      "ttfb_s": 21.178702811012045,
+      "n_images": 20000,
+      "throughput": 107.30293002611988,
+      "batch_p50_ms": 28.869386005681008,
+      "batch_p99_ms": 29.21002102084458,
+      "batch_count": 79
+    },
+    {
+      "name": "raw_s3",
+      "epoch": 1,
+      "total_s": 125.93989909501397,
+      "ttfb_s": 10.486918109003454,
+      "n_images": 20000,
+      "throughput": 158.80590776804752,
+      "batch_p50_ms": 28.953636006917804,
+      "batch_p99_ms": 29.315694991964847,
+      "batch_count": 79
+    }
+  ]
+}

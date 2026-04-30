@@ -1,0 +1,35 @@
+{
+  "method": "parquet",
+  "config": {
+    "batch_size": 256,
+    "num_workers": 8,
+    "prefetch": 2,
+    "epochs": 2,
+    "n_images": 20000,
+    "image_sample_bytes": 198567
+  },
+  "epochs": [
+    {
+      "name": "parquet",
+      "epoch": 0,
+      "total_s": 183.3518057379988,
+      "ttfb_s": 21.86730257299496,
+      "n_images": 20000,
+      "throughput": 109.07991835422155,
+      "batch_p50_ms": 31.25607702531852,
+      "batch_p99_ms": 39.63093101629056,
+      "batch_count": 79
+    },
+    {
+      "name": "parquet",
+      "epoch": 1,
+      "total_s": 179.47442510302062,
+      "ttfb_s": 18.621813786012353,
+      "n_images": 20000,
+      "throughput": 111.4364901211955,
+      "batch_p50_ms": 31.496587995206937,
+      "batch_p99_ms": 40.75220599770546,
+      "batch_count": 79
+    }
+  ]
+}

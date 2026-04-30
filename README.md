@@ -95,3 +95,27 @@
 ## License
 
 MIT, 原始测试数据按 AS-IS 提供。
+
+
+---
+
+### 3️⃣ [Lance ML 训练场景压测](ml-training-bench/) — 宽列 blob 点查 + PyTorch DataLoader
+
+> **核心问题**: 图片 blob + 随机 batch sampling 训练，Lance 是不是好方案？
+>
+> **实测结论**: **比 Parquet 快 2.13x, 比 raw files 快 1.49x**。但远低于 LanceDB 官方声称的 "100-2000x vs Parquet"。
+
+**实测稳态 (20K images × 200KB JPEG, S3 ap-northeast-1, batch=256, workers=8)**:
+
+| 方案 | img/s | 相对 Lance |
+|---|---|---|
+| **Lance v2.2** | **237** ⭐ | 1.00x |
+| Raw S3 files | 159 | 0.67x |
+| Parquet | 111 | 0.47x |
+
+**关键 bug 发现**:
+- pylance 4.0.1 `take_blobs` **不接受乱序 indices**（shuffle DataLoader 直接不能用，必须 workaround）
+- `SafeLanceDataset` 对 blob 列只返回 descriptor 不是 bytes
+- v2.2 不再接受旧的 `lance-encoding:blob=true` metadata
+
+详见 [ml-training-bench/REPORT.md](ml-training-bench/REPORT.md)。
