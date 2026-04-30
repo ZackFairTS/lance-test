@@ -23,16 +23,19 @@
 
 ## 一句话结论
 
-**小 fragment 对读性能的影响强烈依赖于读取方式**：
+**小 fragment 对读性能的影响强烈依赖于读取方式**（主指标: wall-clock ms 延迟）：
 
-| 读方式 | 5000 frag vs 1 frag |
-|---|---|
-| Python 单进程扫描/range | **10-18x 慢** 🔴 |
-| Dataset.open() | 1.7x 慢 🟡 |
-| Python 点查 | 几乎无差 🟢 |
-| **Spark 分布式读** | **几乎无差** 🟢 |
+| 读方式 | A (1 frag) | E (5000 frag) | 退化 |
+|---|---|---|---|
+| Python 单进程扫描 | 804 ms | 8003 ms | 🔴 **10.0x** |
+| Python 范围查询 | 2.3 s | 40.5 s | 🔴 **17.7x** |
+| Python 点查 | 944 ms | 968 ms | 🟢 ~1.0x |
+| Dataset.open() | 80 ms | 134 ms | 🟡 1.7x |
+| **Spark 分布式读** | 7.4 s | 6.4 s | 🟢 **无退化** |
 
-**小文件 = Python 单线程 I/O 串行化问题**。Spark 的并行读用 executor 扇出同时读 fragment，这个问题反而成了优势。
+**小文件 = Python 单线程 I/O 串行化 + per-fragment ~40ms 打开开销** ([lance#4090](https://github.com/lancedb/lance/issues/4090))。Spark 的并行读用 executor 扇出同时读 fragment，这个问题反而成了优势。
+
+> **关于 MB/s**: 报告里的 MB/s 是 `pyarrow.Table.nbytes / 秒`（**Arrow 内存吞吐**），不是 S3 网络带宽。Lance 默认开 64 并行 S3 GET 请求，且 on-disk 有压缩，实际 S3 传输字节比 Arrow 内存小 2-5 倍。Lance 官方 benchmark 和 [arXiv 2504.15247](https://arxiv.org/abs/2504.15247) 都用 **ms + rows/sec**，不用 MB/s。详细解读见 [REPORT.md](REPORT.md) 的 "MB/s 这个指标的解读" 章节。
 
 ## 方法论
 

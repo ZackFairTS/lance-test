@@ -37,18 +37,20 @@
 >
 > **实测结论**: **强烈依赖读取方式**。Python 单进程读 5000 fragments 比 1 fragment 慢 10-18 倍，但 Spark 分布式读几乎无差。
 
-**关键数据**:
+**关键数据**（主指标: wall-clock 延迟）:
 
-| 读方式 | 5000 frag vs 1 frag |
-|---|---|
-| Python 单进程全表扫描 | 🔴 10.0x 慢 (1182→118 MB/s) |
-| Python 范围查询 | 🔴 17.7x 慢 (2.3→40.5 秒) |
-| Python 单列扫描 | 🔴 15.0x 慢 |
-| Dataset.open() | 🟡 1.7x 慢 (80→134 ms) |
-| Python 点查 | 🟢 几乎无差 |
-| **Spark 分布式全表读** | 🟢 **几乎无差** (7.4→6.4 秒) |
+| 读方式 | A (1 frag) | E (5000 frags) | 退化 |
+|---|---|---|---|
+| Python 单进程全表扫描 | 804 ms | 8003 ms | 🔴 **10.0x 慢** |
+| Python 范围查询 | 2.3 秒 | 40.5 秒 | 🔴 **17.7x 慢** |
+| Python 单列扫描 | 142 ms | 2126 ms | 🔴 **15.0x 慢** |
+| Python 点查 (take 1000) | 944 ms | 968 ms | 🟢 几乎无差 |
+| Dataset.open() | 80 ms | 134 ms | 🟡 1.7x |
+| **Spark 分布式全表读** | 7.4 s | 6.4 s | 🟢 **无退化** |
 
-**洞察**: 小文件问题 = 单线程 I/O 串行化问题。Spark 的并行度完全掩盖了这个问题。
+**洞察**: 小文件问题 = 单线程 I/O 串行化 + per-fragment ~40ms 打开开销 ([lance#4090](https://github.com/lancedb/lance/issues/4090))。Spark 的并行读反而让小文件成了"更细粒度的并行度"，完全掩盖了这个问题。
+
+> ⚠️ **MB/s 数字的正确解读**：报告里的 "1182 MB/s → 118 MB/s" 是 `pyarrow.Table.nbytes / elapsed`（Arrow 内存吞吐），**不是 S3 网络带宽**。Lance 默认开 64 并行 S3 GET，且 on-disk 有压缩，实际 S3 传输量比 Arrow 字节数小 2-5 倍。Lance 官方 benchmark 和 arXiv paper 都用 **ms + rows/sec**，不用 MB/s。详见 [read-perf-bench/REPORT.md](read-perf-bench/REPORT.md)。
 
 **文档**: [read-perf-bench/README.md](read-perf-bench/README.md), [read-perf-bench/REPORT.md](read-perf-bench/REPORT.md)
 

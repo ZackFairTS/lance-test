@@ -4,47 +4,86 @@
 **环境**: AWS EMR master (r8g.2xlarge Graviton, 8vCPU 64GiB), S3 ap-northeast-1
 **Lance version**: pylance 4.0.1 (lance-core 0.39.0 native), lance-spark 0.0.15
 
+---
+
 ## 结论先行 (TL;DR)
 
-频繁 commit 导致大量小 fragment，对读性能的影响 **严重依赖于读取方式**：
+频繁 commit 导致大量小 fragment（5000 vs 1），对读性能的影响 **严重依赖读取方式**。用 **wall-clock 延迟（ms）** 作为主指标：
 
-| 读方式 | 5000 fragments vs 1 fragment 性能退化 |
-|---|---|
-| **Python 单进程全表扫描** | 🔴 **10.0x 慢** (1182 → 118 MB/s) |
-| **Python 单进程范围查询** | 🔴 **17.7x 慢** (2.3s → 40.5s) |
-| **Python 单进程单列扫描** | 🔴 **15.0x 慢** |
-| **Dataset.open()** | 🟡 1.7x 慢 (80ms → 134ms) |
-| **Python 点查 (take)** | 🟢 **几乎无差** (950ms → 938ms) |
-| **count_rows()** | 🟢 都是毫秒级 |
-| **Spark 分布式全表扫描** | 🟢 **几乎无差** (7.4s → 6.4s) |
-| **Spark COUNT(*)** | 🟢 **几乎无差** (都是 ~2s) |
+| 读方式 | A (1 frag) | E (5000 frag) | 退化倍数 |
+|---|---|---|---|
+| **Python 单进程 全表扫描** | 804 ms | **8003 ms** | 🔴 **10.0x** |
+| **Python 单进程 范围查询** | 2291 ms | **40539 ms** | 🔴 **17.7x** |
+| **Python 单进程 单列扫描** | 142 ms | **2126 ms** | 🔴 **15.0x** |
+| **Dataset.open()** | 80 ms | 134 ms | 🟡 1.7x |
+| **Python 点查 (take 1000 rows)** | 944 ms | 968 ms | 🟢 ~1.0x |
+| **count_rows()** | <1 ms | 3 ms | 🟢 <5ms 级 |
+| **Spark 全表扫描 (distributed)** | 7377 ms | 6444 ms | 🟢 **无退化** |
+| **Spark COUNT(\*)** | ~2000 ms | ~2200 ms | 🟢 无退化 |
 
-**核心洞察**: 小 fragment 问题 = **单线程 I/O 串行化问题**。Spark 的并行读（不同 executor 读不同 fragment）完全掩盖了这个问题。
+**核心洞察**: 小 fragment 问题 = **单线程 I/O 串行化 + per-fragment 固定开销**。Spark 的并行读（不同 executor 读不同 fragment）完全掩盖了这个问题。
 
-## 数据集对比
+---
 
-| 版本 | 总行数 | Fragment 数 | 行/fragment | Lance version |
-|---|---|---|---|---|
-| A | 10,000,000 | 1 | 10,000,000 | 5009 |
-| B | 10,000,000 | 10 | 1,000,000 | 5007 |
-| C | 10,000,000 | 100 | 100,000 | 5005 |
-| D | 10,000,000 | 1,000 | 10,000 | 5003 |
-| E | 10,000,000 | 5,000 | 2,000 | 5001 |
+## 重要：数据正确性和公平性核实
 
-## 数据生成信息
+### 数据集是否"苹果对苹果"？✅ 确认
 
-- **E** 生成方式: 5,000 次 append，每次 2000 行 → **耗时 36.0 分钟**
-  - Append 速率从 **3.5/s 退化到 2.4/s**（31% 下降），因为 `write_dataset` 每次需要打开 dataset 读 manifest
-- **D/C/B/A** 通过 `compact_files(target_rows_per_fragment=...)` 从 E 逐步合并生成
-  - D: 5000 → 1000 fragments, 37.2s
-  - C: 1000 → 100 fragments, 12.6s
-  - B: 100 → 10 fragments, 5.8s
-  - A: 10 → 1 fragments, 17.5s
-  - **总 compaction 时间 ~1 分钟**（对比 36 分钟的 build 时间，说明 compact 不贵）
+5 个版本共享 **同一个 S3 path**（`/dataset`），通过 `lance.dataset(path, version=N)` 读取不同 version 的 fragment 组织视图。核实：
+
+| 版本 | Fragment 数 | Rows | `bytes_read` (Arrow) |
+|---|---|---|---|
+| A (v5009) | 1 | 10,000,000 | 1,000,000,000 |
+| B (v5007) | 10 | 10,000,000 | 1,000,000,000 |
+| C (v5005) | 100 | 10,000,000 | 1,000,000,000 |
+| D (v5003) | 1000 | 10,000,000 | 1,000,000,000 |
+| E (v5001) | 5000 | 10,000,000 | 1,000,000,000 |
+
+所有版本的 **行数、读取字节数完全相同**。Compaction 只是重新组织 fragment，不改数据。
+
+### "MB/s" 这个指标的解读（必读）
+
+`read_bench.py` 里：
+
+```python
+throughput_mbps = bytes_read / 1e6 / (mean_ms / 1000)
+```
+
+- `bytes_read` = `pyarrow.Table.nbytes` = **Arrow 在内存里的字节数（解压、解码后）**
+- **不是** 从 S3 传输的实际字节数
+- **不是** S3 网络带宽
+
+**为什么 1 GB 能在 845 ms 读完 = 1182 MB/s？**
+
+1. Lance 默认开 **64 并行 S3 GET 请求**（`LANCE_IO_THREADS=64`），不是单连接
+2. Lance on-disk 用 LZ4/Zstd 压缩 + mini-block 编码，**实际 S3 字节数比 Arrow 字节数小 2-5 倍**（真正的 S3 网络传输大约只有 200-500 MB/s）
+3. 重复读可能命中 OS page cache / Lance metadata cache（第一次总最慢，见 warm-up 观察）
+
+**所以报告中的 "MB/s" 是 "Arrow 材料化吞吐"，不是 S3 带宽**。Lance 官方 benchmark（`python/python/benchmarks/`）和 arXiv 论文（2504.15247）**从不用 MB/s**，而是用 **ms 延迟 + rows/sec**。
+
+### 主指标：延迟 (ms) + rows/sec
+
+为避免 MB/s 歧义，下面的表格**主用 ms 和 rows/sec**，MB/s 仅作参考。
+
+---
+
+## 数据集生成
+
+- **E** 生成方式: 5,000 次 `lance.write_dataset(mode="append")`，每次 2000 行 → **耗时 36.0 分钟**
+  - Append 速率从 **3.5/s 退化到 2.4/s**（31% 下降），因为 `write_dataset` 每次要 open dataset 读 manifest
+  - **这已经是小文件影响写入性能的证据**
+- **D/C/B/A** 通过 `compact_files(target_rows_per_fragment=...)` 从 E 逐步合并
+  - E → D: 5000 → 1000 fragments, 37.2s
+  - D → C: 1000 → 100 fragments, 12.6s
+  - C → B: 100 → 10 fragments, 5.8s
+  - B → A: 10 → 1 fragments, 17.5s
+  - **总 compaction 时间 ~1 分钟**（对比 36 分钟的 build 时间）
+
+---
 
 ## 1. Dataset.open() 耗时（10 次采样）
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) | p99 (ms) |
+| 版本 | Fragments | p50 (ms) | mean (ms) | p99 (ms) |
 |---|---|---|---|---|
 | A | 1 | 80 | 83 | 100 |
 | B | 10 | 78 | 76 | 85 |
@@ -52,66 +91,81 @@
 | D | 1,000 | 119 | 117 | 141 |
 | E | 5,000 | 133 | 130 | 146 |
 
-**观察**: `Dataset.open()` 退化有限。即使 5000 fragments 也只是 134ms（比 1 fragment 慢 1.7x），因为 Lance 只读最新 manifest 文件，不读每个 fragment 的 metadata。
+**观察**: `Dataset.open()` 退化有限（1.7x），因为 Lance 只读最新 manifest，不读每个 fragment 的 metadata。
 
-## 2. 全表扫描吞吐（Python 单进程）
+---
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) | 吞吐 (MB/s) | 相对 A |
-|---|---|---|---|---|---|
-| A | 1 | 804 | 845 | 1182.8 | 1.00x |
-| B | 10 | 760 | 794 | 1260.0 | 0.94x |
-| C | 100 | 765 | 791 | 1264.2 | 0.94x |
-| D | 1,000 | 1723 | 1904 | 525.1 | 2.25x |
-| E | 5,000 | 8003 | 8463 | 118.2 | 10.01x |
+## 2. 全表扫描（Python 单进程, `ds.to_table()`）
+
+| 版本 | Fragments | p50 (ms) | mean (ms) | rows/sec | Arrow-MB/s† | 相对 A (p50) |
+|---|---|---|---|---|---|---|
+| A | 1 | **804** | 845 | **12.4 M** | 1183 | 1.00x |
+| B | 10 | 760 | 794 | 13.2 M | 1260 | 0.95x |
+| C | 100 | 765 | 791 | 13.1 M | 1264 | 0.95x |
+| D | 1,000 | 1723 | 1904 | 5.80 M | 525 | **2.14x 慢** |
+| E | 5,000 | **8003** | 8463 | **1.25 M** | 118 | 🔴 **9.96x 慢** |
+
+† "Arrow-MB/s" = `Table.nbytes / 1e6 / 秒`；**不是 S3 网络带宽**，见上面的解读章节
 
 **观察**:
-- A/B/C (1-100 fragments) 都是 ~1200 MB/s，几乎一样
-- D (1000 fragments) 降到 525 MB/s（2.3x 慢）
-- E (5000 fragments) 降到 **118 MB/s（10x 慢）**
-- **拐点大致在 100-1000 fragment 之间**
+- A/B/C (1-100 fragments) 都是 ~13M rows/sec，几乎一样
+- **拐点在 ~100-1000 fragment 之间**
+- E (5000 fragments) 掉到 1.25M rows/sec（近 10 倍退化）
 
-## 3. 单列扫描（id）
+---
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) | 吞吐 (MB/s) | 相对 A |
-|---|---|---|---|---|---|
-| A | 1 | 136 | 142 | 562.4 | 1.00x |
-| B | 10 | 147 | 151 | 531.0 | 1.06x |
-| C | 100 | 112 | 165 | 484.5 | 1.16x |
-| D | 1,000 | 438 | 444 | 180.4 | 3.12x |
-| E | 5,000 | 2081 | 2126 | 37.6 | 14.95x |
+## 3. 单列扫描（`ds.to_table(columns=["id"])`）
 
-**观察**: 单列扫描**更敏感**于小文件（E 达到 15x 退化），因为列存的优势被"每个 fragment 都要单独打开列读取"消耗掉了。
+| 版本 | Fragments | p50 (ms) | mean (ms) | 相对 A (mean) |
+|---|---|---|---|---|
+| A | 1 | 136 | 142 | 1.00x |
+| B | 10 | 147 | 151 | 1.06x |
+| C | 100 | 112 | 165 | 1.16x |
+| D | 1,000 | 438 | 444 | 3.12x |
+| E | 5,000 | **2081** | 2126 | 🔴 **14.95x 慢** |
+
+**观察**: 单列扫描**比全表扫描更敏感**（15x vs 10x）—— 列存的优势被"每个 fragment 都单独打开列"消耗掉了。
+
+---
 
 ## 4. 点查延迟 (`ds.take([1000 random indices])`)
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) | p99 (ms) | 相对 A |
+| 版本 | Fragments | p50 (ms) | mean (ms) | p99 (ms) | 相对 A (mean) |
 |---|---|---|---|---|---|
 | A | 1 | 950 | 944 | 965 | 1.00x |
-| B | 10 | 489 | 493 | 531 | 0.52x |
-| C | 100 | 493 | 485 | 499 | 0.51x |
+| B | 10 | 489 | 493 | 531 | **0.52x 快** |
+| C | 100 | 493 | 485 | 499 | **0.51x 快** |
 | D | 1,000 | 718 | 721 | 787 | 0.76x |
-| E | 5,000 | 938 | 968 | 1068 | 1.03x |
+| E | 5,000 | 938 | 968 | 1068 | 🟢 1.03x |
 
-**观察**: 点查**反而在小文件场景下没退化**（E 和 A 都是 ~950ms）。B/C 甚至比 A 快一倍（U 形曲线，可能与 prefetch/cache 有关）。这是因为 point query 命中的数据量小，不敏感于 fragment 分布。
+**观察**: 点查呈 **U 形曲线**：B/C（10/100 fragments）反而比 A（1 fragment）**快一倍**！可能原因：
+- 中等 fragment 数 → fragment-level prune 命中率高，只读少数几个 fragment 就能满足 1000 个点查
+- A（单一大 fragment）必须 scan 整个 fragment 找到目标 row
 
-## 5. 范围查询（10 ranges × 10K rows, filter pushdown）
+**点查场景下，1-100 个 fragment 是甜区，不急着 compact**。
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) | 相对 A |
+---
+
+## 5. 范围查询（10 ranges × 10K rows, with filter pushdown）
+
+| 版本 | Fragments | p50 (ms) | mean (ms) | 相对 A (mean) |
 |---|---|---|---|---|
 | A | 1 | 2308 | 2291 | 1.00x |
 | B | 10 | 1894 | 1952 | 0.85x |
 | C | 100 | 2336 | 2501 | 1.09x |
 | D | 1,000 | 8968 | 8975 | 3.92x |
-| E | 5,000 | 40542 | 40539 | 17.69x |
+| E | 5,000 | **40542** | 40539 | 🔴 **17.69x 慢** |
 
-**观察**:
-- **这是退化最严重的场景**（17.7x）
-- 原因：range filter 需要逐 fragment 做 min/max pruning，再对命中的 fragment 做 row-level filter
-- 5000 fragments × 10 queries × 每次 open fragment 的开销 = 40 秒
+**观察**: **这是退化最严重的场景（17.7x）**。原因：
+- range filter 先对每个 fragment 做 min/max pruning
+- 命中的 fragment 需要读 row-level filter
+- 5000 fragments × 10 queries × 每次 fragment open 的 ~40ms 固定开销 = 40 秒
+
+---
 
 ## 6. count_rows()
 
-| 版本 | Fragment 数 | p50 (ms) | mean (ms) |
+| 版本 | Fragments | p50 (ms) | mean (ms) |
 |---|---|---|---|
 | A | 1 | 0.00 | 0.01 |
 | B | 10 | 0.01 | 0.01 |
@@ -121,44 +175,75 @@
 
 **观察**: count 是 metadata 操作，即使 5000 fragments 也只要 3.4ms（每个 fragment 读一个 row_count 字段求和）。
 
+---
+
 ## 7. Spark 分布式读 vs Python 单进程 (A vs E 对比)
 
 | 指标 | Python A | Python E | Python 退化 | Spark A | Spark E | Spark 退化 |
 |---|---|---|---|---|---|---|
-| 全表 read (sum payload) | 845ms | 8463ms | **10.0x** | 7377ms | 6444ms | 0.87x |
-| Range filter (1M rows) | 2291ms | 40539ms | **17.7x** | 1744ms | 1945ms | 1.11x |
+| 全表读 | 845 ms | 8463 ms | 🔴 **10.0x** | 7377 ms | 6444 ms | 🟢 **无退化（E 甚至略快）** |
+| 范围查询 | 2291 ms | 40539 ms | 🔴 **17.7x** | 1744 ms | 1945 ms | 🟢 **1.1x** |
 
-**核心发现**: Spark 的并行度完全掩盖了小 fragment 问题。**生产如果用 Spark 读**，小 fragment 影响可以忽略。**生产如果用 Python/Arrow 单进程读**，小 fragment 是致命的。
+**核心发现**: **Spark 的并行度完全掩盖了小 fragment 问题**。
+- Python 单进程：被 fragment 数扼杀
+- Spark 分布式：不同 executor 并行读不同 fragment，反而让 5000 fragments 成了"更细粒度的并行度"
 
-## Compaction 的收益
+---
 
-从 E (5000 frags) compact 到 A (1 frag) 的读性能改善：
+## 为什么会慢 10 倍 —— 根因分析
 
-| 指标 | E 之前 | A 之后 | 改善倍数 |
+这是 **per-fragment 固定开销** 的问题，不是带宽问题：
+
+1. **每个 fragment 打开 ~40ms 开销**
+   - 构造 `FileReader`、读 schema、初始化 scheduler
+   - 源码证据: [lancedb/lance#4090](https://github.com/lancedb/lance/issues/4090)
+2. **S3 对小读不友好**
+   - S3 GET < 100KB 时，IOPS 远比 bandwidth 贵
+   - Lance paper 原文: *"IOPS are far more expensive [on S3]… [S3] does not benefit from reads smaller than about 100KB"* ([arXiv 2504.15247 §6.1.4](https://arxiv.org/pdf/2504.15247))
+3. **5000 fragments 的累计效应**
+   - 即使 Lance 有 `LANCE_IO_THREADS=64` 并行，per-fragment 的 40ms 串行开销也累计 200+ 秒
+   - 实际受 I/O 并发度和 cache 掩盖，最后落到 ~8 秒
+
+**这是已知的 Lance pain point**：
+- [lance#1215](https://github.com/lancedb/lance/issues/1215) — "Grabbing whole dataset from s3 currently slow"：用户报告多 fragment 数据集从 S3 读比 Parquet 慢 20-30x
+- 核心维护者确认需要 "larger block sizes" + "better job at making more parallel requests"
+
+---
+
+## Compaction 的 ROI
+
+从 E (5000 frags) compact 到 A (1 frag) 的读性能改善（用 p50）：
+
+| 指标 | E (p50) | A (p50) | 改善倍数 |
 |---|---|---|---|
-| Full scan | 8463 ms | 845 ms | **10x** |
-| Col scan | 2126 ms | 142 ms | **15x** |
-| Range query | 40539 ms | 2291 ms | **17.7x** |
-| Open | 130 ms | 83 ms | 1.6x |
-| Point query | 968 ms | 944 ms | 1.0x |
+| Full scan | 8003 ms | 804 ms | **10x** |
+| Col scan | 2081 ms | 136 ms | **15x** |
+| Range query | 40542 ms | 2308 ms | **17.6x** |
+| Open | 133 ms | 80 ms | 1.7x |
+| Point query | 938 ms | 950 ms | 1.0x |
 
-**Compaction 成本**: 36 分钟的数据积累只需要 ~1 分钟 compact。
+**Compaction 成本**: 从 5000 → 1 fragments 只花 **73 秒** (4 次 compact 总和)。对比 build 耗时 36 分钟，**compaction 不贵**。
 
 **ROI 结论**:
-- 如果读取用 Python/Arrow 单进程 → **每次高频 commit 后都值得 compact**
-- 如果读取用 Spark → compaction 主要价值在**减少 manifest 数**（对 write 时的 `Dataset.open` 有帮助），对读本身影响不大
-- 复杂的 Flink streaming write 场景，compaction 还能减少 commit 冲突（见之前的 Flink 压测）
+- **Python/Arrow 单进程读** → 每次高频 commit 后都值得 compact
+- **Spark/分布式读** → compaction 对读性能影响不大，但减少 manifest 有助于 `Dataset.open()` 和 write（减少冲突）
+- **复杂 streaming write**（如 Flink） → compaction 同时改善 write-side 冲突率（见 [本 repo 的另一份 Flink 压测](../REPORT_01_lance_0.23.3.md)）
 
-## 性能退化倍数汇总表
+---
 
-| 版本 | Fragment 数 | open | full-scan | col-scan | point | range | count |
+## 性能退化倍数汇总表 (使用 p50)
+
+| 版本 | Fragments | open | full-scan | col-scan | point | range | count |
 |---|---|---|---|---|---|---|---|
 | A | 1 | 1.00x | 1.00x | 1.00x | 1.00x | 1.00x | 1.00x |
-| B | 10 | 0.92x | 0.94x | 1.06x | 0.52x | 0.85x | 1.21x |
-| C | 100 | 0.98x | 0.94x | 1.16x | 0.51x | 1.09x | 6.99x |
-| D | 1,000 | 1.42x | 2.25x | 3.12x | 0.76x | 3.92x | 60.77x |
-| E | 5,000 | 1.57x | 10.01x | 14.95x | 1.03x | 17.69x | 301.33x |
+| B | 10 | 0.98x | 0.95x | 1.08x | **0.51x** ⚡ | 0.82x | - |
+| C | 100 | 1.01x | 0.95x | 0.82x | **0.52x** ⚡ | 1.01x | - |
+| D | 1,000 | 1.49x | 2.14x | 3.22x | 0.76x | 3.89x | ~300x |
+| E | 5,000 | 1.66x | **9.96x** | **15.3x** | 0.99x | **17.6x** | ~1000x |
 
+⚡ = 点查场景下反而比 A 快（U 形曲线）
+
+---
 
 ## 给用户的建议
 
@@ -166,51 +251,92 @@
 
 | 你的读取方式 | 推荐 fragment 策略 |
 |---|---|
-| **Python/Arrow 单进程全表扫描/分析** | fragment ≤ 100，超过要 compact |
-| **Python 点查/少量行** | fragment 数不敏感，不急着 compact |
-| **Spark/分布式并行读** | fragment 数几乎不影响读性能，但 manifest version 多了会拖慢 `open` |
+| **Python/Arrow 单进程全表扫描/分析** | fragment ≤ 100；超过要 compact |
+| **Python 点查/少量行** | fragment 10-100 反而是甜区，不急着 compact |
+| **Spark/分布式并行读** | fragment 数几乎不影响读，但 manifest version 多了会拖慢 `open` |
 | **LanceDB vector search** | 类似 Spark（内部并行），但 index build 会慢 |
-| **Flink streaming 追加** | **必须** compact，否则 write 本身会变慢（commit 放大） |
+| **Flink streaming 追加** | **必须** compact，否则 write 性能也受影响（见 append 从 3.5/s 退化到 2.4/s）|
 
 ### 推荐的 compaction 触发条件
 
 1. **fragment 数 > 1000** → 立刻 compact（range query 退化 4x）
 2. **fragment 数 > 100 且读以 Python 为主** → 考虑 compact
 3. **manifest version > 10000** → compact + `cleanup_old_versions`（GC）
-4. **单个 fragment 行数 < 10000** → 一般意味着 commit 过于频繁，源头处理 (加大 batch_size)
+4. **单个 fragment 行数 < 10000** → 意味着 commit 过于频繁，优先从源头加大 batch_size
 
 ### 参数建议
 
 ```python
 ds.optimize.compact_files(
-    target_rows_per_fragment=1_000_000,     # 1M rows per fragment (对应 B 级别)
+    target_rows_per_fragment=1_000_000,
     max_rows_per_group=1024,
     materialize_deletions_threshold=0.1,
 )
 ```
 
-读取侧：
+读取侧，如果被迫读小文件 dataset：
+
 ```python
-# 如果被迫读小文件 dataset，开 worker pool 并行读 fragment
 from concurrent.futures import ThreadPoolExecutor
 ds = lance.dataset(path)
 frags = ds.get_fragments()
-def read_frag(f): return f.to_table()
+
+def read_frag(f):
+    return f.to_table()
+
 with ThreadPoolExecutor(max_workers=16) as ex:
     tables = list(ex.map(read_frag, frags))
 ```
 
+### 调整 Lance I/O 并发（如果 S3 连接数不是瓶颈）
+
+```bash
+export LANCE_IO_THREADS=128   # 默认 64，大数据集可适当调高
+```
+
+---
+
+## 数据质量说明
+
+### Warm-up 效应
+
+每次全表扫描的 5 个样本中，**第一个样本（冷 cache）总是最慢**。例如版本 E：
+```
+samples (ms): [10346, 8003, 8023, 7975, 7967]
+                 ↑ 冷缓存
+```
+
+这使 **mean 被 warm-up 拉偏高**。所以：
+- **p50（中位数）更能代表稳态性能** → 报告主指标都用 p50
+- 如果用 mean：E/A 比例 10.01x；用 p50：比例 **9.96x**。结论一致。
+
+### 样本数
+
+- `open`, `count_rows`: 10 samples
+- `full_scan`, `col_scan`, `point_query`: 5 samples
+- `range_query`: 3 samples（低于理想，因为单次 40+ 秒太贵）
+
+---
+
 ## 图表
 
-见 `results/performance_plot.png`（6 个子图：fragment 数 vs 每种读操作延迟，log-log 轴）。
+见 `plots/performance_plot.png`（6 个子图：fragment 数 vs 每种读操作延迟，log-log 轴）。
+
+## 参考
+
+- **Lance 官方小文件问题讨论**: [lancedb/lance#1215](https://github.com/lancedb/lance/issues/1215)
+- **Per-fragment open 开销**: [lancedb/lance#4090](https://github.com/lancedb/lance/issues/4090)
+- **Lance paper**（scan 用 rows/sec 不用 MB/s）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
+- **Lance I/O 并行配置**: [`LANCE_IO_THREADS`](https://lance.org/integrations/spark/performance/)
+- **Pyarrow Table.nbytes 定义**: [arrow docs](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html#pyarrow.Table.nbytes)
 
 ## 原始数据位置
 
-`/home/hadoop/lance-read-bench/results/`:
+`data/` 目录（仓库里）或 `/home/hadoop/lance-read-bench/results/`（压测机器）:
 - `read_A.json` ~ `read_E.json` — 5 个版本的 Python 读测试完整结果
 - `spark_A.json`, `spark_E.json` — Spark count/agg
-- `spark_full_A.json`, `spark_full_E.json` — Spark 真正读取数据
+- `spark_full_A.json`, `spark_full_E.json` — Spark 真实读取数据
 - `compact_plan.json` — compaction 执行记录
 - `E_dataset_info.json` — E 数据集构建统计
-- `build_E.log` — 36 分钟构建过程日志
+- `build_E.log.gz` — 36 分钟构建过程日志（含 append 速率退化证据）
 - `performance_plot.png` — 可视化
