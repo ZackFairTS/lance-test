@@ -99,6 +99,21 @@ MIT, 原始测试数据按 AS-IS 提供。
 
 ---
 
+### 4️⃣ [Lance 扩展压测 Top 4](extended-bench/) — update/filter/vector-search/prefilter
+
+4 个关键未测能力，每个脚本通过 **opencode AI review**：
+
+| 测试 | 核心发现 |
+|---|---|
+| A. `update()` + stable_row_ids bug | 🔴 **11,494x 慢**（复现 issue #6404）|
+| B. Filter vs Parquet | 🔴 Lance v2.1 仍**慢 2.49x**（issue #738 3 年未解）|
+| D. 向量搜索 Pareto (SIFT-1M) | ✅ IVF_HNSW_SQ 赢家，recall≥0.95 时 535 QPS |
+| E. Prefilter + HNSW | 🟡 10% 边界**相位跃迁实锤**，p50 翻倍 |
+
+详见 [extended-bench/REPORT.md](extended-bench/REPORT.md)。
+
+---
+
 ### 3️⃣ [Lance ML 训练场景压测](ml-training-bench/) — 宽列 blob 点查 + PyTorch DataLoader
 
 > **核心问题**: 图片 blob + 随机 batch sampling 训练，Lance 是不是好方案？

@@ -1,0 +1,458 @@
+{
+  "pylance_version": "4.0.1",
+  "timestamp": 1777563310.054421,
+  "n_rows": 1000000,
+  "timeout_seconds": 300,
+  "results": [
+    {
+      "rows_affected": 1,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0082,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.006,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0061,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0061,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0268,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0181,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0259,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0184,
+      "updated": 1
+    },
+    {
+      "rows_affected": 1000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0061,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0053,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0061,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0061,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.7971,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.1091,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.9172,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 1000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.1098,
+      "updated": 1000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0059,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0054,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0062,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0061,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 7.7128,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.9592,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 8.9813,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 10000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.9685,
+      "updated": 10000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0081,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0071,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0081,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.008,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 80.0529,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 9.5398,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 93.098,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 100000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 8.8558,
+      "updated": 100000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0165,
+      "updated": 500000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": false,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0164,
+      "updated": 500000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "seconds": 0.0158,
+      "updated": 500000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": false,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 0.0161,
+      "updated": 500000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": true,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "seconds": 48.3022,
+      "updated": 500000
+    },
+    {
+      "rows_affected": 500000,
+      "stable": true,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "seconds": 42.8043,
+      "updated": 500000
+    }
+  ],
+  "ratios": [
+    {
+      "rows_affected": 1,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.006,
+      "on_seconds": 0.0181,
+      "ratio": 3.016666666666667
+    },
+    {
+      "rows_affected": 1,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0082,
+      "on_seconds": 0.0268,
+      "ratio": 3.268292682926829
+    },
+    {
+      "rows_affected": 1,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.0184,
+      "ratio": 3.0163934426229506
+    },
+    {
+      "rows_affected": 1,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.0259,
+      "ratio": 4.245901639344262
+    },
+    {
+      "rows_affected": 1000,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0053,
+      "on_seconds": 0.1091,
+      "ratio": 20.58490566037736
+    },
+    {
+      "rows_affected": 1000,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.7971,
+      "ratio": 130.67213114754097
+    },
+    {
+      "rows_affected": 1000,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.1098,
+      "ratio": 17.999999999999996
+    },
+    {
+      "rows_affected": 1000,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.9172,
+      "ratio": 150.36065573770492
+    },
+    {
+      "rows_affected": 10000,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0054,
+      "on_seconds": 0.9592,
+      "ratio": 177.62962962962962
+    },
+    {
+      "rows_affected": 10000,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0059,
+      "on_seconds": 7.7128,
+      "ratio": 1307.2542372881355
+    },
+    {
+      "rows_affected": 10000,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0061,
+      "on_seconds": 0.9685,
+      "ratio": 158.77049180327867
+    },
+    {
+      "rows_affected": 10000,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0062,
+      "on_seconds": 8.9813,
+      "ratio": 1448.5967741935483
+    },
+    {
+      "rows_affected": 100000,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0071,
+      "on_seconds": 9.5398,
+      "ratio": 1343.6338028169014
+    },
+    {
+      "rows_affected": 100000,
+      "storage": "2.0",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0081,
+      "on_seconds": 80.0529,
+      "ratio": 9883.074074074073
+    },
+    {
+      "rows_affected": 100000,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.008,
+      "on_seconds": 8.8558,
+      "ratio": 1106.975
+    },
+    {
+      "rows_affected": 100000,
+      "storage": "2.1",
+      "max_rows_per_file": 1048576,
+      "off_seconds": 0.0081,
+      "on_seconds": 93.098,
+      "ratio": 11493.580246913582
+    },
+    {
+      "rows_affected": 500000,
+      "storage": "2.0",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0164,
+      "on_seconds": 48.3022,
+      "ratio": 2945.2560975609754
+    },
+    {
+      "rows_affected": 500000,
+      "storage": "2.1",
+      "max_rows_per_file": 100000,
+      "off_seconds": 0.0161,
+      "on_seconds": 42.8043,
+      "ratio": 2658.6521739130435
+    }
+  ]
+}
