@@ -1,0 +1,274 @@
+{
+  "lance_version": "4.0.1",
+  "spark_version": "3.5.5-amzn-1",
+  "n_rows": 3000000,
+  "engine": "spark-sql",
+  "results": [
+    {
+      "median_ms": 98.3383739949204,
+      "mean_ms": 99.35383742309308,
+      "min_ms": 81.0963719850406,
+      "max_ms": 115.447009971831,
+      "stdev_ms": 13.797510833191435,
+      "source": "parquet_view",
+      "selectivity_target": 0.0001,
+      "label": "pickup_minute=30 AND rare_1k='V0'"
+    },
+    {
+      "median_ms": 133.3635919727385,
+      "mean_ms": 135.57117542950436,
+      "min_ms": 123.63885302329436,
+      "max_ms": 149.22749303514138,
+      "stdev_ms": 9.978548587664955,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.0001,
+      "label": "pickup_minute=30 AND rare_1k='V0'"
+    },
+    {
+      "median_ms": 31.79449198069051,
+      "mean_ms": 31.941985295686337,
+      "min_ms": 30.494320031721145,
+      "max_ms": 33.587453013751656,
+      "stdev_ms": 1.014010719283736,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.0001,
+      "label": "pickup_minute=30 AND rare_1k='V0'"
+    },
+    {
+      "median_ms": 34.67530099442229,
+      "mean_ms": 35.16205000258716,
+      "min_ms": 34.447646990884095,
+      "max_ms": 37.8017530310899,
+      "stdev_ms": 1.1934083623419807,
+      "source": "lance_btree",
+      "selectivity_target": 0.0001,
+      "label": "pickup_minute=30 AND rare_1k='V0'"
+    },
+    {
+      "median_ms": 65.39116299245507,
+      "mean_ms": 68.1416267179884,
+      "min_ms": 63.24061698978767,
+      "max_ms": 77.08527299109846,
+      "stdev_ms": 5.055063187382199,
+      "source": "parquet_view",
+      "selectivity_target": 0.001,
+      "label": "rare_1k='V0'"
+    },
+    {
+      "median_ms": 112.64076904626563,
+      "mean_ms": 113.6107832925128,
+      "min_ms": 109.09587697824463,
+      "max_ms": 120.25985296349972,
+      "stdev_ms": 3.8567843725141002,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.001,
+      "label": "rare_1k='V0'"
+    },
+    {
+      "median_ms": 29.58298899466172,
+      "mean_ms": 29.72482398451705,
+      "min_ms": 28.71316601522267,
+      "max_ms": 31.27700398908928,
+      "stdev_ms": 0.8632098433114577,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.001,
+      "label": "rare_1k='V0'"
+    },
+    {
+      "median_ms": 30.28337098658085,
+      "mean_ms": 30.54230785762359,
+      "min_ms": 29.748516040854156,
+      "max_ms": 31.68159199412912,
+      "stdev_ms": 0.7662765319118539,
+      "source": "lance_btree",
+      "selectivity_target": 0.001,
+      "label": "rare_1k='V0'"
+    },
+    {
+      "median_ms": 63.77182400319725,
+      "mean_ms": 63.71905727844153,
+      "min_ms": 59.86435496015474,
+      "max_ms": 68.85519402567297,
+      "stdev_ms": 3.206685628493103,
+      "source": "parquet_view",
+      "selectivity_target": 0.01,
+      "label": "rare_100='V0'"
+    },
+    {
+      "median_ms": 106.7904619849287,
+      "mean_ms": 108.17467042943463,
+      "min_ms": 104.13651197450235,
+      "max_ms": 114.58607303211465,
+      "stdev_ms": 4.132067208482609,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.01,
+      "label": "rare_100='V0'"
+    },
+    {
+      "median_ms": 32.10872696945444,
+      "mean_ms": 32.51475114042738,
+      "min_ms": 31.34986001532525,
+      "max_ms": 34.40234099980444,
+      "stdev_ms": 1.0724029659140464,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.01,
+      "label": "rare_100='V0'"
+    },
+    {
+      "median_ms": 35.58509302092716,
+      "mean_ms": 36.08632670615667,
+      "min_ms": 34.400794946122915,
+      "max_ms": 37.41887002252042,
+      "stdev_ms": 1.2304585848062708,
+      "source": "lance_btree",
+      "selectivity_target": 0.01,
+      "label": "rare_100='V0'"
+    },
+    {
+      "median_ms": 54.12748799426481,
+      "mean_ms": 56.031364149280954,
+      "min_ms": 51.83047498576343,
+      "max_ms": 66.3234920357354,
+      "stdev_ms": 4.949629503839315,
+      "source": "parquet_view",
+      "selectivity_target": 0.0167,
+      "label": "pickup_minute=30"
+    },
+    {
+      "median_ms": 84.25867703044787,
+      "mean_ms": 85.23725057187092,
+      "min_ms": 83.3343550330028,
+      "max_ms": 89.03577900491655,
+      "stdev_ms": 2.0155615916357905,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.0167,
+      "label": "pickup_minute=30"
+    },
+    {
+      "median_ms": 37.357460998464376,
+      "mean_ms": 37.55762713262811,
+      "min_ms": 36.26356995664537,
+      "max_ms": 39.77701399708167,
+      "stdev_ms": 1.1571167809175302,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.0167,
+      "label": "pickup_minute=30"
+    },
+    {
+      "median_ms": 42.31868596980348,
+      "mean_ms": 43.544716991683735,
+      "min_ms": 41.01478500524536,
+      "max_ms": 49.085656995885074,
+      "stdev_ms": 2.7480869759331408,
+      "source": "lance_btree",
+      "selectivity_target": 0.0167,
+      "label": "pickup_minute=30"
+    },
+    {
+      "median_ms": 54.016487032640725,
+      "mean_ms": 55.48013799956867,
+      "min_ms": 53.53198095690459,
+      "max_ms": 60.410387988667935,
+      "stdev_ms": 2.7899717311244423,
+      "source": "parquet_view",
+      "selectivity_target": 0.1,
+      "label": "pickup_minute<6"
+    },
+    {
+      "median_ms": 87.23584102699533,
+      "mean_ms": 87.8108360006341,
+      "min_ms": 86.57796797342598,
+      "max_ms": 91.03823400801048,
+      "stdev_ms": 1.5195577200545565,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.1,
+      "label": "pickup_minute<6"
+    },
+    {
+      "median_ms": 91.87432698672637,
+      "mean_ms": 92.16283985214042,
+      "min_ms": 86.53870498528704,
+      "max_ms": 97.24110597744584,
+      "stdev_ms": 4.029797022673919,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.1,
+      "label": "pickup_minute<6"
+    },
+    {
+      "median_ms": 107.3106019757688,
+      "mean_ms": 107.13998555105978,
+      "min_ms": 103.87176496442407,
+      "max_ms": 110.37458496866748,
+      "stdev_ms": 2.0118245453533405,
+      "source": "lance_btree",
+      "selectivity_target": 0.1,
+      "label": "pickup_minute<6"
+    },
+    {
+      "median_ms": 65.69925101939589,
+      "mean_ms": 67.70373415201902,
+      "min_ms": 65.44144003419206,
+      "max_ms": 75.12635900638998,
+      "stdev_ms": 3.5370365874341143,
+      "source": "parquet_view",
+      "selectivity_target": 0.5,
+      "label": "pickup_minute<30"
+    },
+    {
+      "median_ms": 121.3931980310008,
+      "mean_ms": 122.31705529848114,
+      "min_ms": 108.75951399793848,
+      "max_ms": 136.22175197815523,
+      "stdev_ms": 10.31755990356364,
+      "source": "lance_no_idx",
+      "selectivity_target": 0.5,
+      "label": "pickup_minute<30"
+    },
+    {
+      "median_ms": 248.37579001905397,
+      "mean_ms": 246.01497684073234,
+      "min_ms": 230.56757397716865,
+      "max_ms": 257.8056419733912,
+      "stdev_ms": 8.842409009156892,
+      "source": "lance_bitmap",
+      "selectivity_target": 0.5,
+      "label": "pickup_minute<30"
+    },
+    {
+      "median_ms": 318.7626770231873,
+      "mean_ms": 323.78138444619253,
+      "min_ms": 313.1472769891843,
+      "max_ms": 359.30881300009787,
+      "stdev_ms": 15.994561636926825,
+      "source": "lance_btree",
+      "selectivity_target": 0.5,
+      "label": "pickup_minute<30"
+    }
+  ],
+  "sample_plans": {
+    "parquet_view_sel0.0001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter (('pickup_minute = 30) AND ('rare_1k = V0))\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter ((cast(pickup_minute#0 as int) = 30) AND (rare_1k#1 = V0))\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter ((isnotnull(pickup_minute#0) AND isnotnull(rare_1k#1)) AND ((pickup_minute#0 = 30) AND (rare_1k#1 = V0)))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Project [pickup_minute#0, fare_amount#3]\n+- *(1) Filter (((isnotnull(pickup_minute#0) AND isnotnull(rare_1k#1)) AND (pickup_minute#0 = 30)) AND (rare_1k#1 = V0))\n   +- *(1) ColumnarToRow\n      +- FileScan parquet [pickup_minute#0,rare_1k#1,fare_amount#3] Batched: true, DataFilters: [isnotnull(pickup_minute#0), isnotnull(rare_1k#1), (pickup_minute#0 = 30), (rare_1k#1 = V0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(pickup_minute), IsNotNull(rare_1k), EqualTo(pickup_minute,30), EqualTo(rare_1k,V0)], ReadSchema: struct<pickup_minute:tinyint,rare_1k:string,fare_amount:double>\n",
+    "lance_no_idx_sel0.0001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter (('pickup_minute = 30) AND ('rare_1k = V0))\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter ((cast(pickup_minute#8 as int) = 30) AND (rare_1k#9 = V0))\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.0001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter (('pickup_minute = 30) AND ('rare_1k = V0))\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter ((cast(pickup_minute#16 as int) = 30) AND (rare_1k#17 = V0))\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.0001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter (('pickup_minute = 30) AND ('rare_1k = V0))\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter ((cast(pickup_minute#24 as int) = 30) AND (rare_1k#25 = V0))\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "parquet_view_sel0.001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_1k = V0)\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (rare_1k#1 = V0)\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (isnotnull(rare_1k#1) AND (rare_1k#1 = V0))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Project [pickup_minute#0, fare_amount#3]\n+- *(1) Filter (isnotnull(rare_1k#1) AND (rare_1k#1 = V0))\n   +- *(1) ColumnarToRow\n      +- FileScan parquet [pickup_minute#0,rare_1k#1,fare_amount#3] Batched: true, DataFilters: [isnotnull(rare_1k#1), (rare_1k#1 = V0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(rare_1k), EqualTo(rare_1k,V0)], ReadSchema: struct<pickup_minute:tinyint,rare_1k:string,fare_amount:double>\n",
+    "lance_no_idx_sel0.001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_1k = V0)\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter (rare_1k#9 = V0)\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_1k = V0)\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter (rare_1k#17 = V0)\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.001": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_1k = V0)\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter (rare_1k#25 = V0)\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "parquet_view_sel0.01": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_100 = V0)\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (rare_100#2 = V0)\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (isnotnull(rare_100#2) AND (rare_100#2 = V0))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Project [pickup_minute#0, fare_amount#3]\n+- *(1) Filter (isnotnull(rare_100#2) AND (rare_100#2 = V0))\n   +- *(1) ColumnarToRow\n      +- FileScan parquet [pickup_minute#0,rare_100#2,fare_amount#3] Batched: true, DataFilters: [isnotnull(rare_100#2), (rare_100#2 = V0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(rare_100), EqualTo(rare_100,V0)], ReadSchema: struct<pickup_minute:tinyint,rare_100:string,fare_amount:double>\n",
+    "lance_no_idx_sel0.01": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_100 = V0)\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter (rare_100#10 = V0)\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.01": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_100 = V0)\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter (rare_100#18 = V0)\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.01": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('rare_100 = V0)\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter (rare_100#26 = V0)\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "parquet_view_sel0.0167": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute = 30)\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (cast(pickup_minute#0 as int) = 30)\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 = 30))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 = 30))\n+- *(1) ColumnarToRow\n   +- FileScan parquet [pickup_minute#0,fare_amount#3] Batched: true, DataFilters: [isnotnull(pickup_minute#0), (pickup_minute#0 = 30)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(pickup_minute), EqualTo(pickup_minute,30)], ReadSchema: struct<pickup_minute:tinyint,fare_amount:double>\n",
+    "lance_no_idx_sel0.0167": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute = 30)\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter (cast(pickup_minute#8 as int) = 30)\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.0167": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute = 30)\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter (cast(pickup_minute#16 as int) = 30)\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.0167": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute = 30)\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter (cast(pickup_minute#24 as int) = 30)\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "parquet_view_sel0.1": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 6)\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (cast(pickup_minute#0 as int) < 6)\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 < 6))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 < 6))\n+- *(1) ColumnarToRow\n   +- FileScan parquet [pickup_minute#0,fare_amount#3] Batched: true, DataFilters: [isnotnull(pickup_minute#0), (pickup_minute#0 < 6)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(pickup_minute), LessThan(pickup_minute,6)], ReadSchema: struct<pickup_minute:tinyint,fare_amount:double>\n",
+    "lance_no_idx_sel0.1": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 6)\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter (cast(pickup_minute#8 as int) < 6)\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.1": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 6)\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter (cast(pickup_minute#16 as int) < 6)\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.1": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 6)\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter (cast(pickup_minute#24 as int) < 6)\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "parquet_view_sel0.5": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 30)\n   +- 'UnresolvedRelation [parquet_view], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (cast(pickup_minute#0 as int) < 30)\n   +- SubqueryAlias parquet_view\n      +- View (`parquet_view`, [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3])\n         +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Optimized Logical Plan ==\nProject [pickup_minute#0, fare_amount#3]\n+- Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 < 30))\n   +- Relation [pickup_minute#0,rare_1k#1,rare_100#2,fare_amount#3] parquet\n\n== Physical Plan ==\n*(1) Filter (isnotnull(pickup_minute#0) AND (pickup_minute#0 < 30))\n+- *(1) ColumnarToRow\n   +- FileScan parquet [pickup_minute#0,fare_amount#3] Batched: true, DataFilters: [isnotnull(pickup_minute#0), (pickup_minute#0 < 30)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/tmp/b4_spark_uzhi9f6g/data.parquet], PartitionFilters: [], PushedFilters: [IsNotNull(pickup_minute), LessThan(pickup_minute,30)], ReadSchema: struct<pickup_minute:tinyint,fare_amount:double>\n",
+    "lance_no_idx_sel0.5": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 30)\n   +- 'UnresolvedRelation [lance_no_idx], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#8, fare_amount#11]\n+- Filter (cast(pickup_minute#8 as int) < 30)\n   +- SubqueryAlias lance_no_idx\n      +- View (`lance_no_idx`, [pickup_minute#8,rare_1k#9,rare_100#10,fare_amount#11])\n         +- RelationV2[pickup_minute#8, rare_1k#9, rare_100#10, fare_amount#11] lance.com.lancedb.lance.spark.LanceIdentifier@455d924d lance_no_idx\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#8, fare_amount#11] lance_no_idx\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_no_idx[pickup_minute#8, fare_amount#11] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_bitmap_sel0.5": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 30)\n   +- 'UnresolvedRelation [lance_bitmap], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#16, fare_amount#19]\n+- Filter (cast(pickup_minute#16 as int) < 30)\n   +- SubqueryAlias lance_bitmap\n      +- View (`lance_bitmap`, [pickup_minute#16,rare_1k#17,rare_100#18,fare_amount#19])\n         +- RelationV2[pickup_minute#16, rare_1k#17, rare_100#18, fare_amount#19] lance.com.lancedb.lance.spark.LanceIdentifier@7671348e lance_bitmap\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#16, fare_amount#19] lance_bitmap\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_bitmap[pickup_minute#16, fare_amount#19] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n",
+    "lance_btree_sel0.5": "== Parsed Logical Plan ==\n'Project ['pickup_minute, 'fare_amount]\n+- 'Filter ('pickup_minute < 30)\n   +- 'UnresolvedRelation [lance_btree], [], false\n\n== Analyzed Logical Plan ==\npickup_minute: tinyint, fare_amount: double\nProject [pickup_minute#24, fare_amount#27]\n+- Filter (cast(pickup_minute#24 as int) < 30)\n   +- SubqueryAlias lance_btree\n      +- View (`lance_btree`, [pickup_minute#24,rare_1k#25,rare_100#26,fare_amount#27])\n         +- RelationV2[pickup_minute#24, rare_1k#25, rare_100#26, fare_amount#27] lance.com.lancedb.lance.spark.LanceIdentifier@4df176cd lance_btree\n\n== Optimized Logical Plan ==\nRelationV2[pickup_minute#24, fare_amount#27] lance_btree\n\n== Physical Plan ==\n*(1) ColumnarToRow\n+- BatchScan lance_btree[pickup_minute#24, fare_amount#27] class com.lancedb.lance.spark.read.LanceScan RuntimeFilters: []\n"
+  }
+}

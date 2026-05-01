@@ -125,6 +125,12 @@ MIT, 原始测试数据按 AS-IS 提供。
 - **Parquet 在中高选择率** (>1.5%) 反超
 - 🔴 **发现 Lance query planner bug**：高选择率 (>10%) 下 BITMAP 反而拖慢 11x，说明 Lance 不会根据选择率自动跳过索引
 
+**🎯 Spark 中立引擎修正** ([extended-bench/REPORT_spark_neutral.md](extended-bench/REPORT_spark_neutral.md)) - 回应"之前 Lance 用 DataFusion, Parquet 用 PyArrow, 引擎不同"：
+- 在**同一 Spark SQL 引擎**下重跑
+- **结论显著改变**: Lance BITMAP 在低选择率 (≤10%) 全面领先 Parquet **1.4-3.1x**
+- 高选择率 (50%) 仍是 Parquet 赢（query planner bug 跨引擎存在）
+- **PyArrow 给 Parquet 隐形加持 5-6x** —— 引擎公平性确实很关键
+
 ---
 
 ### 3️⃣ [Lance ML 训练场景压测](ml-training-bench/) — 宽列 blob 点查 + PyTorch DataLoader
