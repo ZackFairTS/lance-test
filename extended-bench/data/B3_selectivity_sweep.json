@@ -1,0 +1,319 @@
+{
+  "lance_version": "4.0.1",
+  "pyarrow_version": "20.0.0",
+  "n_rows": 3000000,
+  "results": {
+    "parquet_snappy": {
+      "size_mb": 33.5,
+      "build_index_seconds": 0.0,
+      "queries": [
+        {
+          "median_ms": 28.465684998081997,
+          "mean_ms": 28.52404419099912,
+          "min_ms": 27.214411995373666,
+          "max_ms": 30.643977981526405,
+          "stdev_ms": 1.113500810420725,
+          "rows_returned": 62,
+          "selectivity_target": 0.0001,
+          "predicate": "pickup_minute = 30 AND rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 27.147983520990238,
+          "mean_ms": 27.448070811806247,
+          "min_ms": 26.871684996876866,
+          "max_ms": 29.568619036581367,
+          "stdev_ms": 0.7958567300082803,
+          "rows_returned": 2986,
+          "selectivity_target": 0.001,
+          "predicate": "rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 27.406485518440604,
+          "mean_ms": 27.3814323998522,
+          "min_ms": 26.70149999903515,
+          "max_ms": 28.347423009108752,
+          "stdev_ms": 0.5615339158825553,
+          "rows_returned": 30269,
+          "selectivity_target": 0.01,
+          "predicate": "rare_100 = 'V0'",
+          "indexed_column": "rare_100",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 8.398512989515439,
+          "mean_ms": 8.445343695348129,
+          "min_ms": 8.14333203015849,
+          "max_ms": 9.040569013450295,
+          "stdev_ms": 0.2829078416082994,
+          "rows_returned": 49740,
+          "selectivity_target": 0.0167,
+          "predicate": "pickup_minute = 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        },
+        {
+          "median_ms": 8.471352484775707,
+          "mean_ms": 8.859782991930842,
+          "min_ms": 8.396742981858552,
+          "max_ms": 10.53486397722736,
+          "stdev_ms": 0.7664990577855473,
+          "rows_returned": 299260,
+          "selectivity_target": 0.1,
+          "predicate": "pickup_minute < 6",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 6
+        },
+        {
+          "median_ms": 9.730884019518271,
+          "mean_ms": 9.790355194127187,
+          "min_ms": 9.271032991819084,
+          "max_ms": 10.660361964255571,
+          "stdev_ms": 0.48657289354195987,
+          "rows_returned": 1499937,
+          "selectivity_target": 0.5,
+          "predicate": "pickup_minute < 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        }
+      ]
+    },
+    "lance_no_index": {
+      "size_mb": 32.49,
+      "build_index_seconds": 0.0,
+      "queries": [
+        {
+          "median_ms": 23.570136458147317,
+          "mean_ms": 31.15752308513038,
+          "min_ms": 21.167219965718687,
+          "max_ms": 73.70849302969873,
+          "stdev_ms": 16.281255484775187,
+          "rows_returned": 62,
+          "selectivity_target": 0.0001,
+          "predicate": "pickup_minute = 30 AND rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 30.673772998852655,
+          "mean_ms": 35.06259580608457,
+          "min_ms": 28.629579988773912,
+          "max_ms": 62.43726197862998,
+          "stdev_ms": 10.693528273764693,
+          "rows_returned": 2986,
+          "selectivity_target": 0.001,
+          "predicate": "rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 43.11715147923678,
+          "mean_ms": 43.49661039886996,
+          "min_ms": 33.13934901962057,
+          "max_ms": 61.210913001559675,
+          "stdev_ms": 9.600486900461076,
+          "rows_returned": 30269,
+          "selectivity_target": 0.01,
+          "predicate": "rare_100 = 'V0'",
+          "indexed_column": "rare_100",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 22.62749199871905,
+          "mean_ms": 22.56435500457883,
+          "min_ms": 20.89580096071586,
+          "max_ms": 24.28668102947995,
+          "stdev_ms": 0.8485306283437637,
+          "rows_returned": 49740,
+          "selectivity_target": 0.0167,
+          "predicate": "pickup_minute = 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        },
+        {
+          "median_ms": 24.10060298279859,
+          "mean_ms": 24.10949718905613,
+          "min_ms": 22.739098989404738,
+          "max_ms": 25.60594299575314,
+          "stdev_ms": 0.7388220682495149,
+          "rows_returned": 299260,
+          "selectivity_target": 0.1,
+          "predicate": "pickup_minute < 6",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 6
+        },
+        {
+          "median_ms": 28.24407850857824,
+          "mean_ms": 28.24255739687942,
+          "min_ms": 27.47014001943171,
+          "max_ms": 29.232992965262383,
+          "stdev_ms": 0.7159870495024319,
+          "rows_returned": 1499937,
+          "selectivity_target": 0.5,
+          "predicate": "pickup_minute < 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        }
+      ]
+    },
+    "lance_bitmap": {
+      "size_mb": 51.01,
+      "build_index_seconds": 1.196,
+      "queries": [
+        {
+          "median_ms": 2.091343514621258,
+          "mean_ms": 2.113618893781677,
+          "min_ms": 2.00910895364359,
+          "max_ms": 2.291281009092927,
+          "stdev_ms": 0.09986139671136382,
+          "rows_returned": 62,
+          "selectivity_target": 0.0001,
+          "predicate": "pickup_minute = 30 AND rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 5.719078035326675,
+          "mean_ms": 5.707912502111867,
+          "min_ms": 5.238154029939324,
+          "max_ms": 6.198632006999105,
+          "stdev_ms": 0.32392913767920395,
+          "rows_returned": 2986,
+          "selectivity_target": 0.001,
+          "predicate": "rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 9.795501973712817,
+          "mean_ms": 9.626846900209785,
+          "min_ms": 8.798321010544896,
+          "max_ms": 10.302769020199776,
+          "stdev_ms": 0.5932978138529454,
+          "rows_returned": 30269,
+          "selectivity_target": 0.01,
+          "predicate": "rare_100 = 'V0'",
+          "indexed_column": "rare_100",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 12.722242012387142,
+          "mean_ms": 12.703593308106065,
+          "min_ms": 11.715618020389229,
+          "max_ms": 14.03202599612996,
+          "stdev_ms": 0.6818817801216096,
+          "rows_returned": 49740,
+          "selectivity_target": 0.0167,
+          "predicate": "pickup_minute = 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        },
+        {
+          "median_ms": 40.23963201325387,
+          "mean_ms": 48.76499209785834,
+          "min_ms": 35.165330045856535,
+          "max_ms": 108.20859501836821,
+          "stdev_ms": 22.097271464517362,
+          "rows_returned": 299260,
+          "selectivity_target": 0.1,
+          "predicate": "pickup_minute < 6",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 6
+        },
+        {
+          "median_ms": 110.46696500852704,
+          "mean_ms": 115.24968221201561,
+          "min_ms": 101.01080202730373,
+          "max_ms": 167.1986110159196,
+          "stdev_ms": 19.86130610524228,
+          "rows_returned": 1499937,
+          "selectivity_target": 0.5,
+          "predicate": "pickup_minute < 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        }
+      ]
+    },
+    "lance_btree": {
+      "size_mb": 68.37,
+      "build_index_seconds": 1.003,
+      "queries": [
+        {
+          "median_ms": 2.8783504967577755,
+          "mean_ms": 3.2528913929127157,
+          "min_ms": 2.7984349871985614,
+          "max_ms": 6.580806977581233,
+          "stdev_ms": 1.1704464954361145,
+          "rows_returned": 62,
+          "selectivity_target": 0.0001,
+          "predicate": "pickup_minute = 30 AND rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 5.9154209739062935,
+          "mean_ms": 5.958010180620477,
+          "min_ms": 5.575707007665187,
+          "max_ms": 6.538251007441431,
+          "stdev_ms": 0.3120150510292296,
+          "rows_returned": 2986,
+          "selectivity_target": 0.001,
+          "predicate": "rare_1k = 'V0'",
+          "indexed_column": "rare_1k",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 9.910235996358097,
+          "mean_ms": 10.034694301430136,
+          "min_ms": 9.599038981832564,
+          "max_ms": 10.823128977790475,
+          "stdev_ms": 0.40397207542568103,
+          "rows_returned": 30269,
+          "selectivity_target": 0.01,
+          "predicate": "rare_100 = 'V0'",
+          "indexed_column": "rare_100",
+          "indexed_value": "V0"
+        },
+        {
+          "median_ms": 13.302015024237335,
+          "mean_ms": 13.395095913438126,
+          "min_ms": 12.835236033424735,
+          "max_ms": 14.355655992403626,
+          "stdev_ms": 0.4202989947450653,
+          "rows_returned": 49740,
+          "selectivity_target": 0.0167,
+          "predicate": "pickup_minute = 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        },
+        {
+          "median_ms": 38.58598353690468,
+          "mean_ms": 38.7003367068246,
+          "min_ms": 35.973112971987575,
+          "max_ms": 42.236141045577824,
+          "stdev_ms": 2.172090643886301,
+          "rows_returned": 299260,
+          "selectivity_target": 0.1,
+          "predicate": "pickup_minute < 6",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 6
+        },
+        {
+          "median_ms": 112.66341299051419,
+          "mean_ms": 111.99141760007478,
+          "min_ms": 105.52487103268504,
+          "max_ms": 119.19152800692245,
+          "stdev_ms": 4.188710781325396,
+          "rows_returned": 1499937,
+          "selectivity_target": 0.5,
+          "predicate": "pickup_minute < 30",
+          "indexed_column": "pickup_minute",
+          "indexed_value": 30
+        }
+      ]
+    }
+  }
+}

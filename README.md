@@ -120,6 +120,11 @@ MIT, 原始测试数据按 AS-IS 提供。
 - `list_versions()` 版本数**平方级增长**
 - FTS 内存 envelope 3-5x input size
 
+**Fair-Filter 修正** ([extended-bench/REPORT_fair_filter.md](extended-bench/REPORT_fair_filter.md)) - 回应"加了 scalar index 才公平"：
+- Lance **BITMAP 在低选择率** (<1%) 大幅领先 (最多 14x)
+- **Parquet 在中高选择率** (>1.5%) 反超
+- 🔴 **发现 Lance query planner bug**：高选择率 (>10%) 下 BITMAP 反而拖慢 11x，说明 Lance 不会根据选择率自动跳过索引
+
 ---
 
 ### 3️⃣ [Lance ML 训练场景压测](ml-training-bench/) — 宽列 blob 点查 + PyTorch DataLoader

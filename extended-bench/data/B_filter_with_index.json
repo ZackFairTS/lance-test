@@ -1,0 +1,97 @@
+{
+  "lance_version": "4.0.1",
+  "pyarrow_version": "20.0.0",
+  "n_rows": 3000000,
+  "filter": "pickup_minute = 30",
+  "columns_read": [
+    "pickup_minute",
+    "fare_amount",
+    "trip_distance"
+  ],
+  "results": {
+    "parquet_snappy": {
+      "median_ms": 9.885994018986821,
+      "mean_ms": 9.983714006375521,
+      "min_ms": 9.427171025890857,
+      "max_ms": 10.858747991733253,
+      "stdev_ms": 0.49460492559203634,
+      "rows_returned": 49740,
+      "write_seconds": 0.306,
+      "size_mb": 55.71,
+      "build_index_seconds": 0,
+      "index_overhead_mb": 0
+    },
+    "parquet_zstd": {
+      "median_ms": 21.849055512575433,
+      "mean_ms": 22.14684709906578,
+      "min_ms": 21.68979198904708,
+      "max_ms": 23.221142997499555,
+      "stdev_ms": 0.5494584067151161,
+      "rows_returned": 49740,
+      "write_seconds": 0.358,
+      "size_mb": 52.85,
+      "build_index_seconds": 0,
+      "index_overhead_mb": 0
+    },
+    "lance_no_index": {
+      "median_ms": 27.218350500334054,
+      "mean_ms": 27.33115710434504,
+      "min_ms": 25.528601021505892,
+      "max_ms": 28.80535996519029,
+      "stdev_ms": 0.9969998679349621,
+      "rows_returned": 49740,
+      "write_seconds": 0.069,
+      "size_mb": 53.58,
+      "build_index_seconds": 0.0,
+      "index_overhead_mb": 0.0
+    },
+    "lance_zonemap": {
+      "median_ms": 38.56323900981806,
+      "mean_ms": 38.27783410670236,
+      "min_ms": 35.981089051347226,
+      "max_ms": 39.455625985283405,
+      "stdev_ms": 1.087963492941179,
+      "rows_returned": 49740,
+      "write_seconds": 0.067,
+      "size_mb": 53.58,
+      "build_index_seconds": 0.011,
+      "index_overhead_mb": 0.01
+    },
+    "lance_btree": {
+      "median_ms": 17.311969015281647,
+      "mean_ms": 17.62197639909573,
+      "min_ms": 16.422987973783165,
+      "max_ms": 19.513792009092867,
+      "stdev_ms": 0.9887158557238522,
+      "rows_returned": 49740,
+      "write_seconds": 0.069,
+      "size_mb": 65.06,
+      "build_index_seconds": 0.156,
+      "index_overhead_mb": 11.48
+    },
+    "lance_bitmap": {
+      "median_ms": 17.07549550337717,
+      "mean_ms": 17.29538130457513,
+      "min_ms": 16.11869700718671,
+      "max_ms": 18.828722008038312,
+      "stdev_ms": 0.8610808359119655,
+      "rows_returned": 49740,
+      "write_seconds": 0.068,
+      "size_mb": 59.61,
+      "build_index_seconds": 0.316,
+      "index_overhead_mb": 6.03
+    },
+    "lance_bloomfilter": {
+      "median_ms": 38.76443501212634,
+      "mean_ms": 38.72772390022874,
+      "min_ms": 37.26441698381677,
+      "max_ms": 40.02136300550774,
+      "stdev_ms": 1.0123050722584412,
+      "rows_returned": 49740,
+      "write_seconds": 0.067,
+      "size_mb": 53.62,
+      "build_index_seconds": 0.084,
+      "index_overhead_mb": 0.04
+    }
+  }
+}
