@@ -1,0 +1,72 @@
+{
+  "lance_version": "4.0.1",
+  "measurement_method": "subprocess-per-config",
+  "results": [
+    {
+      "n_rows": 10000,
+      "words_per_doc": 50,
+      "input_mb": 3.56,
+      "gen_seconds": 0.24,
+      "write_seconds": 0.01,
+      "build_seconds": 0.12,
+      "peak_rss_mb": 198.2,
+      "dataset_mb": 4.01,
+      "ok": true
+    },
+    {
+      "n_rows": 100000,
+      "words_per_doc": 50,
+      "input_mb": 35.52,
+      "gen_seconds": 2.36,
+      "write_seconds": 0.01,
+      "build_seconds": 0.4,
+      "peak_rss_mb": 359.8,
+      "dataset_mb": 39.78,
+      "ok": true
+    },
+    {
+      "n_rows": 100000,
+      "words_per_doc": 200,
+      "input_mb": 138.8,
+      "gen_seconds": 4.99,
+      "write_seconds": 0.04,
+      "build_seconds": 1.48,
+      "peak_rss_mb": 681.5,
+      "dataset_mb": 144.75,
+      "ok": true
+    },
+    {
+      "n_rows": 500000,
+      "words_per_doc": 50,
+      "input_mb": 177.63,
+      "gen_seconds": 11.83,
+      "write_seconds": 0.05,
+      "build_seconds": 1.94,
+      "peak_rss_mb": 816.2,
+      "dataset_mb": 198.79,
+      "ok": true
+    },
+    {
+      "n_rows": 500000,
+      "words_per_doc": 200,
+      "input_mb": 694.02,
+      "gen_seconds": 25.05,
+      "write_seconds": 0.19,
+      "build_seconds": 7.23,
+      "peak_rss_mb": 2242.5,
+      "dataset_mb": 723.66,
+      "ok": true
+    },
+    {
+      "n_rows": 1000000,
+      "words_per_doc": 50,
+      "input_mb": 355.26,
+      "gen_seconds": 23.82,
+      "write_seconds": 0.11,
+      "build_seconds": 3.76,
+      "peak_rss_mb": 1344.7,
+      "dataset_mb": 397.56,
+      "ok": true
+    }
+  ]
+}

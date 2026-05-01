@@ -112,6 +112,14 @@ MIT, 原始测试数据按 AS-IS 提供。
 
 详见 [extended-bench/REPORT.md](extended-bench/REPORT.md)。
 
+**Tier 2 六项补充测试** (F/G/H/I/J/K) 见 [extended-bench/REPORT_tier2.md](extended-bench/REPORT_tier2.md)：
+- 🔴 **Merge-insert + BTREE = 慢 ~500x**（违反官方建议）
+- ✅ Schema evolution 零写（比 Parquet 快 130x）
+- 🔴 Lance 对 vector/embedding **完全无压缩**（证实 [#3705](https://github.com/lance-format/lance/discussions/3705)）
+- 🔴 Lance **v2.1 full scan 比 v2.0 慢 2.44x**（又一个 v2.1 回归）
+- `list_versions()` 版本数**平方级增长**
+- FTS 内存 envelope 3-5x input size
+
 ---
 
 ### 3️⃣ [Lance ML 训练场景压测](ml-training-bench/) — 宽列 blob 点查 + PyTorch DataLoader

@@ -1,0 +1,95 @@
+{
+  "lance_version": "4.0.1",
+  "base_rows": 1000000,
+  "timing_method": "single_shot",
+  "results": [
+    {
+      "elapsed_s": 0.029,
+      "n_matches": 1000,
+      "n_new": 100,
+      "throughput_rows_s": 37844.0,
+      "final_rowcount": 1000100,
+      "expected_rowcount": 1000100,
+      "rowcount_ok": true,
+      "with_index": false,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 0.029,
+      "n_matches": 10000,
+      "n_new": 1000,
+      "throughput_rows_s": 373146.0,
+      "final_rowcount": 1001000,
+      "expected_rowcount": 1001000,
+      "rowcount_ok": true,
+      "with_index": false,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 0.039,
+      "n_matches": 100000,
+      "n_new": 10000,
+      "throughput_rows_s": 2834731.0,
+      "final_rowcount": 1010000,
+      "expected_rowcount": 1010000,
+      "rowcount_ok": true,
+      "with_index": false,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 0.09,
+      "n_matches": 500000,
+      "n_new": 50000,
+      "throughput_rows_s": 6131675.0,
+      "final_rowcount": 1050000,
+      "expected_rowcount": 1050000,
+      "rowcount_ok": true,
+      "with_index": false,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 0.113,
+      "n_matches": 1000,
+      "n_new": 100,
+      "throughput_rows_s": 9709.0,
+      "final_rowcount": 1000100,
+      "expected_rowcount": 1000100,
+      "rowcount_ok": true,
+      "with_index": true,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 0.818,
+      "n_matches": 10000,
+      "n_new": 1000,
+      "throughput_rows_s": 13451.0,
+      "final_rowcount": 1001000,
+      "expected_rowcount": 1001000,
+      "rowcount_ok": true,
+      "with_index": true,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 8.537,
+      "n_matches": 100000,
+      "n_new": 10000,
+      "throughput_rows_s": 12886.0,
+      "final_rowcount": 1010000,
+      "expected_rowcount": 1010000,
+      "rowcount_ok": true,
+      "with_index": true,
+      "base_rows": 1000000
+    },
+    {
+      "elapsed_s": 44.308,
+      "n_matches": 500000,
+      "n_new": 50000,
+      "throughput_rows_s": 12413.0,
+      "final_rowcount": 1050000,
+      "expected_rowcount": 1050000,
+      "rowcount_ok": true,
+      "with_index": true,
+      "base_rows": 1000000
+    }
+  ]
+}

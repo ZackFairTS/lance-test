@@ -1,0 +1,190 @@
+{
+  "lance_version": "4.0.1",
+  "n_rows": 100000,
+  "results": {
+    "int64_sequential": {
+      "lance_v2_0": {
+        "size_bytes": 800746,
+        "size_mb": 0.801
+      },
+      "lance_v2_1": {
+        "size_bytes": 199608,
+        "size_mb": 0.2
+      },
+      "parquet_snappy": {
+        "size_bytes": 613458,
+        "size_mb": 0.613
+      },
+      "parquet_zstd": {
+        "size_bytes": 309921,
+        "size_mb": 0.31
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 1013216,
+        "size_mb": 1.013
+      },
+      "_arrow_in_memory_mb": 0.8
+    },
+    "int64_random": {
+      "lance_v2_0": {
+        "size_bytes": 800746,
+        "size_mb": 0.801
+      },
+      "lance_v2_1": {
+        "size_bytes": 755256,
+        "size_mb": 0.755
+      },
+      "parquet_snappy": {
+        "size_bytes": 1013258,
+        "size_mb": 1.013
+      },
+      "parquet_zstd": {
+        "size_bytes": 1007726,
+        "size_mb": 1.008
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 1013216,
+        "size_mb": 1.013
+      },
+      "_arrow_in_memory_mb": 0.8
+    },
+    "float32_vector_128d": {
+      "lance_v2_0": {
+        "size_bytes": 51200952,
+        "size_mb": 51.201
+      },
+      "lance_v2_1": {
+        "size_bytes": 51200878,
+        "size_mb": 51.201
+      },
+      "parquet_snappy": {
+        "size_bytes": 52327382,
+        "size_mb": 52.327
+      },
+      "parquet_zstd": {
+        "size_bytes": 48443209,
+        "size_mb": 48.443
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 52327328,
+        "size_mb": 52.327
+      },
+      "_arrow_in_memory_mb": 51.2
+    },
+    "float32_vector_1536d": {
+      "lance_v2_0": {
+        "size_bytes": 614402365,
+        "size_mb": 614.402
+      },
+      "lance_v2_1": {
+        "size_bytes": 614400891,
+        "size_mb": 614.401
+      },
+      "parquet_snappy": {
+        "size_bytes": 615560433,
+        "size_mb": 615.56
+      },
+      "parquet_zstd": {
+        "size_bytes": 569001331,
+        "size_mb": 569.001
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 615560380,
+        "size_mb": 615.56
+      },
+      "_arrow_in_memory_mb": 614.4
+    },
+    "uint8_embeddings_1024d": {
+      "lance_v2_0": {
+        "size_bytes": 102401138,
+        "size_mb": 102.401
+      },
+      "lance_v2_1": {
+        "size_bytes": 102400898,
+        "size_mb": 102.401
+      },
+      "parquet_snappy": {
+        "size_bytes": 103110385,
+        "size_mb": 103.11
+      },
+      "parquet_zstd": {
+        "size_bytes": 103109774,
+        "size_mb": 103.11
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 103110380,
+        "size_mb": 103.11
+      },
+      "_arrow_in_memory_mb": 102.4
+    },
+    "long_text": {
+      "lance_v2_0": {
+        "size_bytes": 18299291,
+        "size_mb": 18.299
+      },
+      "lance_v2_1": {
+        "size_bytes": 3685163,
+        "size_mb": 3.685
+      },
+      "parquet_snappy": {
+        "size_bytes": 6047489,
+        "size_mb": 6.047
+      },
+      "parquet_zstd": {
+        "size_bytes": 3608547,
+        "size_mb": 3.609
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 17916023,
+        "size_mb": 17.916
+      },
+      "_arrow_in_memory_mb": 17.898
+    },
+    "short_categorical": {
+      "lance_v2_0": {
+        "size_bytes": 101647,
+        "size_mb": 0.102
+      },
+      "lance_v2_1": {
+        "size_bytes": 78461,
+        "size_mb": 0.078
+      },
+      "parquet_snappy": {
+        "size_bytes": 75895,
+        "size_mb": 0.076
+      },
+      "parquet_zstd": {
+        "size_bytes": 75847,
+        "size_mb": 0.076
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 76183,
+        "size_mb": 0.076
+      },
+      "_arrow_in_memory_mb": 0.98
+    },
+    "jpeg_blob_small": {
+      "lance_v2_0": {
+        "size_bytes": 372860539,
+        "size_mb": 372.861
+      },
+      "lance_v2_1": {
+        "size_bytes": 372859107,
+        "size_mb": 372.859
+      },
+      "parquet_snappy": {
+        "size_bytes": 345826245,
+        "size_mb": 345.826
+      },
+      "parquet_zstd": {
+        "size_bytes": 312239613,
+        "size_mb": 312.24
+      },
+      "parquet_uncompressed": {
+        "size_bytes": 373200870,
+        "size_mb": 373.201
+      },
+      "_arrow_in_memory_mb": 372.458
+    }
+  }
+}

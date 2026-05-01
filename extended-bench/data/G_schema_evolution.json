@@ -1,0 +1,32 @@
+{
+  "pylance_version": "4.0.1",
+  "n_rows": 1000000,
+  "base": {
+    "lance_mb": 21.0,
+    "parquet_mb": 17.81
+  },
+  "lance_add_column_schema_only": {
+    "add_ms": 0.791,
+    "size_delta_mb": 0.001
+  },
+  "lance_add_column_sql": {
+    "add_ms": 28.58,
+    "size_after_mb": 29.0,
+    "size_delta_mb": 8.0,
+    "read_new_col_ms": 6.09,
+    "read_old_col_ms": 5.42
+  },
+  "parquet_rewrite": {
+    "rewrite_ms": 104.21,
+    "new_size_mb": 26.09
+  },
+  "lance_drop_column": {
+    "drop_ms": 0.65,
+    "size_after_mb": 29.01,
+    "size_delta_mb": 0.0
+  },
+  "lance_rename_column": {
+    "rename_ms": 0.705,
+    "size_delta_mb": 0.0009
+  }
+}
