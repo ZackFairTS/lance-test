@@ -1,0 +1,1467 @@
+{
+  "lance_version": "4.0.1",
+  "pyarrow_version": "20.0.0",
+  "warmup": 3,
+  "rounds": 7,
+  "point_take_n": 1000,
+  "source_manifest": "results/L2_manifest_1m.json",
+  "s3_root": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710",
+  "records": [
+    {
+      "workload": "tab_flat",
+      "format": "lance_2.0",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_flat/lance_2.0.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 1.376,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.0",
+      "verify_manifest_version": 1,
+      "size_bytes": 58004195,
+      "size_mb": 58.0,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.0",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 198.733,
+          "mean_ms": 199.33,
+          "min_ms": 197.539,
+          "max_ms": 202.237,
+          "stdev_ms": 1.725,
+          "runs_ms": [
+            199.6,
+            202.24,
+            197.54,
+            200.93,
+            198.55,
+            198.73,
+            197.72
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 89.288,
+          "mean_ms": 89.138,
+          "min_ms": 87.255,
+          "max_ms": 90.102,
+          "stdev_ms": 0.951,
+          "runs_ms": [
+            89.29,
+            90.1,
+            88.84,
+            89.96,
+            87.26,
+            89.0,
+            89.51
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 159.028,
+          "mean_ms": 159.215,
+          "min_ms": 156.606,
+          "max_ms": 161.887,
+          "stdev_ms": 1.636,
+          "runs_ms": [
+            159.44,
+            159.03,
+            156.61,
+            158.26,
+            160.26,
+            159.02,
+            161.89
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 98.971,
+          "mean_ms": 100.772,
+          "min_ms": 97.299,
+          "max_ms": 112.665,
+          "stdev_ms": 5.342,
+          "runs_ms": [
+            112.66,
+            100.49,
+            97.3,
+            97.86,
+            98.97,
+            99.18,
+            98.94
+          ],
+          "rows_returned": 20181
+        }
+      }
+    },
+    {
+      "workload": "tab_flat",
+      "format": "lance_2.1",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_flat/lance_2.1.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 0.719,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.1",
+      "verify_manifest_version": 1,
+      "size_bytes": 29444977,
+      "size_mb": 29.44,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.1",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 93.406,
+          "mean_ms": 95.393,
+          "min_ms": 91.806,
+          "max_ms": 106.14,
+          "stdev_ms": 4.933,
+          "runs_ms": [
+            91.81,
+            93.41,
+            106.14,
+            92.44,
+            95.99,
+            94.57,
+            93.41
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 85.076,
+          "mean_ms": 86.826,
+          "min_ms": 84.343,
+          "max_ms": 98.648,
+          "stdev_ms": 5.224,
+          "runs_ms": [
+            84.62,
+            84.34,
+            85.33,
+            85.08,
+            85.1,
+            84.66,
+            98.65
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 88.33,
+          "mean_ms": 89.515,
+          "min_ms": 87.561,
+          "max_ms": 96.575,
+          "stdev_ms": 3.234,
+          "runs_ms": [
+            88.33,
+            88.36,
+            96.57,
+            87.56,
+            87.59,
+            88.03,
+            90.17
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 93.54,
+          "mean_ms": 101.299,
+          "min_ms": 92.525,
+          "max_ms": 123.064,
+          "stdev_ms": 13.649,
+          "runs_ms": [
+            119.35,
+            92.52,
+            123.06,
+            93.82,
+            93.54,
+            93.48,
+            93.31
+          ],
+          "rows_returned": 20181
+        }
+      }
+    },
+    {
+      "workload": "tab_flat",
+      "format": "lance_2.2",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_flat/lance_2.2.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 0.751,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.2",
+      "verify_manifest_version": 1,
+      "size_bytes": 29466198,
+      "size_mb": 29.47,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.2",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 95.677,
+          "mean_ms": 99.093,
+          "min_ms": 93.601,
+          "max_ms": 111.162,
+          "stdev_ms": 6.982,
+          "runs_ms": [
+            95.17,
+            93.6,
+            95.68,
+            95.71,
+            107.06,
+            111.16,
+            95.27
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 86.094,
+          "mean_ms": 85.939,
+          "min_ms": 85.365,
+          "max_ms": 86.406,
+          "stdev_ms": 0.409,
+          "runs_ms": [
+            86.14,
+            85.37,
+            86.41,
+            86.17,
+            86.03,
+            86.09,
+            85.36
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 89.534,
+          "mean_ms": 89.878,
+          "min_ms": 89.123,
+          "max_ms": 91.372,
+          "stdev_ms": 0.791,
+          "runs_ms": [
+            90.28,
+            89.12,
+            89.53,
+            90.16,
+            91.37,
+            89.45,
+            89.24
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 93.004,
+          "mean_ms": 97.252,
+          "min_ms": 92.848,
+          "max_ms": 122.587,
+          "stdev_ms": 11.173,
+          "runs_ms": [
+            92.85,
+            92.89,
+            93.18,
+            92.92,
+            93.0,
+            93.34,
+            122.59
+          ],
+          "rows_returned": 20181
+        }
+      }
+    },
+    {
+      "workload": "tab_flat",
+      "format": "parquet_snappy",
+      "mode": "spark",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_flat/parquet_snappy",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 42.371,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 33197487,
+      "size_mb": 33.2,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 100.6,
+          "mean_ms": 100.926,
+          "min_ms": 100.24,
+          "max_ms": 102.095,
+          "stdev_ms": 0.69,
+          "runs_ms": [
+            101.16,
+            102.1,
+            101.52,
+            100.6,
+            100.34,
+            100.24,
+            100.53
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 37.778,
+          "mean_ms": 37.164,
+          "min_ms": 29.786,
+          "max_ms": 41.877,
+          "stdev_ms": 3.817,
+          "runs_ms": [
+            35.6,
+            41.88,
+            29.79,
+            36.82,
+            37.78,
+            39.21,
+            39.07
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 103.837,
+          "mean_ms": 104.007,
+          "min_ms": 103.084,
+          "max_ms": 104.787,
+          "stdev_ms": 0.687,
+          "runs_ms": [
+            103.08,
+            104.55,
+            103.32,
+            104.79,
+            104.72,
+            103.75,
+            103.84
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 63.839,
+          "mean_ms": 65.918,
+          "min_ms": 59.813,
+          "max_ms": 76.406,
+          "stdev_ms": 5.768,
+          "runs_ms": [
+            61.47,
+            76.41,
+            63.84,
+            70.52,
+            63.27,
+            59.81,
+            66.1
+          ],
+          "rows_returned": 20181
+        }
+      }
+    },
+    {
+      "workload": "tab_flat",
+      "format": "parquet_zstd",
+      "mode": "spark",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_flat/parquet_zstd",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 37.69,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 25996466,
+      "size_mb": 26.0,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 85.812,
+          "mean_ms": 88.366,
+          "min_ms": 85.385,
+          "max_ms": 103.095,
+          "stdev_ms": 6.507,
+          "runs_ms": [
+            85.74,
+            85.81,
+            86.66,
+            86.08,
+            103.1,
+            85.79,
+            85.38
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 36.819,
+          "mean_ms": 37.018,
+          "min_ms": 34.332,
+          "max_ms": 40.578,
+          "stdev_ms": 1.93,
+          "runs_ms": [
+            40.58,
+            36.04,
+            36.82,
+            37.42,
+            34.33,
+            36.16,
+            37.77
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 88.506,
+          "mean_ms": 88.64,
+          "min_ms": 88.196,
+          "max_ms": 89.48,
+          "stdev_ms": 0.426,
+          "runs_ms": [
+            88.2,
+            88.57,
+            88.42,
+            88.89,
+            89.48,
+            88.42,
+            88.51
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 64.704,
+          "mean_ms": 66.148,
+          "min_ms": 60.657,
+          "max_ms": 74.739,
+          "stdev_ms": 4.982,
+          "runs_ms": [
+            60.66,
+            74.74,
+            63.42,
+            62.24,
+            70.6,
+            66.68,
+            64.7
+          ],
+          "rows_returned": 20181
+        }
+      }
+    },
+    {
+      "workload": "tab_vec",
+      "format": "lance_2.0",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_vec/lance_2.0.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 2.407,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.0",
+      "verify_manifest_version": 1,
+      "size_bytes": 570005824,
+      "size_mb": 570.01,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.0",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 500.121,
+          "mean_ms": 506.968,
+          "min_ms": 488.464,
+          "max_ms": 543.988,
+          "stdev_ms": 20.735,
+          "runs_ms": [
+            543.99,
+            491.59,
+            517.36,
+            488.58,
+            500.12,
+            488.46,
+            518.68
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 86.173,
+          "mean_ms": 86.255,
+          "min_ms": 85.78,
+          "max_ms": 86.702,
+          "stdev_ms": 0.295,
+          "runs_ms": [
+            86.13,
+            86.33,
+            86.17,
+            86.7,
+            86.17,
+            86.5,
+            85.78
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 392.71,
+          "mean_ms": 398.362,
+          "min_ms": 377.63,
+          "max_ms": 427.477,
+          "stdev_ms": 19.829,
+          "runs_ms": [
+            377.63,
+            427.48,
+            396.95,
+            388.54,
+            392.71,
+            424.0,
+            381.22
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 93.71,
+          "mean_ms": 102.213,
+          "min_ms": 92.795,
+          "max_ms": 128.214,
+          "stdev_ms": 15.015,
+          "runs_ms": [
+            93.7,
+            119.53,
+            94.26,
+            128.21,
+            93.28,
+            93.71,
+            92.8
+          ],
+          "rows_returned": 20181
+        },
+        "col_scan_vector": {
+          "median_ms": 461.38,
+          "mean_ms": 456.263,
+          "min_ms": 411.921,
+          "max_ms": 482.39,
+          "stdev_ms": 24.516,
+          "runs_ms": [
+            482.39,
+            475.54,
+            450.62,
+            439.75,
+            411.92,
+            472.23,
+            461.38
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_vec",
+      "format": "lance_2.1",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_vec/lance_2.1.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 2.166,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.1",
+      "verify_manifest_version": 1,
+      "size_bytes": 541445366,
+      "size_mb": 541.45,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.1",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 773.35,
+          "mean_ms": 780.567,
+          "min_ms": 758.957,
+          "max_ms": 815.176,
+          "stdev_ms": 20.413,
+          "runs_ms": [
+            766.7,
+            758.96,
+            790.29,
+            773.35,
+            815.18,
+            795.47,
+            764.01
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 86.322,
+          "mean_ms": 87.682,
+          "min_ms": 85.807,
+          "max_ms": 96.066,
+          "stdev_ms": 3.716,
+          "runs_ms": [
+            96.07,
+            85.81,
+            86.96,
+            85.96,
+            86.32,
+            86.14,
+            86.51
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 461.717,
+          "mean_ms": 463.853,
+          "min_ms": 451.045,
+          "max_ms": 481.204,
+          "stdev_ms": 10.724,
+          "runs_ms": [
+            458.88,
+            461.72,
+            473.63,
+            481.2,
+            466.33,
+            454.16,
+            451.05
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 92.502,
+          "mean_ms": 92.523,
+          "min_ms": 91.205,
+          "max_ms": 93.494,
+          "stdev_ms": 0.925,
+          "runs_ms": [
+            92.5,
+            93.39,
+            91.71,
+            93.38,
+            91.21,
+            93.49,
+            91.98
+          ],
+          "rows_returned": 20181
+        },
+        "col_scan_vector": {
+          "median_ms": 652.872,
+          "mean_ms": 657.907,
+          "min_ms": 640.103,
+          "max_ms": 676.879,
+          "stdev_ms": 13.977,
+          "runs_ms": [
+            640.1,
+            667.57,
+            651.92,
+            676.88,
+            671.05,
+            652.87,
+            644.95
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_vec",
+      "format": "lance_2.2",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_vec/lance_2.2.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 2.363,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.2",
+      "verify_manifest_version": 1,
+      "size_bytes": 541466586,
+      "size_mb": 541.47,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.2",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 635.55,
+          "mean_ms": 638.09,
+          "min_ms": 612.291,
+          "max_ms": 683.044,
+          "stdev_ms": 24.143,
+          "runs_ms": [
+            612.29,
+            619.79,
+            650.78,
+            621.45,
+            683.04,
+            635.55,
+            643.72
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 86.115,
+          "mean_ms": 86.202,
+          "min_ms": 85.286,
+          "max_ms": 87.331,
+          "stdev_ms": 0.713,
+          "runs_ms": [
+            86.12,
+            85.68,
+            86.66,
+            86.65,
+            85.7,
+            85.29,
+            87.33
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 458.321,
+          "mean_ms": 458.611,
+          "min_ms": 445.829,
+          "max_ms": 474.441,
+          "stdev_ms": 10.001,
+          "runs_ms": [
+            450.39,
+            458.32,
+            474.44,
+            466.55,
+            452.26,
+            445.83,
+            462.49
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 93.257,
+          "mean_ms": 92.991,
+          "min_ms": 91.959,
+          "max_ms": 93.693,
+          "stdev_ms": 0.682,
+          "runs_ms": [
+            93.69,
+            92.71,
+            93.48,
+            92.27,
+            93.56,
+            91.96,
+            93.26
+          ],
+          "rows_returned": 20181
+        },
+        "col_scan_vector": {
+          "median_ms": 610.407,
+          "mean_ms": 610.757,
+          "min_ms": 579.833,
+          "max_ms": 646.576,
+          "stdev_ms": 23.073,
+          "runs_ms": [
+            579.83,
+            601.45,
+            615.64,
+            631.25,
+            590.15,
+            610.41,
+            646.58
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_vec",
+      "format": "parquet_snappy",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_vec/parquet_snappy",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 2.138,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 548978326,
+      "size_mb": 548.98,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 6460.173,
+          "mean_ms": 6457.888,
+          "min_ms": 6442.39,
+          "max_ms": 6468.191,
+          "stdev_ms": 10.275,
+          "runs_ms": [
+            6466.63,
+            6464.03,
+            6468.19,
+            6458.84,
+            6460.17,
+            6442.39,
+            6444.97
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 104.66,
+          "mean_ms": 105.666,
+          "min_ms": 101.541,
+          "max_ms": 114.757,
+          "stdev_ms": 4.346,
+          "runs_ms": [
+            106.31,
+            104.27,
+            102.46,
+            101.54,
+            104.66,
+            105.67,
+            114.76
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 6441.921,
+          "mean_ms": 6442.831,
+          "min_ms": 6437.003,
+          "max_ms": 6449.178,
+          "stdev_ms": 4.233,
+          "runs_ms": [
+            6449.18,
+            6441.92,
+            6445.03,
+            6437.0,
+            6441.85,
+            6438.79,
+            6446.04
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 113.719,
+          "mean_ms": 115.154,
+          "min_ms": 111.078,
+          "max_ms": 126.235,
+          "stdev_ms": 5.039,
+          "runs_ms": [
+            113.15,
+            114.99,
+            114.18,
+            111.08,
+            126.24,
+            112.72,
+            113.72
+          ],
+          "rows_returned": 20181
+        },
+        "col_scan_vector": {
+          "median_ms": 6483.251,
+          "mean_ms": 6484.262,
+          "min_ms": 6474.519,
+          "max_ms": 6494.455,
+          "stdev_ms": 7.704,
+          "runs_ms": [
+            6483.25,
+            6494.45,
+            6480.87,
+            6490.11,
+            6474.52,
+            6475.94,
+            6490.69
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_vec",
+      "format": "parquet_zstd",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_vec/parquet_zstd",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 2.676,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 503555486,
+      "size_mb": 503.56,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 6487.094,
+          "mean_ms": 6488.799,
+          "min_ms": 6481.83,
+          "max_ms": 6498.436,
+          "stdev_ms": 5.375,
+          "runs_ms": [
+            6485.86,
+            6486.33,
+            6489.55,
+            6492.49,
+            6487.09,
+            6498.44,
+            6481.83
+          ],
+          "rows_returned": 1000000
+        },
+        "col_scan_amount": {
+          "median_ms": 103.811,
+          "mean_ms": 105.06,
+          "min_ms": 103.033,
+          "max_ms": 108.226,
+          "stdev_ms": 2.124,
+          "runs_ms": [
+            106.45,
+            107.04,
+            103.81,
+            103.03,
+            103.12,
+            103.74,
+            108.23
+          ],
+          "rows_returned": 1000000
+        },
+        "point_take": {
+          "median_ms": 6504.543,
+          "mean_ms": 6688.965,
+          "min_ms": 6479.316,
+          "max_ms": 7837.236,
+          "stdev_ms": 506.447,
+          "runs_ms": [
+            7837.24,
+            6504.54,
+            6505.41,
+            6499.7,
+            6508.41,
+            6488.14,
+            6479.32
+          ],
+          "rows_returned": 1000
+        },
+        "filter_category": {
+          "median_ms": 109.039,
+          "mean_ms": 108.107,
+          "min_ms": 103.249,
+          "max_ms": 110.52,
+          "stdev_ms": 2.44,
+          "runs_ms": [
+            110.52,
+            109.05,
+            106.78,
+            109.04,
+            103.25,
+            108.35,
+            109.76
+          ],
+          "rows_returned": 20181
+        },
+        "col_scan_vector": {
+          "median_ms": 6519.225,
+          "mean_ms": 6520.588,
+          "min_ms": 6515.334,
+          "max_ms": 6527.356,
+          "stdev_ms": 4.52,
+          "runs_ms": [
+            6518.52,
+            6527.36,
+            6519.22,
+            6516.66,
+            6515.33,
+            6521.22,
+            6525.8
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_nested",
+      "format": "lance_2.0",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_nested/lance_2.0.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": null,
+      "write_attempt_seconds": 0.053,
+      "ok": false,
+      "error": "PanicException: not yet implemented: Implement encoding for field Field(id=8, name=scores, type=map, children=[Field(id=9, name=entries, type=struct, children=[Field(id=10, name=key, type=string), Field(id=11, name=value, type=float), ]), ])",
+      "measure_skipped": "write_failed"
+    },
+    {
+      "workload": "tab_nested",
+      "format": "lance_2.1",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_nested/lance_2.1.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": null,
+      "write_attempt_seconds": 0.038,
+      "ok": false,
+      "error": "OSError: Not supported: Map data type is only supported in Lance file format 2.2+, current version: 2.1, /home/runner/work/lance/lance/rust/lance-encoding/src/encoder.rs:485:36",
+      "measure_skipped": "write_failed"
+    },
+    {
+      "workload": "tab_nested",
+      "format": "lance_2.2",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_nested/lance_2.2.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 0.907,
+      "ok": true,
+      "verify_rows": 1000000,
+      "verify_storage_version": "2.2",
+      "verify_manifest_version": 1,
+      "size_bytes": 45868691,
+      "size_mb": 45.87,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.2",
+        "manifest_version": 1,
+        "full_scan": {
+          "median_ms": 199.115,
+          "mean_ms": 209.77,
+          "min_ms": 195.977,
+          "max_ms": 247.93,
+          "stdev_ms": 19.922,
+          "runs_ms": [
+            247.93,
+            195.98,
+            227.05,
+            199.11,
+            200.7,
+            199.03,
+            198.58
+          ],
+          "rows_returned": 1000000
+        },
+        "nested_subread": {
+          "median_ms": 156.407,
+          "mean_ms": 156.396,
+          "min_ms": 155.145,
+          "max_ms": 157.556,
+          "stdev_ms": 0.754,
+          "runs_ms": [
+            156.41,
+            155.88,
+            157.56,
+            156.33,
+            155.14,
+            156.65,
+            156.8
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_nested",
+      "format": "parquet_snappy",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_nested/parquet_snappy",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 0.801,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 49081584,
+      "size_mb": 49.08,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 443.39,
+          "mean_ms": 447.316,
+          "min_ms": 439.781,
+          "max_ms": 472.058,
+          "stdev_ms": 11.348,
+          "runs_ms": [
+            449.09,
+            444.65,
+            441.91,
+            443.39,
+            439.78,
+            472.06,
+            440.33
+          ],
+          "rows_returned": 1000000
+        },
+        "nested_subread": {
+          "median_ms": 95.087,
+          "mean_ms": 97.308,
+          "min_ms": 93.344,
+          "max_ms": 109.748,
+          "stdev_ms": 5.63,
+          "runs_ms": [
+            94.5,
+            97.38,
+            96.13,
+            109.75,
+            94.97,
+            95.09,
+            93.34
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_nested",
+      "format": "parquet_zstd",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_nested/parquet_zstd",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 1000000,
+      "write_seconds": 0.898,
+      "ok": true,
+      "verify_rows": 1000000,
+      "size_bytes": 37628105,
+      "size_mb": 37.63,
+      "measurements": {
+        "open_ok": true,
+        "full_scan": {
+          "median_ms": 365.203,
+          "mean_ms": 366.759,
+          "min_ms": 363.15,
+          "max_ms": 372.115,
+          "stdev_ms": 3.001,
+          "runs_ms": [
+            368.49,
+            365.09,
+            368.06,
+            363.15,
+            365.2,
+            372.12,
+            365.2
+          ],
+          "rows_returned": 1000000
+        },
+        "nested_subread": {
+          "median_ms": 95.258,
+          "mean_ms": 95.752,
+          "min_ms": 93.456,
+          "max_ms": 98.81,
+          "stdev_ms": 1.78,
+          "runs_ms": [
+            95.46,
+            97.39,
+            93.46,
+            98.81,
+            95.26,
+            94.75,
+            95.13
+          ],
+          "rows_returned": 1000000
+        }
+      }
+    },
+    {
+      "workload": "tab_blob",
+      "format": "lance_2.0",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_blob/lance_2.0.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 5000,
+      "blob_bucket_counts": {
+        "inline": 2972,
+        "packed": 1498,
+        "dedicated": 530
+      },
+      "blob_total_payload_bytes": 3727111611,
+      "write_seconds": 8.702,
+      "ok": true,
+      "verify_rows": 5000,
+      "verify_storage_version": "2.0",
+      "verify_manifest_version": 1,
+      "size_bytes": 3727463166,
+      "size_mb": 3727.46,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.0",
+        "manifest_version": 1,
+        "scan_non_blob": {
+          "median_ms": 27.089,
+          "mean_ms": 33.788,
+          "min_ms": 23.19,
+          "max_ms": 75.669,
+          "stdev_ms": 18.587,
+          "runs_ms": [
+            75.67,
+            27.09,
+            26.76,
+            28.32,
+            25.59,
+            23.19,
+            29.9
+          ],
+          "rows_returned": 5000
+        },
+        "blob_take_legacy": {
+          "median_ms": 133.322,
+          "mean_ms": 138.537,
+          "min_ms": 130.591,
+          "max_ms": 166.901,
+          "stdev_ms": 12.963,
+          "runs_ms": [
+            137.8,
+            130.95,
+            166.9,
+            130.59,
+            131.12,
+            133.32,
+            139.08
+          ]
+        }
+      }
+    },
+    {
+      "workload": "tab_blob",
+      "format": "lance_2.1",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_blob/lance_2.1.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 5000,
+      "blob_bucket_counts": {
+        "inline": 2972,
+        "packed": 1498,
+        "dedicated": 530
+      },
+      "blob_total_payload_bytes": 3727111611,
+      "write_seconds": 12.407,
+      "ok": true,
+      "verify_rows": 5000,
+      "verify_storage_version": "2.1",
+      "verify_manifest_version": 1,
+      "size_bytes": 3727497648,
+      "size_mb": 3727.5,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.1",
+        "manifest_version": 1,
+        "scan_non_blob": {
+          "median_ms": 22.59,
+          "mean_ms": 24.239,
+          "min_ms": 21.036,
+          "max_ms": 32.07,
+          "stdev_ms": 3.915,
+          "runs_ms": [
+            21.31,
+            21.77,
+            32.07,
+            21.04,
+            25.45,
+            25.46,
+            22.59
+          ],
+          "rows_returned": 5000
+        },
+        "blob_take_legacy": {
+          "median_ms": 150.803,
+          "mean_ms": 153.055,
+          "min_ms": 147.17,
+          "max_ms": 171.905,
+          "stdev_ms": 8.424,
+          "runs_ms": [
+            150.8,
+            151.16,
+            149.35,
+            147.17,
+            171.91,
+            150.9,
+            150.1
+          ]
+        }
+      }
+    },
+    {
+      "workload": "tab_blob",
+      "format": "lance_2.2",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_blob/lance_2.2.lance",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 5000,
+      "blob_bucket_counts": {
+        "inline": 2972,
+        "packed": 1498,
+        "dedicated": 530
+      },
+      "blob_total_payload_bytes": 3727111611,
+      "write_seconds": 103.908,
+      "ok": true,
+      "verify_rows": 5000,
+      "verify_storage_version": "2.2",
+      "verify_manifest_version": 1,
+      "size_bytes": 3727523659,
+      "size_mb": 3727.52,
+      "measurements": {
+        "open_ok": true,
+        "data_storage_version": "2.2",
+        "manifest_version": 1,
+        "scan_non_blob": {
+          "median_ms": 26.049,
+          "mean_ms": 26.697,
+          "min_ms": 21.708,
+          "max_ms": 32.279,
+          "stdev_ms": 3.957,
+          "runs_ms": [
+            22.89,
+            29.25,
+            26.05,
+            24.56,
+            30.14,
+            21.71,
+            32.28
+          ],
+          "rows_returned": 5000
+        },
+        "blob_take_v22": {
+          "median_ms": 2985.529,
+          "mean_ms": 2995.879,
+          "min_ms": 2921.84,
+          "max_ms": 3077.065,
+          "stdev_ms": 54.732,
+          "runs_ms": [
+            3024.89,
+            3042.6,
+            2967.94,
+            2921.84,
+            2985.53,
+            2951.28,
+            3077.06
+          ]
+        }
+      }
+    },
+    {
+      "workload": "tab_blob",
+      "format": "parquet_snappy",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_blob/parquet_snappy",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 5000,
+      "blob_bucket_counts": {
+        "inline": 2972,
+        "packed": 1498,
+        "dedicated": 530
+      },
+      "blob_total_payload_bytes": 3727111611,
+      "write_seconds": 10.957,
+      "ok": true,
+      "verify_rows": 5000,
+      "size_bytes": 3727504466,
+      "size_mb": 3727.5,
+      "measurements": {
+        "open_ok": true,
+        "scan_non_blob": {
+          "median_ms": 40.446,
+          "mean_ms": 40.871,
+          "min_ms": 38.639,
+          "max_ms": 44.284,
+          "stdev_ms": 1.811,
+          "runs_ms": [
+            38.64,
+            40.92,
+            40.45,
+            39.99,
+            39.89,
+            44.28,
+            41.93
+          ],
+          "rows_returned": 5000
+        },
+        "blob_take_legacy": {
+          "median_ms": 9705.955,
+          "mean_ms": 9683.763,
+          "min_ms": 9565.253,
+          "max_ms": 9773.937,
+          "stdev_ms": 68.449,
+          "runs_ms": [
+            9713.56,
+            9712.05,
+            9692.47,
+            9705.96,
+            9623.11,
+            9565.25,
+            9773.94
+          ]
+        }
+      }
+    },
+    {
+      "workload": "tab_blob",
+      "format": "parquet_zstd",
+      "mode": "single",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/L2/20260502-133710/tab_blob/parquet_zstd",
+      "region": "ap-northeast-1",
+      "lance_version": "4.0.1",
+      "pyarrow_version": "20.0.0",
+      "n_rows": 5000,
+      "blob_bucket_counts": {
+        "inline": 2972,
+        "packed": 1498,
+        "dedicated": 530
+      },
+      "blob_total_payload_bytes": 3727111611,
+      "write_seconds": 11.327,
+      "ok": true,
+      "verify_rows": 5000,
+      "size_bytes": 3727384795,
+      "size_mb": 3727.38,
+      "measurements": {
+        "open_ok": true,
+        "scan_non_blob": {
+          "median_ms": 42.634,
+          "mean_ms": 42.856,
+          "min_ms": 38.558,
+          "max_ms": 46.045,
+          "stdev_ms": 2.645,
+          "runs_ms": [
+            44.02,
+            41.17,
+            38.56,
+            46.05,
+            41.86,
+            45.7,
+            42.63
+          ],
+          "rows_returned": 5000
+        },
+        "blob_take_legacy": {
+          "median_ms": 9717.159,
+          "mean_ms": 9714.994,
+          "min_ms": 9653.05,
+          "max_ms": 9768.171,
+          "stdev_ms": 38.691,
+          "runs_ms": [
+            9692.32,
+            9698.94,
+            9753.68,
+            9768.17,
+            9653.05,
+            9721.64,
+            9717.16
+          ]
+        }
+      }
+    }
+  ]
+}
