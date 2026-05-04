@@ -1,0 +1,171 @@
+{
+  "scale": 10,
+  "region": "ap-northeast-1",
+  "m1_manifest": "/home/hadoop/lance-extended-bench/results/M1_manifest_sf10.json",
+  "warmup": 3,
+  "rounds": 7,
+  "engine": "python+arrow (pylance + pyiceberg native)",
+  "lance_version": "4.0.1",
+  "tables": [
+    {
+      "table": "store_sales",
+      "scan_column": "ss_ext_list_price",
+      "formats": {
+        "lance_2.2": {
+          "full_scan": {
+            "median_ms": 2701.231,
+            "mean_ms": 2716.153,
+            "min_ms": 2607.024,
+            "max_ms": 2822.894,
+            "stdev_ms": 75.223,
+            "runs_ms": [
+              2701.23,
+              2718.21,
+              2694.85,
+              2822.89,
+              2802.62,
+              2666.24,
+              2607.02
+            ],
+            "rows_returned": 28800991
+          },
+          "col_scan": {
+            "median_ms": 609.129,
+            "mean_ms": 603.573,
+            "min_ms": 549.06,
+            "max_ms": 691.587,
+            "stdev_ms": 52.662,
+            "runs_ms": [
+              562.9,
+              626.71,
+              609.13,
+              691.59,
+              634.46,
+              551.16,
+              549.06
+            ],
+            "rows_returned": 28800991,
+            "column": "ss_ext_list_price"
+          }
+        },
+        "iceberg_v2": {
+          "full_scan": {
+            "median_ms": 2284.492,
+            "mean_ms": 2289.264,
+            "min_ms": 2254.523,
+            "max_ms": 2364.925,
+            "stdev_ms": 36.665,
+            "runs_ms": [
+              2364.92,
+              2275.55,
+              2260.26,
+              2254.52,
+              2298.06,
+              2287.03,
+              2284.49
+            ],
+            "rows_returned": 28800991
+          },
+          "col_scan": {
+            "median_ms": 387.734,
+            "mean_ms": 393.87,
+            "min_ms": 346.821,
+            "max_ms": 431.377,
+            "stdev_ms": 29.551,
+            "runs_ms": [
+              390.21,
+              387.73,
+              431.32,
+              385.68,
+              346.82,
+              431.38,
+              383.95
+            ],
+            "rows_returned": 28800991,
+            "column": "ss_ext_list_price"
+          }
+        }
+      }
+    },
+    {
+      "table": "customer",
+      "scan_column": "c_customer_id",
+      "formats": {
+        "lance_2.2": {
+          "full_scan": {
+            "median_ms": 280.263,
+            "mean_ms": 284.48,
+            "min_ms": 266.996,
+            "max_ms": 306.356,
+            "stdev_ms": 15.154,
+            "runs_ms": [
+              306.36,
+              295.93,
+              295.43,
+              280.26,
+              267.0,
+              267.28,
+              279.1
+            ],
+            "rows_returned": 500000
+          },
+          "col_scan": {
+            "median_ms": 203.538,
+            "mean_ms": 208.968,
+            "min_ms": 174.826,
+            "max_ms": 264.75,
+            "stdev_ms": 31.178,
+            "runs_ms": [
+              223.89,
+              203.54,
+              219.29,
+              174.83,
+              264.75,
+              201.23,
+              175.25
+            ],
+            "rows_returned": 500000,
+            "column": "c_customer_id"
+          }
+        },
+        "iceberg_v2": {
+          "full_scan": {
+            "median_ms": 389.752,
+            "mean_ms": 394.048,
+            "min_ms": 370.845,
+            "max_ms": 430.204,
+            "stdev_ms": 21.566,
+            "runs_ms": [
+              389.75,
+              395.48,
+              384.41,
+              414.22,
+              370.85,
+              373.44,
+              430.2
+            ],
+            "rows_returned": 500000
+          },
+          "col_scan": {
+            "median_ms": 234.399,
+            "mean_ms": 237.165,
+            "min_ms": 211.613,
+            "max_ms": 268.756,
+            "stdev_ms": 20.222,
+            "runs_ms": [
+              268.76,
+              253.0,
+              211.61,
+              234.4,
+              246.44,
+              228.23,
+              217.71
+            ],
+            "rows_returned": 500000,
+            "column": "c_customer_id"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "scale": 10,
+  "region": "ap-northeast-1",
+  "s3_root": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10",
+  "row_group_size": 1048576,
+  "compression": "zstd",
+  "compression_level": 3,
+  "dsdgen_seconds": 119.708,
+  "duckdb_version": "1.4.4",
+  "tables": [
+    {
+      "table": "store_sales",
+      "rows": 28800991,
+      "local_bytes": 1021696049,
+      "local_size_mb": 1021.7,
+      "export_seconds": 6.124,
+      "upload_seconds": 7.076,
+      "s3_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/store_sales/store_sales.parquet",
+      "schema": [
+        {
+          "name": "ss_sold_date_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_sold_time_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_item_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_customer_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_cdemo_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_hdemo_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_addr_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_store_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_promo_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_ticket_number",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_quantity",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "ss_wholesale_cost",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_list_price",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_sales_price",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_ext_discount_amt",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_ext_sales_price",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_ext_wholesale_cost",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_ext_list_price",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_ext_tax",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_coupon_amt",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_net_paid",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_net_paid_inc_tax",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        },
+        {
+          "name": "ss_net_profit",
+          "type": "DECIMAL(7,2)",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "table": "customer",
+      "rows": 500000,
+      "local_bytes": 18052276,
+      "local_size_mb": 18.05,
+      "export_seconds": 0.529,
+      "upload_seconds": 1.143,
+      "s3_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/customer/customer.parquet",
+      "schema": [
+        {
+          "name": "c_customer_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_customer_id",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_current_cdemo_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_current_hdemo_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_current_addr_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_first_shipto_date_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_first_sales_date_sk",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_salutation",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_first_name",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_last_name",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_preferred_cust_flag",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_birth_day",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_birth_month",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_birth_year",
+          "type": "BIGINT",
+          "nullable": true
+        },
+        {
+          "name": "c_birth_country",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_login",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_email_address",
+          "type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "c_last_review_date_sk",
+          "type": "INTEGER",
+          "nullable": true
+        }
+      ]
+    }
+  ]
+}

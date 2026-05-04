@@ -1,0 +1,213 @@
+{
+  "scale": 1,
+  "region": "ap-northeast-1",
+  "m1_manifest": "/home/hadoop/lance-extended-bench/results/M1_manifest_sf1.json",
+  "m5_work_root": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/M5/M5_work_20260502-145420",
+  "delete_column": "ss_sold_date_sk",
+  "delete_table": "store_sales",
+  "delete_fractions": {
+    "0.1%": 0.001,
+    "1%": 0.01,
+    "10%": 0.1
+  },
+  "projected_columns": [
+    "ss_item_sk",
+    "ss_customer_sk",
+    "ss_quantity",
+    "ss_sales_price"
+  ],
+  "scan_column": "ss_ext_list_price",
+  "warmup": 3,
+  "rounds": 7,
+  "engine": "lance: pylance native; iceberg: Spark write (MoR) + pyiceberg read",
+  "n_total_source": 2880404,
+  "lance_version": "4.0.1",
+  "results": [
+    {
+      "label": "0.1%",
+      "target_fraction": 0.001,
+      "actual_fraction": 0.0010047201711982068,
+      "predicate_k": 2450818,
+      "delete_rows_expected": 2894,
+      "copy_seconds": {
+        "lance": 1.901,
+        "iceberg_ctas": 14.85
+      },
+      "dst_fqn": "ice.tpcds.store_sales_m5_0p1pct",
+      "dst_data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg/tpcds/store_sales_m5_0p1pct",
+      "formats": {
+        "lance_2.2": {
+          "pre_size_bytes": 361306262,
+          "delete_seconds": 0.376,
+          "post_size_bytes": 361319177,
+          "rows_after_delete": 2877510,
+          "post_delete_scan": {
+            "median_ms": 332.415,
+            "mean_ms": 330.207,
+            "min_ms": 307.718,
+            "max_ms": 359.117,
+            "stdev_ms": 18.962,
+            "runs_ms": [
+              340.98,
+              307.72,
+              319.92,
+              342.19,
+              359.12,
+              332.41,
+              309.11
+            ],
+            "rows_returned": 2877510
+          }
+        },
+        "iceberg_v2": {
+          "pre_size_bytes": 99090880,
+          "delete_seconds": 2.99,
+          "post_size_bytes": 99115918,
+          "rows_after_delete": 2877510,
+          "delete_files": 1,
+          "post_delete_scan": {
+            "median_ms": 999.072,
+            "mean_ms": 988.45,
+            "min_ms": 933.845,
+            "max_ms": 1037.938,
+            "stdev_ms": 46.262,
+            "runs_ms": [
+              999.07,
+              1028.68,
+              1030.82,
+              1037.94,
+              945.53,
+              943.27,
+              933.85
+            ],
+            "rows_returned": 2877510
+          }
+        }
+      }
+    },
+    {
+      "label": "1%",
+      "target_fraction": 0.01,
+      "actual_fraction": 0.010038869547466259,
+      "predicate_k": 2450848,
+      "delete_rows_expected": 28916,
+      "copy_seconds": {
+        "lance": 1.854,
+        "iceberg_ctas": 12.526
+      },
+      "dst_fqn": "ice.tpcds.store_sales_m5_1pct",
+      "dst_data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg/tpcds/store_sales_m5_1pct",
+      "formats": {
+        "lance_2.2": {
+          "pre_size_bytes": 361306262,
+          "delete_seconds": 0.378,
+          "post_size_bytes": 361366841,
+          "rows_after_delete": 2851488,
+          "post_delete_scan": {
+            "median_ms": 341.18,
+            "mean_ms": 349.148,
+            "min_ms": 339.348,
+            "max_ms": 377.751,
+            "stdev_ms": 14.296,
+            "runs_ms": [
+              347.57,
+              339.7,
+              377.75,
+              340.38,
+              358.1,
+              339.35,
+              341.18
+            ],
+            "rows_returned": 2851488
+          }
+        },
+        "iceberg_v2": {
+          "pre_size_bytes": 99090867,
+          "delete_seconds": 3.537,
+          "post_size_bytes": 99147796,
+          "rows_after_delete": 2851488,
+          "delete_files": 1,
+          "post_delete_scan": {
+            "median_ms": 1034.434,
+            "mean_ms": 1019.889,
+            "min_ms": 929.837,
+            "max_ms": 1081.501,
+            "stdev_ms": 54.401,
+            "runs_ms": [
+              1033.98,
+              1081.5,
+              1046.94,
+              1052.84,
+              1034.43,
+              959.69,
+              929.84
+            ],
+            "rows_returned": 2851488
+          }
+        }
+      }
+    },
+    {
+      "label": "10%",
+      "target_fraction": 0.1,
+      "actual_fraction": 0.09980231939686239,
+      "predicate_k": 2451078,
+      "delete_rows_expected": 287471,
+      "copy_seconds": {
+        "lance": 1.81,
+        "iceberg_ctas": 12.36
+      },
+      "dst_fqn": "ice.tpcds.store_sales_m5_10pct",
+      "dst_data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg/tpcds/store_sales_m5_10pct",
+      "formats": {
+        "lance_2.2": {
+          "pre_size_bytes": 361306262,
+          "delete_seconds": 0.474,
+          "post_size_bytes": 361669463,
+          "rows_after_delete": 2592933,
+          "post_delete_scan": {
+            "median_ms": 312.631,
+            "mean_ms": 303.351,
+            "min_ms": 268.46,
+            "max_ms": 331.174,
+            "stdev_ms": 24.065,
+            "runs_ms": [
+              316.15,
+              268.46,
+              296.22,
+              312.63,
+              275.41,
+              331.17,
+              323.4
+            ],
+            "rows_returned": 2592933
+          }
+        },
+        "iceberg_v2": {
+          "pre_size_bytes": 99090871,
+          "delete_seconds": 2.496,
+          "post_size_bytes": 99438948,
+          "rows_after_delete": 2592933,
+          "delete_files": 1,
+          "post_delete_scan": {
+            "median_ms": 1518.029,
+            "mean_ms": 1512.278,
+            "min_ms": 1480.596,
+            "max_ms": 1529.39,
+            "stdev_ms": 18.393,
+            "runs_ms": [
+              1528.59,
+              1509.57,
+              1480.6,
+              1524.3,
+              1529.39,
+              1495.47,
+              1518.03
+            ],
+            "rows_returned": 2592933
+          }
+        }
+      }
+    }
+  ]
+}

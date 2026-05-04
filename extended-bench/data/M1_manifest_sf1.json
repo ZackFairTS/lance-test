@@ -1,0 +1,105 @@
+{
+  "scale": 1,
+  "region": "ap-northeast-1",
+  "m0_manifest": "/home/hadoop/lance-extended-bench/results/M0_manifest_sf1.json",
+  "s3_base": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1",
+  "lance_root": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/lance",
+  "iceberg_warehouse": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg",
+  "iceberg_namespace": "tpcds",
+  "target_file_bytes": 134217728,
+  "lance_version": "4.0.1",
+  "lance_expected_storage_version": "2.2",
+  "iceberg_jar": "/usr/share/aws/iceberg/lib/iceberg-spark-runtime-3.5_2.12-1.8.1-amzn-0.jar",
+  "records": [
+    {
+      "format": "lance_2.2",
+      "table": "store_sales",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/lance/store_sales.lance",
+      "n_rows_source": 2880404,
+      "write_seconds": 4.173,
+      "ok": true,
+      "rows": 2880404,
+      "storage_version": "2.2",
+      "manifest_version": 1,
+      "num_fragments": 2,
+      "size_bytes": 355500174,
+      "size_mb": 355.5
+    },
+    {
+      "format": "iceberg_v2",
+      "table": "store_sales",
+      "fqn": "ice.tpcds.store_sales",
+      "data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg/tpcds/store_sales",
+      "n_rows_source": 2880404,
+      "write_seconds": 17.388,
+      "ok": true,
+      "applied_props": {
+        "format-version": "2",
+        "write.format.default": "parquet",
+        "write.parquet.compression-codec": "zstd",
+        "write.parquet.compression-level": "3",
+        "write.target-file-size-bytes": "134217728"
+      },
+      "n_write_partitions": 1,
+      "rows": 2880404,
+      "snapshots": 1,
+      "data_files": 1,
+      "persisted_props": {
+        "current-snapshot-id": "2878581143855035833",
+        "format": "iceberg/parquet",
+        "format-version": "2",
+        "write.format.default": "parquet",
+        "write.parquet.compression-codec": "zstd",
+        "write.parquet.compression-level": "3",
+        "write.target-file-size-bytes": "134217728"
+      },
+      "size_bytes": 99090754,
+      "size_mb": 99.09
+    },
+    {
+      "format": "lance_2.2",
+      "table": "customer",
+      "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/lance/customer.lance",
+      "n_rows_source": 100000,
+      "write_seconds": 1.218,
+      "ok": true,
+      "rows": 100000,
+      "storage_version": "2.2",
+      "manifest_version": 1,
+      "num_fragments": 1,
+      "size_bytes": 6570720,
+      "size_mb": 6.57
+    },
+    {
+      "format": "iceberg_v2",
+      "table": "customer",
+      "fqn": "ice.tpcds.customer",
+      "data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf1/iceberg/tpcds/customer",
+      "n_rows_source": 100000,
+      "write_seconds": 3.521,
+      "ok": true,
+      "applied_props": {
+        "format-version": "2",
+        "write.format.default": "parquet",
+        "write.parquet.compression-codec": "zstd",
+        "write.parquet.compression-level": "3",
+        "write.target-file-size-bytes": "134217728"
+      },
+      "n_write_partitions": 1,
+      "rows": 100000,
+      "snapshots": 1,
+      "data_files": 1,
+      "persisted_props": {
+        "current-snapshot-id": "6306973626128272678",
+        "format": "iceberg/parquet",
+        "format-version": "2",
+        "write.format.default": "parquet",
+        "write.parquet.compression-codec": "zstd",
+        "write.parquet.compression-level": "3",
+        "write.target-file-size-bytes": "134217728"
+      },
+      "size_bytes": 3661692,
+      "size_mb": 3.66
+    }
+  ]
+}

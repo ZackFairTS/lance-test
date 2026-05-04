@@ -1,0 +1,111 @@
+{
+  "scale": 1,
+  "region": "ap-northeast-1",
+  "m1_manifest": "/home/hadoop/lance-extended-bench/results/M1_manifest_sf1.json",
+  "m0_manifest": "/home/hadoop/lance-extended-bench/results/M0_manifest_sf1.json",
+  "baseline_rows": 50000,
+  "n_appends": 20,
+  "append_rows": 5000,
+  "warmup": 3,
+  "rounds": 7,
+  "engine": "lance: pylance native; iceberg: Spark write + pyiceberg read",
+  "lance_version": "4.0.1",
+  "baseline_write_seconds": {
+    "lance": 0.567,
+    "iceberg": 3.813
+  },
+  "append_total_seconds": {
+    "lance": 5.545,
+    "iceberg": 26.431
+  },
+  "pre_compact": {
+    "lance_fragments": 21,
+    "iceberg_data_files": 21,
+    "iceberg_snapshots": 22,
+    "lance_size_bytes": 24728726,
+    "iceberg_size_bytes": 6393682
+  },
+  "pre_compact_scan": {
+    "lance_2.2": {
+      "median_ms": 185.775,
+      "mean_ms": 183.219,
+      "min_ms": 176.513,
+      "max_ms": 188.574,
+      "stdev_ms": 4.965,
+      "runs_ms": [
+        179.63,
+        188.57,
+        178.21,
+        188.0,
+        185.83,
+        176.51,
+        185.77
+      ],
+      "rows_returned": 150000
+    },
+    "iceberg_v2": {
+      "median_ms": 490.857,
+      "mean_ms": 498.213,
+      "min_ms": 465.291,
+      "max_ms": 547.506,
+      "stdev_ms": 29.138,
+      "runs_ms": [
+        524.67,
+        488.4,
+        471.22,
+        490.86,
+        547.51,
+        499.55,
+        465.29
+      ],
+      "rows_returned": 150000
+    }
+  },
+  "compact_seconds": {
+    "lance": 1.24,
+    "iceberg": 3.783
+  },
+  "post_compact": {
+    "lance_fragments": 1,
+    "iceberg_data_files": 1,
+    "iceberg_snapshots": 23,
+    "lance_size_bytes": 43514535,
+    "iceberg_size_bytes": 12025693
+  },
+  "post_compact_scan": {
+    "lance_2.2": {
+      "median_ms": 198.562,
+      "mean_ms": 202.783,
+      "min_ms": 163.339,
+      "max_ms": 290.225,
+      "stdev_ms": 41.489,
+      "runs_ms": [
+        179.57,
+        179.45,
+        200.94,
+        290.23,
+        163.34,
+        207.4,
+        198.56
+      ],
+      "rows_returned": 150000
+    },
+    "iceberg_v2": {
+      "median_ms": 313.251,
+      "mean_ms": 342.066,
+      "min_ms": 287.76,
+      "max_ms": 433.333,
+      "stdev_ms": 53.585,
+      "runs_ms": [
+        310.64,
+        399.0,
+        433.33,
+        312.54,
+        337.94,
+        313.25,
+        287.76
+      ],
+      "rows_returned": 150000
+    }
+  }
+}

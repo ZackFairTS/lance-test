@@ -1,0 +1,854 @@
+{
+  "scale": 10,
+  "region": "ap-northeast-1",
+  "m1_manifest": "/home/hadoop/lance-extended-bench/results/M1_manifest_sf10.json",
+  "lance_version": "4.0.1",
+  "tables": [
+    {
+      "table": "store_sales",
+      "formats": {
+        "lance_2.2": {
+          "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance",
+          "total_bytes": 3568389800,
+          "total_mb": 3568.39,
+          "bytes_by_category": {
+            "data": 3568379190,
+            "metadata": 10610,
+            "other": 0
+          },
+          "mb_by_category": {
+            "data": 3568.38,
+            "metadata": 0.01,
+            "other": 0.0
+          },
+          "files_by_category": {
+            "data": 19,
+            "metadata": 2,
+            "other": 0
+          },
+          "num_fragments": 19,
+          "per_column": [
+            {
+              "name": "ss_sold_date_sk",
+              "type": "int64",
+              "field_id": 0,
+              "bytes_on_disk": 21036688
+            },
+            {
+              "name": "ss_sold_time_sk",
+              "type": "int64",
+              "field_id": 1,
+              "bytes_on_disk": 23405608
+            },
+            {
+              "name": "ss_item_sk",
+              "type": "int64",
+              "field_id": 2,
+              "bytes_on_disk": 65124184
+            },
+            {
+              "name": "ss_customer_sk",
+              "type": "int64",
+              "field_id": 3,
+              "bytes_on_disk": 26543616
+            },
+            {
+              "name": "ss_cdemo_sk",
+              "type": "int64",
+              "field_id": 4,
+              "bytes_on_disk": 27373720
+            },
+            {
+              "name": "ss_hdemo_sk",
+              "type": "int64",
+              "field_id": 5,
+              "bytes_on_disk": 21276496
+            },
+            {
+              "name": "ss_addr_sk",
+              "type": "int64",
+              "field_id": 6,
+              "bytes_on_disk": 25701904
+            },
+            {
+              "name": "ss_store_sk",
+              "type": "int64",
+              "field_id": 7,
+              "bytes_on_disk": 20584626
+            },
+            {
+              "name": "ss_promo_sk",
+              "type": "int64",
+              "field_id": 8,
+              "bytes_on_disk": 40842832
+            },
+            {
+              "name": "ss_ticket_number",
+              "type": "int64",
+              "field_id": 9,
+              "bytes_on_disk": 21822696
+            },
+            {
+              "name": "ss_quantity",
+              "type": "int64",
+              "field_id": 10,
+              "bytes_on_disk": 33615453
+            },
+            {
+              "name": "ss_wholesale_cost",
+              "type": "decimal128(7, 2)",
+              "field_id": 11,
+              "bytes_on_disk": 60868926
+            },
+            {
+              "name": "ss_list_price",
+              "type": "decimal128(7, 2)",
+              "field_id": 12,
+              "bytes_on_disk": 66315321
+            },
+            {
+              "name": "ss_sales_price",
+              "type": "decimal128(7, 2)",
+              "field_id": 13,
+              "bytes_on_disk": 63476771
+            },
+            {
+              "name": "ss_ext_discount_amt",
+              "type": "decimal128(7, 2)",
+              "field_id": 14,
+              "bytes_on_disk": 73441423
+            },
+            {
+              "name": "ss_ext_sales_price",
+              "type": "decimal128(7, 2)",
+              "field_id": 15,
+              "bytes_on_disk": 471244816
+            },
+            {
+              "name": "ss_ext_wholesale_cost",
+              "type": "decimal128(7, 2)",
+              "field_id": 16,
+              "bytes_on_disk": 471243800
+            },
+            {
+              "name": "ss_ext_list_price",
+              "type": "decimal128(7, 2)",
+              "field_id": 17,
+              "bytes_on_disk": 471242712
+            },
+            {
+              "name": "ss_ext_tax",
+              "type": "decimal128(7, 2)",
+              "field_id": 18,
+              "bytes_on_disk": 75795098
+            },
+            {
+              "name": "ss_coupon_amt",
+              "type": "decimal128(7, 2)",
+              "field_id": 19,
+              "bytes_on_disk": 73438519
+            },
+            {
+              "name": "ss_net_paid",
+              "type": "decimal128(7, 2)",
+              "field_id": 20,
+              "bytes_on_disk": 471248056
+            },
+            {
+              "name": "ss_net_paid_inc_tax",
+              "type": "decimal128(7, 2)",
+              "field_id": 21,
+              "bytes_on_disk": 471254560
+            },
+            {
+              "name": "ss_net_profit",
+              "type": "decimal128(7, 2)",
+              "field_id": 22,
+              "bytes_on_disk": 471255760
+            }
+          ],
+          "top_files": [
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/0111010001101101100000003cd7fd4d0e9d2e0a97928a4dbb.lance",
+              "size": 194859776,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/000000001111010001111101a1356e4f35836d3a3793c945e0.lance",
+              "size": 194837696,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/0100100100110011000111106eb7a44809a1b9cce2be58d854.lance",
+              "size": 194833408,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/101000101010000011011010a510b24e8489dc3f8ffa463b56.lance",
+              "size": 194827904,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/00110100111000010101111065e222408e8f3bf524e3c53e89.lance",
+              "size": 194825088,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/110111001000001101110100de46364e6eb343bf6c6f9e0641.lance",
+              "size": 194820224,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/000100110010001101100011a465e442099d61be26935a130a.lance",
+              "size": 194811136,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/000010001100100011011100730acf437ebb875ff5119c9f31.lance",
+              "size": 194808256,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/0101111100001111011001015a8077436d821544c3992d34b7.lance",
+              "size": 194807872,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/110100001110101000100000dcf66e44158a8266c4eca16c7d.lance",
+              "size": 194805952,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/001000101111111010110011637bd74900b13dc47fa67f9325.lance",
+              "size": 194801984,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/0000100011111000010101017abdb44390a10a460f79b817bd.lance",
+              "size": 194795840,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/00000110100101110100110074a23747f18dc457080fda1993.lance",
+              "size": 194795072,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/0001010011101110010110119e15b84083a3c3ca8388a7e912.lance",
+              "size": 194794432,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/111101101101100101111010adb9654f9697dd1c86ae217a19.lance",
+              "size": 194793408,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/100000110010011100000100710cf04b66ba95c3dc1969e109.lance",
+              "size": 194775488,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/100101100011001011001010e15b1d4142bf77d49647b89f3e.lance",
+              "size": 179003279,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/011100011101100110110111eec9224858abcda366c467550f.lance",
+              "size": 178791888,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/data/110001010101100011000011c82fd4478e809a813604a7b533.lance",
+              "size": 93590487,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance/_versions/18446744073709551614.manifest",
+              "size": 7111,
+              "category": "metadata"
+            }
+          ]
+        },
+        "iceberg_v2": {
+          "data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales",
+          "total_bytes": 1475825510,
+          "total_mb": 1475.83,
+          "bytes_by_category": {
+            "data": 1475803022,
+            "metadata": 22488,
+            "other": 0
+          },
+          "mb_by_category": {
+            "data": 1475.8,
+            "metadata": 0.02,
+            "other": 0.0
+          },
+          "files_by_category": {
+            "data": 16,
+            "metadata": 4,
+            "other": 0
+          },
+          "num_data_files": 16,
+          "num_snapshots": 1,
+          "per_column": [
+            {
+              "name": "ss_sold_date_sk",
+              "type": "int64",
+              "bytes_on_disk": 40396485,
+              "bytes_uncompressed": 41360666
+            },
+            {
+              "name": "ss_sold_time_sk",
+              "type": "int64",
+              "bytes_on_disk": 68418811,
+              "bytes_uncompressed": 148303858
+            },
+            {
+              "name": "ss_item_sk",
+              "type": "int64",
+              "bytes_on_disk": 80979277,
+              "bytes_uncompressed": 230461431
+            },
+            {
+              "name": "ss_customer_sk",
+              "type": "int64",
+              "bytes_on_disk": 90561449,
+              "bytes_uncompressed": 223273681
+            },
+            {
+              "name": "ss_cdemo_sk",
+              "type": "int64",
+              "bytes_on_disk": 96400796,
+              "bytes_uncompressed": 223280950
+            },
+            {
+              "name": "ss_hdemo_sk",
+              "type": "int64",
+              "bytes_on_disk": 47643051,
+              "bytes_uncompressed": 48926890
+            },
+            {
+              "name": "ss_addr_sk",
+              "type": "int64",
+              "bytes_on_disk": 86900678,
+              "bytes_uncompressed": 223277919
+            },
+            {
+              "name": "ss_store_sk",
+              "type": "int64",
+              "bytes_on_disk": 23151565,
+              "bytes_uncompressed": 23937044
+            },
+            {
+              "name": "ss_promo_sk",
+              "type": "int64",
+              "bytes_on_disk": 33480354,
+              "bytes_uncompressed": 34313295
+            },
+            {
+              "name": "ss_ticket_number",
+              "type": "int64",
+              "bytes_on_disk": 89249114,
+              "bytes_uncompressed": 230461431
+            },
+            {
+              "name": "ss_quantity",
+              "type": "int64",
+              "bytes_on_disk": 26591060,
+              "bytes_uncompressed": 27383120
+            },
+            {
+              "name": "ss_wholesale_cost",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 51461784,
+              "bytes_uncompressed": 52076496
+            },
+            {
+              "name": "ss_list_price",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 66412560,
+              "bytes_uncompressed": 113256911
+            },
+            {
+              "name": "ss_sales_price",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 54749348,
+              "bytes_uncompressed": 55356290
+            },
+            {
+              "name": "ss_ext_discount_amt",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 29715991,
+              "bytes_uncompressed": 61302903
+            },
+            {
+              "name": "ss_ext_sales_price",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 81974568,
+              "bytes_uncompressed": 113263244
+            },
+            {
+              "name": "ss_ext_wholesale_cost",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 84683346,
+              "bytes_uncompressed": 113259287
+            },
+            {
+              "name": "ss_ext_list_price",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 86603259,
+              "bytes_uncompressed": 113257954
+            },
+            {
+              "name": "ss_ext_tax",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 57349474,
+              "bytes_uncompressed": 63574702
+            },
+            {
+              "name": "ss_coupon_amt",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 29718962,
+              "bytes_uncompressed": 61299428
+            },
+            {
+              "name": "ss_net_paid",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 81336975,
+              "bytes_uncompressed": 113257323
+            },
+            {
+              "name": "ss_net_paid_inc_tax",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 82054126,
+              "bytes_uncompressed": 113256171
+            },
+            {
+              "name": "ss_net_profit",
+              "type": "decimal128(7, 2)",
+              "bytes_on_disk": 84838598,
+              "bytes_uncompressed": 113254466
+            }
+          ],
+          "top_files": [
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00003-12-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134979032,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00005-14-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134927309,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00004-13-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134592396,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00006-15-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134591558,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00002-11-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134586493,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00000-9-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134548052,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00007-16-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134465093,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00001-10-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00001.parquet",
+              "size": 134396187,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00000-9-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 50810267,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00002-11-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 50368232,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00006-15-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 50336273,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00004-13-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 50229383,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00007-16-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 49600947,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00001-10-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 49593826,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00005-14-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 48922992,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/data/00003-12-4930276c-5ecc-4cbe-b7b7-a0c0e512f942-0-00002.parquet",
+              "size": 48854982,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/metadata/e57ea629-0cb0-4930-836e-3326a66f0def-m0.avro",
+              "size": 13152,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/metadata/v1.metadata.json",
+              "size": 4820,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/metadata/snap-4261006306724201622-1-e57ea629-0cb0-4930-836e-3326a66f0def.avro",
+              "size": 4515,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/metadata/version-hint.text",
+              "size": 1,
+              "category": "metadata"
+            }
+          ]
+        }
+      },
+      "size_ratio_lance_over_iceberg": 2.418
+    },
+    {
+      "table": "customer",
+      "formats": {
+        "lance_2.2": {
+          "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/lance/customer.lance",
+          "total_bytes": 32689133,
+          "total_mb": 32.69,
+          "bytes_by_category": {
+            "data": 32686240,
+            "metadata": 2893,
+            "other": 0
+          },
+          "mb_by_category": {
+            "data": 32.69,
+            "metadata": 0.0,
+            "other": 0.0
+          },
+          "files_by_category": {
+            "data": 1,
+            "metadata": 2,
+            "other": 0
+          },
+          "num_fragments": 1,
+          "per_column": [
+            {
+              "name": "c_customer_sk",
+              "type": "int64",
+              "field_id": 0,
+              "bytes_on_disk": 1134772
+            },
+            {
+              "name": "c_customer_id",
+              "type": "string",
+              "field_id": 1,
+              "bytes_on_disk": 5569116
+            },
+            {
+              "name": "c_current_cdemo_sk",
+              "type": "int64",
+              "field_id": 2,
+              "bytes_on_disk": 1431868
+            },
+            {
+              "name": "c_current_hdemo_sk",
+              "type": "int64",
+              "field_id": 3,
+              "bytes_on_disk": 942292
+            },
+            {
+              "name": "c_current_addr_sk",
+              "type": "int64",
+              "field_id": 4,
+              "bytes_on_disk": 1136436
+            },
+            {
+              "name": "c_first_shipto_date_sk",
+              "type": "int64",
+              "field_id": 5,
+              "bytes_on_disk": 880884
+            },
+            {
+              "name": "c_first_sales_date_sk",
+              "type": "int64",
+              "field_id": 6,
+              "bytes_on_disk": 880412
+            },
+            {
+              "name": "c_salutation",
+              "type": "string",
+              "field_id": 7,
+              "bytes_on_disk": 305360
+            },
+            {
+              "name": "c_first_name",
+              "type": "string",
+              "field_id": 8,
+              "bytes_on_disk": 963918
+            },
+            {
+              "name": "c_last_name",
+              "type": "string",
+              "field_id": 9,
+              "bytes_on_disk": 975741
+            },
+            {
+              "name": "c_preferred_cust_flag",
+              "type": "string",
+              "field_id": 10,
+              "bytes_on_disk": 2616264
+            },
+            {
+              "name": "c_birth_day",
+              "type": "int64",
+              "field_id": 11,
+              "bytes_on_disk": 432886
+            },
+            {
+              "name": "c_birth_month",
+              "type": "int64",
+              "field_id": 12,
+              "bytes_on_disk": 368114
+            },
+            {
+              "name": "c_birth_year",
+              "type": "int64",
+              "field_id": 13,
+              "bytes_on_disk": 556470
+            },
+            {
+              "name": "c_birth_country",
+              "type": "string",
+              "field_id": 14,
+              "bytes_on_disk": 621747
+            },
+            {
+              "name": "c_login",
+              "type": "string",
+              "field_id": 15,
+              "bytes_on_disk": 1000020
+            },
+            {
+              "name": "c_email_address",
+              "type": "string",
+              "field_id": 16,
+              "bytes_on_disk": 11361240
+            },
+            {
+              "name": "c_last_review_date_sk",
+              "type": "int32",
+              "field_id": 17,
+              "bytes_on_disk": 1496324
+            }
+          ],
+          "top_files": [
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/customer.lance/data/010010011001101111111110e699794bfda009b763f1b00fae.lance",
+              "size": 32686240,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/customer.lance/_versions/18446744073709551614.manifest",
+              "size": 1954,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/lance/customer.lance/_transactions/0-272042f3-acae-4b57-8393-c406e0364ccb.txn",
+              "size": 939,
+              "category": "metadata"
+            }
+          ]
+        },
+        "iceberg_v2": {
+          "data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer",
+          "total_bytes": 18232845,
+          "total_mb": 18.23,
+          "bytes_by_category": {
+            "data": 18215587,
+            "metadata": 17258,
+            "other": 0
+          },
+          "mb_by_category": {
+            "data": 18.22,
+            "metadata": 0.02,
+            "other": 0.0
+          },
+          "files_by_category": {
+            "data": 1,
+            "metadata": 4,
+            "other": 0
+          },
+          "num_data_files": 1,
+          "num_snapshots": 1,
+          "per_column": [
+            {
+              "name": "c_customer_sk",
+              "type": "int64",
+              "bytes_on_disk": 527964,
+              "bytes_uncompressed": 4000924
+            },
+            {
+              "name": "c_customer_id",
+              "type": "string",
+              "bytes_on_disk": 336872,
+              "bytes_uncompressed": 10000923
+            },
+            {
+              "name": "c_current_cdemo_sk",
+              "type": "int64",
+              "bytes_on_disk": 1682808,
+              "bytes_uncompressed": 3910353
+            },
+            {
+              "name": "c_current_hdemo_sk",
+              "type": "int64",
+              "bytes_on_disk": 844021,
+              "bytes_uncompressed": 891949
+            },
+            {
+              "name": "c_current_addr_sk",
+              "type": "int64",
+              "bytes_on_disk": 1527271,
+              "bytes_uncompressed": 4000922
+            },
+            {
+              "name": "c_first_shipto_date_sk",
+              "type": "int64",
+              "bytes_on_disk": 769735,
+              "bytes_uncompressed": 803102
+            },
+            {
+              "name": "c_first_sales_date_sk",
+              "type": "int64",
+              "bytes_on_disk": 768487,
+              "bytes_uncompressed": 803493
+            },
+            {
+              "name": "c_salutation",
+              "type": "string",
+              "bytes_on_disk": 205107,
+              "bytes_uncompressed": 230993
+            },
+            {
+              "name": "c_first_name",
+              "type": "string",
+              "bytes_on_disk": 776728,
+              "bytes_uncompressed": 875723
+            },
+            {
+              "name": "c_last_name",
+              "type": "string",
+              "bytes_on_disk": 817858,
+              "bytes_uncompressed": 883542
+            },
+            {
+              "name": "c_preferred_cust_flag",
+              "type": "string",
+              "bytes_on_disk": 94264,
+              "bytes_uncompressed": 110951
+            },
+            {
+              "name": "c_birth_day",
+              "type": "int64",
+              "bytes_on_disk": 338965,
+              "bytes_uncompressed": 352239
+            },
+            {
+              "name": "c_birth_month",
+              "type": "int64",
+              "bytes_on_disk": 257176,
+              "bytes_uncompressed": 291366
+            },
+            {
+              "name": "c_birth_year",
+              "type": "int64",
+              "bytes_on_disk": 453210,
+              "bytes_uncompressed": 473165
+            },
+            {
+              "name": "c_birth_country",
+              "type": "string",
+              "bytes_on_disk": 508598,
+              "bytes_uncompressed": 535523
+            },
+            {
+              "name": "c_login",
+              "type": "string",
+              "bytes_on_disk": 28547,
+              "bytes_uncompressed": 49584
+            },
+            {
+              "name": "c_email_address",
+              "type": "string",
+              "bytes_on_disk": 7677093,
+              "bytes_uncompressed": 15229127
+            },
+            {
+              "name": "c_last_review_date_sk",
+              "type": "int32",
+              "bytes_on_disk": 581028,
+              "bytes_uncompressed": 594571
+            }
+          ],
+          "top_files": [
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer/data/00000-28-bd8c41f3-efa9-4700-a3ad-3e0d765a7990-0-00001.parquet",
+              "size": 18215587,
+              "category": "data"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer/metadata/dc15befe-6c50-4d1f-9997-a780b38e3395-m0.avro",
+              "size": 8551,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer/metadata/snap-3012854492246422252-1-dc15befe-6c50-4d1f-9997-a780b38e3395.avro",
+              "size": 4508,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer/metadata/v1.metadata.json",
+              "size": 4198,
+              "category": "metadata"
+            },
+            {
+              "key": "extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/customer/metadata/version-hint.text",
+              "size": 1,
+              "category": "metadata"
+            }
+          ]
+        }
+      },
+      "size_ratio_lance_over_iceberg": 1.793
+    }
+  ]
+}
