@@ -1,6 +1,6 @@
 # Lance 压测实证报告集
 
-这个 repo 包含两个独立的 Lance 压测研究，对应两个不同的生产问题。
+这个 repo 包含四个独立的 Lance 压测研究，外加扩展对比（格式矩阵 + Lance vs Iceberg）。
 
 ---
 
@@ -130,6 +130,20 @@ MIT, 原始测试数据按 AS-IS 提供。
 - **结论显著改变**: Lance BITMAP 在低选择率 (≤10%) 全面领先 Parquet **1.4-3.1x**
 - 高选择率 (50%) 仍是 Parquet 赢（query planner bug 跨引擎存在）
 - **PyArrow 给 Parquet 隐形加持 5-6x** —— 引擎公平性确实很关键
+
+**L2 — 格式版本 × 工作负载矩阵** ([extended-bench/REPORT_L2_format_compare.md](extended-bench/REPORT_L2_format_compare.md)) - `4 workloads × 5 formats × 6 ops` 的完整矩阵：
+- 🔴 **Lance v2.2 Blob V2 在少量随机 take 比 v2.0 large_binary 慢 20x**（ML notebook 场景反效果）
+- 🔴 **Lance v2.1 在 vector full_scan 比 v2.0 慢 54%**（新的 v2.1 回归，不同于 J 里的 flat 回归）
+- ✅ **Lance 向量列读比 Parquet 快 10-14x**（最大的单项胜利）
+- ✅ **v2.2 是唯一支持 map 的版本**；nested full_scan 比 Parquet 快 1.8-2.2x
+- 🔴 **nested subread Lance 慢 1.6x**；struct 子字段下推不如 Parquet
+
+**M 系列 — Lance v2.2 vs Iceberg v2 MoR on TPC-DS** ([extended-bench/REPORT_M_lance_vs_iceberg.md](extended-bench/REPORT_M_lance_vs_iceberg.md)) ⭐ —— 第一次跟 Iceberg 完整 stack 对比，sf1 + sf10 真实 TPC-DS：
+- 🔴 **Lance 存储大 2.4x** (same zstd-3)；decimal 列膨胀 **5.7x**，低基数 string 列膨胀 **27-35x**
+- 🔴 **col_scan 慢 1.57x**（sf10），**filter 全选择率都慢 1.33-2.69x**
+- ✅ **DELETE 快 5-8x + 几乎无读放大**（Iceberg MoR 删 10% 后读变慢 51%，Lance 不变慢）
+- ✅ **20 次 append + compact 读比 Iceberg 快 2.6x**；compact 本身快 3x
+- 🟡 Lance `compact_files()` 不 GC 旧数据，size 反而大 76%
 
 ---
 
