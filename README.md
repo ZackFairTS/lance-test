@@ -2,6 +2,10 @@
 
 这个 repo 包含四个独立的 Lance 压测研究，外加扩展对比（格式矩阵 + Lance vs Iceberg）。
 
+> **🎯 先看 [META_ANALYSIS.md](META_ANALYSIS.md)** —— 跨所有 5 个研究的综合分析与生产建议。
+>
+> **🐛 [issues/decimal_sorted_bloat.md](issues/decimal_sorted_bloat.md)** —— 本次研究发现的最大 bug，待提交到 lance-format/lance。
+
 ---
 
 ## 📚 研究索引
