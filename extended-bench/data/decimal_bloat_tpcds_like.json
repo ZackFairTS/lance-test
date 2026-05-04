@@ -1,0 +1,146 @@
+{
+  "lance_version": "4.0.1",
+  "pyarrow_version": "20.0.0",
+  "rows": 3000000,
+  "seed": 42,
+  "mode": "tpcds_like",
+  "results": [
+    {
+      "label": "lance_2.0",
+      "kind": "lance",
+      "path": "/tmp/lance_decimal_tpcds_like/v2_0.lance",
+      "write_seconds": 0.037,
+      "total_bytes": 99003878,
+      "per_column": {
+        "id": {
+          "bytes_on_disk": 24000000,
+          "type": "int64"
+        },
+        "money_decimal": {
+          "bytes_on_disk": 48000000,
+          "type": "decimal128(7, 2)"
+        },
+        "money_float64": {
+          "bytes_on_disk": 24000000,
+          "type": "double"
+        },
+        "quantity_int8": {
+          "bytes_on_disk": 3000000,
+          "type": "int8"
+        }
+      }
+    },
+    {
+      "label": "lance_2.1",
+      "kind": "lance",
+      "path": "/tmp/lance_decimal_tpcds_like/v2_1.lance",
+      "write_seconds": 0.076,
+      "total_bytes": 40767621,
+      "per_column": {
+        "id": {
+          "bytes_on_disk": 7779460,
+          "type": "int64"
+        },
+        "money_decimal": {
+          "bytes_on_disk": 6625716,
+          "type": "decimal128(7, 2)"
+        },
+        "money_float64": {
+          "bytes_on_disk": 23680260,
+          "type": "double"
+        },
+        "quantity_int8": {
+          "bytes_on_disk": 2678020,
+          "type": "int8"
+        }
+      }
+    },
+    {
+      "label": "lance_2.2",
+      "kind": "lance",
+      "path": "/tmp/lance_decimal_tpcds_like/v2_2.lance",
+      "write_seconds": 0.068,
+      "total_bytes": 23451577,
+      "per_column": {
+        "id": {
+          "bytes_on_disk": 7785320,
+          "type": "int64"
+        },
+        "money_decimal": {
+          "bytes_on_disk": 5902089,
+          "type": "decimal128(7, 2)"
+        },
+        "money_float64": {
+          "bytes_on_disk": 7075824,
+          "type": "double"
+        },
+        "quantity_int8": {
+          "bytes_on_disk": 2683880,
+          "type": "int8"
+        }
+      }
+    },
+    {
+      "label": "parquet_zstd3",
+      "kind": "parquet",
+      "path": "/tmp/lance_decimal_tpcds_like/zstd3.parquet",
+      "write_seconds": 0.317,
+      "total_bytes": 19174318,
+      "per_column": {
+        "id": {
+          "bytes_on_disk": 3897332,
+          "bytes_uncompressed": 24838246,
+          "type": "int64"
+        },
+        "money_decimal": {
+          "bytes_on_disk": 5785147,
+          "bytes_uncompressed": 5877615,
+          "type": "decimal128(7, 2)"
+        },
+        "money_float64": {
+          "bytes_on_disk": 6858039,
+          "bytes_uncompressed": 7086593,
+          "type": "double"
+        },
+        "quantity_int8": {
+          "bytes_on_disk": 2631722,
+          "bytes_uncompressed": 2632400,
+          "type": "int8"
+        }
+      }
+    },
+    {
+      "label": "parquet_snappy",
+      "kind": "parquet",
+      "path": "/tmp/lance_decimal_tpcds_like/snappy.parquet",
+      "write_seconds": 0.259,
+      "total_bytes": 28443779,
+      "per_column": {
+        "id": {
+          "bytes_on_disk": 12844989,
+          "bytes_uncompressed": 24838246,
+          "type": "int64"
+        },
+        "money_decimal": {
+          "bytes_on_disk": 5877643,
+          "bytes_uncompressed": 5877615,
+          "type": "decimal128(7, 2)"
+        },
+        "money_float64": {
+          "bytes_on_disk": 7086654,
+          "bytes_uncompressed": 7086593,
+          "type": "double"
+        },
+        "quantity_int8": {
+          "bytes_on_disk": 2632415,
+          "bytes_uncompressed": 2632400,
+          "type": "int8"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "decimal_ratio_lance_over_parquet": 1.020214179518688,
+    "float_ratio_lance_over_parquet": 1.0317561623665308
+  }
+}
