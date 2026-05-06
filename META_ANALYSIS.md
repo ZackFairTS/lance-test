@@ -57,7 +57,7 @@
 |---|---|
 | [Flink 压测](../01_REPORT_lance_0.23.3.md) | 2000+ 个 manifest version 让 `Dataset.open()` 慢到让 checkpoint 超时 60s |
 | [read-perf-bench](../read-perf-bench/REPORT.md) | 5000 fragments 下 Python 单进程读慢 10-18x，build 本身 append 速率从 3.5/s 退化到 2.4/s |
-| [M6 compact](../extended-bench/REPORT_M_lance_vs_iceberg.md#m6-small-files-pathology--compaction) | 20 次 append 虽然 Lance 比 Iceberg 快 2.6x，但 Lance compact 之后 size 反而**大 76%**（不 GC 旧 fragments） |
+| [M6 compact](../extended-bench/REPORT_M_lance_vs_iceberg.md#m6-small-files-pathology--compaction) | 20 次 append 虽然 Lance 比 Iceberg 快 2.6x，但 Lance compact 后 S3 字节反而涨 76% —— **已定位为孤儿 fragment，不是真膨胀**（[compact GC investigation](../extended-bench/REPORT_M_lance_vs_iceberg.md#compact-gc-机制调查--new-2026-05-06)），`cleanup_old_versions()` 回收后反而比 pre-compact 小 5% |
 
 **根因**: Lance 的 manifest-per-commit 设计在 high-frequency 写场景下把 cost 累积到读侧（open overhead）和 storage 侧（未 GC 的 version）。
 
@@ -314,7 +314,7 @@ opencode review 在本项目多处 catch 致命 bug：
 3. **Blob V2 的批量 S3 GET 是否值得做？** 现在是 per-blob 串行 Range GET；把一次 take_blobs 合并成一个 multi-range GET 或预取 pipeline 可以大幅改善 notebook 场景
 4. **lance-flink PR #15 合并后的实测**（[计划在前序测试留作 followup](../README.md)）
 5. **TPC-DS sf100 + 完整 22-query** 才是真正的 DW benchmark，现在只跑了 store_sales + customer 两张表的微基准
-6. **`ds.optimize.compact_files()` 为什么让 size 大 76%？** M6 观察到的 UX 坑，需要定位到是 Lance 不 GC 还是写入逻辑本身膨胀
+6. **`ds.optimize.compact_files()` 为什么让 size 大 76%？** ✅ **已解答** (2026-05-06)：通过 [compact_gc_investigation.py](../extended-bench/scripts/compact_gc_investigation.py) 隔离测试确认是**假说 A (不 GC 孤儿 fragment)**，不是 compact 本身膨胀。调用 `cleanup_old_versions(older_than=0)` 后 size 回落到 pre-compact 的 95%（compact 实际做了紧凑重写）。修复方式：加 `auto_cleanup=True` 选项或默认行为。
 
 ---
 

@@ -1,0 +1,69 @@
+{
+  "lance_version": "4.0.1",
+  "baseline_rows": 100000,
+  "append_rows": 10000,
+  "n_appends": 20,
+  "snapshots": [
+    {
+      "stage": "1_baseline_written",
+      "total_bytes": 1757878,
+      "total_mb": 1.758,
+      "n_files": 3,
+      "data_files": 1,
+      "tx_files": 1,
+      "active_fragments": 1,
+      "versions": 1,
+      "latest_version": 1,
+      "rows": 100000
+    },
+    {
+      "stage": "2_after_appends",
+      "total_bytes": 7953979,
+      "total_mb": 7.954,
+      "n_files": 63,
+      "data_files": 21,
+      "tx_files": 21,
+      "active_fragments": 21,
+      "versions": 21,
+      "latest_version": 21,
+      "rows": 300000
+    },
+    {
+      "stage": "3_post_compact_precleanup",
+      "total_bytes": 13120466,
+      "total_mb": 13.12,
+      "n_files": 68,
+      "data_files": 22,
+      "tx_files": 23,
+      "active_fragments": 1,
+      "versions": 23,
+      "latest_version": 23,
+      "rows": 300000,
+      "compact_seconds": 0.051,
+      "compact_metrics": "CompactionMetrics(fragments_removed=21, fragments_added=1, files_removed=21, files_added=1)"
+    },
+    {
+      "stage": "4_post_cleanup",
+      "total_bytes": 5164297,
+      "total_mb": 5.164,
+      "n_files": 3,
+      "data_files": 1,
+      "tx_files": 1,
+      "active_fragments": 1,
+      "versions": 1,
+      "latest_version": 23,
+      "rows": 300000,
+      "cleanup_seconds": 0.004,
+      "cleanup_stats": "CleanupStats { bytes_removed: 7956169, old_versions: 22, data_files_removed: 21, transaction_files_removed: 22, index_files_removed: 0, deletion_files_removed: 0 }"
+    }
+  ],
+  "deltas": {
+    "compact_growth_mb": 5.166,
+    "compact_growth_pct": 64.95,
+    "cleanup_shrink_mb": 7.956,
+    "cleanup_recovery_pct": 154.01,
+    "net_mb_vs_pre_compact": -2.79,
+    "net_pct_vs_pre_compact": -35.08
+  },
+  "verdict": "MIXED: cleanup recovered 154.0% of the compact growth. Both mechanisms contribute. Surviving bloat is -35.1% of pre-compact size."
+}

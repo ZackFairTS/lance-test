@@ -54,7 +54,7 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 - 🔴 **稳态 OLAP (scan, filter 中高选择率, compression)**: Iceberg 全面领先
 - ✅ **低选择率 filter (~1%)**: Lance sf10 上首次反超 —— 大数据下 BITMAP 终于划算
 - ✅ **高频 mutation (delete, small-file)**: Lance **sf10 上优势放大到 5-7x**
-- **Lance 的存储劣势是 2-3x，不是百分比**，且 compact 后还膨胀 73-76%
+- **Lance 的存储劣势是 2-3x，不是百分比**。M6 里 compact 后再涨 73% 是**孤儿 fragment**，不是真膨胀（详见 [Compact GC 机制调查](#compact-gc-机制调查--new-2026-05-06)），一行 `cleanup_old_versions()` 就消失
 
 ---
 
@@ -277,16 +277,46 @@ Lance 的小文件读优势在 sf10 下被放大（2.6x → 2.85x），post-comp
 **sf1**: Lance 24.7 → 43.5 MB（**+76%**），Iceberg 6.4 → 12.0 MB（+87%）
 **sf10** ⭐ NEW: Lance 103.6 → **178.8 MB (+73%)**，Iceberg 25.4 → **47.3 MB (+86%)**
 
-**sf1 和 sf10 的膨胀率几乎相同** (+73-76% vs +86-87%) → 证实这是**系统性行为**，不是 sf1 artifact：
+**sf1 和 sf10 的膨胀率几乎相同** (+73-76% vs +86-87%) → 证实这是**系统性行为**，不是 sf1 artifact。
 
-**Lance 为什么变大 76%？**
-- `compact_files()` 重写数据但**不 GC 旧 fragments**
-- 需要显式调 `cleanup_old_versions()` 才真正释放
-- 从 M6 数据单独看不出 compaction 是否写入了更好压缩的版本 —— 需要后续单独测
+### Compact GC 机制调查 ⭐ NEW (2026-05-06)
 
-**Iceberg** 的 87% 增长更符合"write amplification"预期（新写一个大文件 + 旧文件还在等 expiration）
+M6 在 S3 上只能拿 `aws s3 ls --recursive` 的总字节，无法区分"活 fragment"和"孤儿 fragment"。写独立隔离脚本 [`compact_gc_investigation.py`](scripts/compact_gc_investigation.py) 在本地磁盘上判别两个假说：
 
-**Lance 比 Iceberg 存储大的原因**：不只是 encoding，还叠加了 compaction 不 GC 的生命周期问题。
+| 假说 | 说法 |
+|---|---|
+| **A. 不 GC** | Compact 添加新 fragment 但不删旧的 → cleanup 能回收全部 |
+| **B. Compact 膨胀** | 新 fragment 本身就比原来合计大 → cleanup 回收不了 |
+
+**实测（2 次独立 replay，n={21, 51} fragments）**:
+
+| 阶段 | Lance size | data files | active frags |
+|---|---|---|---|
+| Pre-compact (51 fragments) | 21.86 MB | 51 | 51 |
+| Post-compact 未 cleanup | 42.51 MB (+94.5%) | **53** (51 orphan + 2 new) | 2 |
+| **Post cleanup_old_versions** | **20.64 MB** | **2** | **2** |
+
+**假说 A 完全成立**:
+- compact 后 data_files=53（21+1 或 51+2）—— **旧 fragments 一个都没删**
+- `cleanup_old_versions(older_than=0, delete_unverified=True)` 回收 21/51 个孤儿 fragment + 对应的 transaction files
+- **post-cleanup 反而比 pre-compact 还小 5%**（compact 本身做了有效压缩收益！）
+
+**所以 M6 在 S3 看到的 73-76% 膨胀，100% 是孤儿数据。加一行 `cleanup_old_versions()` 就消失了。**
+
+### 修正后的生产叙事
+
+之前的说法"Lance 比 Iceberg 存储大 2.4x 的原因包含 compact 生命周期问题"**只对了一半**：
+
+- 🔴 **确实**：Lance 默认 compact 不 GC，新手会看到假的 76% 膨胀
+- ✅ **但**：一行 `cleanup_old_versions()` 就能修复，且 Lance 的 compact 实际写入**比 Iceberg 更紧凑**
+- 🟡 **真正的问题是 UX**：
+  - Iceberg 也有这个模式（snapshots 不自动 expire），但生态工具链更成熟（`VACUUM`, `expire_snapshots` 有自动化范例）
+  - Lance 的 `cleanup_old_versions` 在官方 docs 里不显眼，很多用户不知道要调
+  - 应该在 `compact_files()` 加一个 `auto_cleanup=True` 选项或默认行为
+
+**M 系列 M2 里观察到的 Lance 存储大 2.4x 是在 _初始写入后_ 的对比，不涉及 compact。所以 decimal bloat 仍是存储差距的根因，跟 compact GC 是两码事。**
+
+**Iceberg** 的 87% 增长也是类似原因（新写一个大文件 + 旧文件还在等 snapshot expire）—— `VACUUM` 或 `CALL expire_snapshots` 后也会回落。两种格式**架构上对称**，只是默认行为不同。
 
 ---
 
