@@ -1,0 +1,69 @@
+{
+  "lance_version": "4.0.1",
+  "baseline_rows": 200000,
+  "append_rows": 20000,
+  "n_appends": 50,
+  "snapshots": [
+    {
+      "stage": "1_baseline_written",
+      "total_bytes": 3502715,
+      "total_mb": 3.503,
+      "n_files": 3,
+      "data_files": 1,
+      "tx_files": 1,
+      "active_fragments": 1,
+      "versions": 1,
+      "latest_version": 1,
+      "rows": 200000
+    },
+    {
+      "stage": "2_after_appends",
+      "total_bytes": 21862653,
+      "total_mb": 21.863,
+      "n_files": 153,
+      "data_files": 51,
+      "tx_files": 51,
+      "active_fragments": 51,
+      "versions": 51,
+      "latest_version": 51,
+      "rows": 1200000
+    },
+    {
+      "stage": "3_post_compact_precleanup",
+      "total_bytes": 42513003,
+      "total_mb": 42.513,
+      "n_files": 159,
+      "data_files": 53,
+      "tx_files": 53,
+      "active_fragments": 2,
+      "versions": 53,
+      "latest_version": 53,
+      "rows": 1200000,
+      "compact_seconds": 0.221,
+      "compact_metrics": "CompactionMetrics(fragments_removed=51, fragments_added=2, files_removed=51, files_added=2)"
+    },
+    {
+      "stage": "4_post_cleanup",
+      "total_bytes": 20645499,
+      "total_mb": 20.645,
+      "n_files": 4,
+      "data_files": 2,
+      "tx_files": 1,
+      "active_fragments": 2,
+      "versions": 1,
+      "latest_version": 53,
+      "rows": 1200000,
+      "cleanup_seconds": 0.006,
+      "cleanup_stats": "CleanupStats { bytes_removed: 21867504, old_versions: 52, data_files_removed: 51, transaction_files_removed: 52, index_files_removed: 0, deletion_files_removed: 0 }"
+    }
+  ],
+  "deltas": {
+    "compact_growth_mb": 20.65,
+    "compact_growth_pct": 94.45,
+    "cleanup_shrink_mb": 21.868,
+    "cleanup_recovery_pct": 105.9,
+    "net_mb_vs_pre_compact": -1.218,
+    "net_pct_vs_pre_compact": -5.57
+  },
+  "verdict": "HYPOTHESIS A confirmed. Post-compact directory growth is MVCC history (old versions retained by design for time travel). cleanup_old_versions() discards the history and active size returns to near the pre-compact baseline. This is not a bug -- Iceberg has identical semantics via expire_snapshots."
+}

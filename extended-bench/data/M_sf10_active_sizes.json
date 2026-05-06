@@ -1,0 +1,37 @@
+[
+  {
+    "kind": "lance",
+    "uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/lance/store_sales.lance",
+    "rows": 28800991,
+    "latest_version": 2,
+    "n_versions": 2,
+    "n_active_fragments": 19,
+    "n_total_files": 24,
+    "active_data_bytes": 3568379190,
+    "orphan_data_bytes": 0,
+    "metadata_bytes": 58009045,
+    "total_bytes_on_disk": 3626388235,
+    "active_mb": 3568.379,
+    "orphan_mb": 0.0,
+    "total_mb": 3626.388,
+    "pct_orphan": 0.0
+  },
+  {
+    "kind": "iceberg",
+    "data_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales",
+    "metadata_uri": "s3://lance-benchmark-113343415039-ap-northeast-1/extended-bench/20260430-151447/M/tpcds_sf10/iceberg/tpcds/store_sales/metadata/v1.metadata.json",
+    "n_active_data_files": 16,
+    "n_active_delete_files": 0,
+    "n_total_files": 20,
+    "active_data_bytes": 1475803022,
+    "active_delete_bytes": 0,
+    "active_total_bytes": 1475803022,
+    "orphan_data_bytes": 0,
+    "metadata_bytes": 22488,
+    "total_bytes_on_disk": 1475825510,
+    "active_mb": 1475.803,
+    "orphan_mb": 0.0,
+    "total_mb": 1475.826,
+    "pct_orphan": 0.0
+  }
+]

@@ -1,49 +1,46 @@
-"""Compact GC investigation: distinguish hypothesis A (compact does not GC
-old fragments) from hypothesis B (compact itself bloats output).
+"""Attribute Lance compact's post-call directory growth: how much is
+MVCC history (old fragments retained intentionally for time travel) vs
+how much is compacted output that is itself larger than the original?
 
-Context (M6 finding): Lance `ds.optimize.compact_files()` inflates on-disk
-size by 73-76% in both sf1 and sf10 runs. It is unclear whether:
-  A. Old fragments remain on disk after compact, inflating total footprint
-     -> size should drop after `cleanup_old_versions()`, per-fragment
-        ratio should match pre-compact.
-  B. New compacted fragments are themselves larger than the originals
-     combined -> cleanup does nothing, new fragment is bloated.
+Context (M6 earlier finding, since corrected): Lance
+`ds.optimize.compact_files()` grows the on-disk *directory* size by
+73-76% in both sf1 and sf10 S3 runs. Naive `du` cannot tell apart:
+  A. OLD FRAGMENTS RETAINED by design -- Lance/Iceberg are MVCC; old
+     version fragments are what make `checkout_version(N)` / time
+     travel / rollback work. They are features, not leaks.
+     `cleanup_old_versions(older_than=...)` discards them when the
+     user no longer needs the history.
+  B. COMPACTED OUTPUT ITSELF LARGER than the sum of the originals --
+     would be a real encoding-path regression, NOT recoverable by
+     cleanup.
 
-Experiment protocol per replay:
-  1. Build a baseline fragment, then append N small fragments.
-  2. Snapshot: count fragments, total S3/disk bytes, count on-disk files
-     under data/, count versions.
-  3. Call ds.optimize.compact_files(). Record CompactionMetrics.
-  4. Snapshot again.
-  5. Call ds.cleanup_old_versions(older_than=timedelta(0), delete_unverified=True).
-     Record CleanupStats.
-  6. Snapshot again.
-  7. Print a matrix: fragments, files, bytes, versions at each stage.
+Experiment protocol:
+  1. Write baseline + N small appends -> `ds` has N+1 versions, all
+     referenced by the current version.
+  2. Call `compact_files()`. Old fragments move from 'current-version
+     referenced' to 'only referenced by historical versions'.
+  3. Call `cleanup_old_versions(older_than=timedelta(0))`. Discards all
+     versions that are not the latest. Equivalent to telling Lance
+     'I do not need time travel, reclaim the space.'
+  4. Compare active-version bytes at each stage.
 
-Hypothesis A is supported if:
-  - Step-2 -> Step-4 grows in bytes and file count
-  - Step-4 -> Step-6 shrinks in bytes (files cleaned up) close to pre-compact
-  - Post-cleanup bytes <= pre-compact bytes
+Interpretation:
+  - If post-cleanup bytes ~= pre-compact bytes -> hypothesis A, what
+    looked like bloat was retained MVCC history.
+  - If post-cleanup bytes >> pre-compact bytes -> hypothesis B, the
+    compacted output itself is larger than the inputs combined.
 
-Hypothesis B is supported if:
-  - Step-2 -> Step-4 grows in bytes
-  - Step-4 -> Step-6 shrinks but still >> pre-compact
-  - The surviving compacted fragment(s) are larger than the sum of the
-    original fragments at Step 2.
-
-We run this on local disk (not S3) so file-count is ground truth; the
-M6 finding was on S3 via `aws s3 ls --summarize` which sums all prefixes
-and cannot distinguish active from orphaned.
+We run locally so file-count is ground truth. S3 `aws s3 ls` sums
+every subfolder and cannot distinguish active from historical files.
 """
 import argparse
 import datetime
+import decimal
 import json
 import os
 import shutil
 import subprocess
 import time
-
-import decimal
 
 import lance
 import numpy as np
@@ -226,19 +223,24 @@ def main():
           f"= {cleanup_recovery_pct:.1f}% of compact growth")
 
     if cleanup_recovery_pct >= 80 and abs(net_pct) <= 15:
-        verdict = ("HYPOTHESIS A supported: compact does NOT GC old "
-                   "fragments. cleanup_old_versions recovers ~all the "
-                   "inflated bytes, and net vs pre-compact is near zero.")
+        verdict = ("HYPOTHESIS A confirmed. Post-compact directory growth "
+                   "is MVCC history (old versions retained by design for "
+                   "time travel). cleanup_old_versions() discards the "
+                   "history and active size returns to near the pre-compact "
+                   "baseline. This is not a bug -- Iceberg has identical "
+                   "semantics via expire_snapshots.")
     elif cleanup_recovery_pct < 40:
-        verdict = ("HYPOTHESIS B supported: the compacted fragment(s) "
-                   "are themselves bloated. cleanup_old_versions "
-                   "recovers little; the surviving data is larger than "
-                   "the sum of the pre-compact fragments.")
+        verdict = ("HYPOTHESIS B confirmed. The compacted output itself is "
+                   "larger than the sum of the pre-compact fragments. "
+                   "cleanup_old_versions cannot recover the difference. "
+                   "This WOULD be a real encoding-path regression.")
     else:
-        verdict = ("MIXED: cleanup recovered "
-                   f"{cleanup_recovery_pct:.1f}% of the compact growth. "
-                   "Both mechanisms contribute. Surviving bloat is "
-                   f"{net_pct:.1f}% of pre-compact size.")
+        verdict = (f"MIXED: cleanup recovered {cleanup_recovery_pct:.1f}% "
+                   "of the post-compact directory growth. Retained MVCC "
+                   "history explains most of the increase, but a small "
+                   f"fraction ({net_pct:.1f}% of pre-compact size) appears "
+                   "to be compacted output that is marginally larger than "
+                   "inputs. Worth re-running to check noise.")
     print(f"\n  VERDICT: {verdict}")
 
     out = {
