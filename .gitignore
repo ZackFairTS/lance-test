@@ -12,3 +12,4 @@ credentials.json
 __pycache__/
 *.pyc
 .DS_Store
+HANDOFF.md
