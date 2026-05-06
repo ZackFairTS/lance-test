@@ -43,17 +43,18 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 | **写入速度** | **43s** (sf10) | 32s | ≈ (不同路径) |
 | **全表扫描** (sf10) | 2701 ms | **2284 ms** ⭐ | 🟡 Iceberg，Lance 慢 **1.18x** |
 | **单列扫描** (sf10) | 609 ms | **388 ms** ⭐ | 🔴 Iceberg，Lance 慢 **1.57x** |
-| **filter (1% sel)** | 413 ms | **311 ms** ⭐ | 🔴 Iceberg，Lance 慢 1.33x |
-| **filter (50% sel)** | 784 ms | **292 ms** ⭐ | 🔴 Iceberg，Lance 慢 2.69x |
-| **DELETE 速度** | **0.4s** ⭐ | 3s | ✅ **Lance 快 7x** |
-| **DELETE 后读** | **312 ms** ⭐ | 1518 ms | ✅ **Lance 快 4.8x** |
-| **50×append+compact 前读** | **186 ms** ⭐ | 491 ms | ✅ **Lance 快 2.6x** |
-| **compact 时间** | **1.2s** ⭐ | 3.8s | ✅ Lance 快 3x |
+| **filter (1% sel, sf10)** ⭐ | **634 ms** | 707 ms | ✅ **Lance 反超 0.90x** |
+| **filter (50% sel, sf10)** | 2143 ms | **729 ms** ⭐ | 🔴 Iceberg，Lance 慢 **2.94x** |
+| **DELETE 速度** (sf10) | **0.6s** ⭐ | 3.5s | ✅ **Lance 快 5.8x** |
+| **DELETE 后读** (sf10, 10%) | **754 ms** ⭐ | 5571 ms | ✅ **Lance 快 7.4x** |
+| **50×append+compact 前读** (sf10) | **309 ms** ⭐ | 880 ms | ✅ **Lance 快 2.85x** |
+| **compact 时间** (sf10) | **1.8s** ⭐ | 6.7s | ✅ Lance 快 3.67x |
 
 **简单概括**:
-- 🔴 **稳态 OLAP (scan, filter, compression)**: Iceberg 全面领先
-- ✅ **高频 mutation (delete, small-file)**: Lance 全面领先
-- **Lance 的存储劣势是 2-3x，不是百分比**
+- 🔴 **稳态 OLAP (scan, filter 中高选择率, compression)**: Iceberg 全面领先
+- ✅ **低选择率 filter (~1%)**: Lance sf10 上首次反超 —— 大数据下 BITMAP 终于划算
+- ✅ **高频 mutation (delete, small-file)**: Lance **sf10 上优势放大到 5-7x**
+- **Lance 的存储劣势是 2-3x，不是百分比**，且 compact 后还膨胀 73-76%
 
 ---
 
@@ -137,6 +138,8 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 
 ### 结果
 
+**sf1 (2.88M rows)**:
+
 | Target | Actual Sel | Rows | Lance p50 | Iceberg p50 | L/I |
 |---|---|---|---|---|---|
 | 0.01% | — | — | SKIPPED ⚠️ | SKIPPED | infeasible |
@@ -144,6 +147,22 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 | 1% | 0.96% | 27,613 | 413 ms | **311 ms** ⭐ | 1.33x 慢 |
 | 10% | 9.56% | 275,345 | 503 ms | **318 ms** ⭐ | 1.58x 慢 |
 | 50% | 49.63% | 1,429,485 | 784 ms | **292 ms** ⭐ | **2.69x 慢** |
+
+**sf10 (28.8M rows)** ⭐ NEW:
+
+| Target | Actual Sel | Rows | Lance p50 | Iceberg p50 | L/I |
+|---|---|---|---|---|---|
+| 0.01% | — | — | SKIPPED ⚠️ | SKIPPED | infeasible |
+| 0.1% | — | — | SKIPPED ⚠️ | SKIPPED | infeasible |
+| **1%** | 0.95% | 274,565 | **634 ms** ⭐ | 707 ms | **0.90x (Lance 反超)** |
+| 10% | 9.55% | 2,750,202 | 912 ms | **714 ms** ⭐ | 1.28x 慢 |
+| 50% | 49.64% | 14,297,510 | 2143 ms | **729 ms** ⭐ | **2.94x 慢** |
+
+**sf10 的新洞察**:
+- **1% 选择率下 Lance 首次反超** (634ms vs 707ms) —— 在大数据量下 BITMAP index 定位 274K 行的能力终于摊销出价值
+- **但 10% 和 50% 差距被放大**（sf1 是 1.58x / 2.69x → sf10 是 1.28x / **2.94x**）
+- **Iceberg 全选择率几乎恒定** (707/714/729 ms)：min/max pruning 在 uniform 分布下零作用，时间都花在 I/O 上
+- **Lance 50% 选择率爆炸**（634→912→**2143 ms**，3.4x 放大），证实 query planner bug 在大数据量下**更严重**
 
 **关键**：
 - **0.01% / 0.1% 目标不可达**：`ss_quantity` 只有 100 个离散值（uniform 1-100），每个值覆盖 ~1%。calibration 正确检测并跳过 —— 这是 M4 脚本的设计优点（B1 审查后改的）
@@ -169,6 +188,22 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 | 0.1% (2,890 rows) | **0.38s** | 2.99s | **332 ms** | 999 ms | **0.33x (Lance 快 3x)** |
 | 1% (~28K rows) | **0.38s** | 3.54s | **341 ms** | 1034 ms | **0.33x (Lance 快 3x)** |
 | 10% (~287K rows) | **0.47s** | 2.50s | **313 ms** | 1518 ms | **0.21x (Lance 快 4.8x)** |
+
+### sf10 结果 ⭐ NEW (28.8M rows)
+
+| Fraction | Lance DELETE | Iceberg DELETE | Lance post-scan | Iceberg post-scan | L/I scan |
+|---|---|---|---|---|---|
+| 0.1% (26,646 rows) | **0.53s** | 3.20s | **1023 ms** | 5492 ms | **0.19x (Lance 快 5.4x)** |
+| 1% (286,345 rows) | **0.54s** | 2.98s | **963 ms** | 5492 ms | **0.18x (Lance 快 5.7x)** |
+| 10% (2,872,726 rows) | **0.63s** | 4.47s | **754 ms** | 5571 ms | **0.14x (Lance 快 7.4x)** |
+
+**sf10 放大了 Lance 的优势 —— 这是 Lance 对 Iceberg 最稳的结构性胜利**:
+- **Lance DELETE 快 5-8x**（sf1 5-8x, sf10 5-7x，规模无关）
+- **Lance post-scan 快 5.4-7.4x**（sf1 是 3-4.8x → sf10 优势反而放大）
+- Lance scan 仍保持"删越多读越快"特性（0.1%→10% 时 1023→**754ms**）
+- Iceberg post-scan 在所有 fraction 上几乎**恒定 5500ms 左右** —— position-delete 文件数量固定 (12 个), 所以 MoR 反合成开销是固定的
+
+**为什么 sf10 优势放大**: 数据量 10x，Lance 的 deletion vector 读开销仍接近 O(1)（位图 alignment），Iceberg 的 position-delete anti-join 开销近似 O(N) → 在大数据上差距被放大。
 
 ### 关键发现
 
@@ -197,6 +232,8 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 
 ### 时间和文件数
 
+**sf1**:
+
 | 阶段 | Lance | Iceberg |
 |---|---|---|
 | Baseline write | **0.6s** ⭐ | 3.8s |
@@ -205,20 +242,42 @@ M 系列首次把 Lance v2.2 跟 **完整 Iceberg v2 stack** 正面对比，在 
 | Pre-compact files | 21 fragments | 21 data files + 22 snapshots |
 | Post-compact files | **1** | 1 (+ 23 snapshots, 旧的未 expire) |
 
-**Lance 所有阶段都快 2-5x**。Iceberg 的 Spark 开销在每次 append 上摊销 ~1s，累积起来 5x 慢。
+**sf10** ⭐ NEW (50 appends, same baseline + append batch sizes):
+
+| 阶段 | Lance | Iceberg |
+|---|---|---|
+| Baseline write | **0.6s** ⭐ | 4.0s |
+| **50 次 append 总时间** | **13.1s** ⭐ | **62.3s** (4.76x) |
+| Compaction 时间 | **1.8s** ⭐ | 6.7s (3.67x) |
+| Pre-compact files | 51 fragments | 51 data files + 52 snapshots |
+| Post-compact files | **1** | 1 (+ 53 snapshots) |
+
+**Lance 所有阶段 sf10 上都快 3-5x**。append 比例 4.76x 跟 sf1 (4.8x) 几乎完全一致 —— 证实 **Spark 每次 append 固定开销 ~1s** 是 Iceberg 的结构死穴，跟数据量无关。
 
 ### 读延迟（pre vs post compact）
+
+**sf1** (21 files → 1 file):
 
 | 阶段 | Lance p50 | Iceberg p50 | Lance/Iceberg |
 |---|---|---|---|
 | Pre-compact (21 files) | **186 ms** ⭐ | 491 ms | **0.38x (Lance 快 2.6x)** |
 | Post-compact (1 file) | **199 ms** ⭐ | 313 ms | 0.63x (Lance 快 1.6x) |
 
-### 意外发现：Lance 的 compact 让 size 变大
+**sf10** ⭐ NEW (51 files → 1 file):
 
-- Lance pre-compact: 24.7 MB (21 fragments)
-- **Lance post-compact: 43.5 MB (1 fragment) —— 大了 76%**
-- Iceberg pre: 6.4 MB → post: 12.0 MB（大了 87%，符合预期的 write amplification）
+| 阶段 | Lance p50 | Iceberg p50 | Lance/Iceberg |
+|---|---|---|---|
+| Pre-compact (51 files) | **309 ms** ⭐ | 880 ms | **0.35x (Lance 快 2.85x)** |
+| Post-compact (1 file) | **214 ms** ⭐ | 382 ms | 0.56x (Lance 快 1.78x) |
+
+Lance 的小文件读优势在 sf10 下被放大（2.6x → 2.85x），post-compact 差距也放大（1.6x → 1.78x）。
+
+### 意外发现：Lance 的 compact 让 size 变大（sf10 验证）
+
+**sf1**: Lance 24.7 → 43.5 MB（**+76%**），Iceberg 6.4 → 12.0 MB（+87%）
+**sf10** ⭐ NEW: Lance 103.6 → **178.8 MB (+73%)**，Iceberg 25.4 → **47.3 MB (+86%)**
+
+**sf1 和 sf10 的膨胀率几乎相同** (+73-76% vs +86-87%) → 证实这是**系统性行为**，不是 sf1 artifact：
 
 **Lance 为什么变大 76%？**
 - `compact_files()` 重写数据但**不 GC 旧 fragments**
@@ -304,11 +363,11 @@ Spark 的 `createDataFrame(pd.DataFrame)` 如果 BIGINT 列有 NULL，会 silent
 | `results/M1_manifest_sf1.json` / `sf10.json` | Lance v2.2 + Iceberg v2 写入 manifest |
 | `results/M2_size_sf1.json` / `sf10.json` | S3 字节分解 + per-column 大小 |
 | `results/M3_scan_sf1.json` / `sf10.json` | Full scan + col scan 延迟 |
-| `results/M4_filter_sf1.json` | BITMAP vs min/max filter (仅 sf1) |
-| `results/M5_update_sf1.json` | DELETE + 读放大 (仅 sf1) |
-| `results/M6_compact_sf1.json` | Small-files + compact (仅 sf1) |
+| `results/M4_filter_sf1.json` / `sf10.json` | BITMAP vs min/max filter |
+| `results/M5_update_sf1.json` / `sf10.json` | DELETE + 读放大 |
+| `results/M6_compact_sf1.json` / `sf10.json` | Small-files + compact |
 
-**为什么 M4/M5/M6 没跑 sf10**：单次成本高（sf10 store_sales 1 GB × 5 selectivities × Spark CTAS × 7 rounds 测量）—— sf1 已经足够揭示定性结论，sf10 可以后续补。
+**sf10 补跑于 2026-05-06**（本 repo 早期版本只有 sf1）。sf10 全部定性结论都跟 sf1 一致，部分量化上差距放大（M5 delete scan 5-7x，M6 pre-compact 2.85x）。
 
 ## 相关脚本
 

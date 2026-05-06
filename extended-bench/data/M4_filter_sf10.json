@@ -1,0 +1,182 @@
+{
+  "scale": 10,
+  "region": "ap-northeast-1",
+  "m1_manifest": "/home/hadoop/lance-extended-bench/results/M1_manifest_sf10.json",
+  "filter_table": "store_sales",
+  "filter_column": "ss_quantity",
+  "projected_columns": [
+    "ss_item_sk",
+    "ss_customer_sk",
+    "ss_quantity",
+    "ss_sales_price"
+  ],
+  "selectivity_targets": {
+    "0.01%": 0.0001,
+    "0.1%": 0.001,
+    "1%": 0.01,
+    "10%": 0.1,
+    "50%": 0.5
+  },
+  "warmup": 3,
+  "rounds": 7,
+  "engine": "python+arrow (pylance + pyiceberg native)",
+  "lance_index": {
+    "requested_build": true,
+    "column": "ss_quantity",
+    "built": true,
+    "build_seconds": 4.182,
+    "existing_types": [
+      "Bitmap"
+    ],
+    "bitmap_present_at_runtime": true
+  },
+  "n_total": 28800991,
+  "lance_version": "4.0.1",
+  "results": [
+    {
+      "label": "0.01%",
+      "target_selectivity": 0.0001,
+      "actual_selectivity": 0.009533178910406243,
+      "predicate_k": 1,
+      "expected_rows": 274565,
+      "skipped": "infeasible_target"
+    },
+    {
+      "label": "0.1%",
+      "target_selectivity": 0.001,
+      "actual_selectivity": 0.009533178910406243,
+      "predicate_k": 1,
+      "expected_rows": 274565,
+      "skipped": "infeasible_target"
+    },
+    {
+      "label": "1%",
+      "target_selectivity": 0.01,
+      "actual_selectivity": 0.009533178910406243,
+      "predicate_k": 1,
+      "expected_rows": 274565,
+      "formats": {
+        "lance_2.2": {
+          "median_ms": 634.335,
+          "mean_ms": 632.26,
+          "min_ms": 587.325,
+          "max_ms": 729.239,
+          "stdev_ms": 48.963,
+          "runs_ms": [
+            591.88,
+            729.24,
+            642.86,
+            598.68,
+            587.33,
+            634.33,
+            641.5
+          ],
+          "rows_returned": 274565
+        },
+        "iceberg_v2": {
+          "median_ms": 707.19,
+          "mean_ms": 715.72,
+          "min_ms": 668.468,
+          "max_ms": 767.826,
+          "stdev_ms": 36.272,
+          "runs_ms": [
+            712.02,
+            695.14,
+            707.19,
+            761.68,
+            767.83,
+            697.72,
+            668.47
+          ],
+          "rows_returned": 274565
+        }
+      }
+    },
+    {
+      "label": "10%",
+      "target_selectivity": 0.1,
+      "actual_selectivity": 0.09548983922115735,
+      "predicate_k": 10,
+      "expected_rows": 2750202,
+      "formats": {
+        "lance_2.2": {
+          "median_ms": 912.328,
+          "mean_ms": 932.361,
+          "min_ms": 874.165,
+          "max_ms": 1009.17,
+          "stdev_ms": 46.896,
+          "runs_ms": [
+            908.59,
+            981.79,
+            912.33,
+            874.16,
+            930.39,
+            910.1,
+            1009.17
+          ],
+          "rows_returned": 2750202
+        },
+        "iceberg_v2": {
+          "median_ms": 713.489,
+          "mean_ms": 702.942,
+          "min_ms": 662.493,
+          "max_ms": 739.155,
+          "stdev_ms": 30.748,
+          "runs_ms": [
+            694.69,
+            713.84,
+            663.91,
+            662.49,
+            739.16,
+            733.01,
+            713.49
+          ],
+          "rows_returned": 2750202
+        }
+      }
+    },
+    {
+      "label": "50%",
+      "target_selectivity": 0.5,
+      "actual_selectivity": 0.4964242376243234,
+      "predicate_k": 52,
+      "expected_rows": 14297510,
+      "formats": {
+        "lance_2.2": {
+          "median_ms": 2143.403,
+          "mean_ms": 2154.999,
+          "min_ms": 2111.528,
+          "max_ms": 2214.03,
+          "stdev_ms": 40.747,
+          "runs_ms": [
+            2208.19,
+            2143.4,
+            2154.42,
+            2123.33,
+            2111.53,
+            2214.03,
+            2130.09
+          ],
+          "rows_returned": 14297510
+        },
+        "iceberg_v2": {
+          "median_ms": 728.982,
+          "mean_ms": 737.949,
+          "min_ms": 660.985,
+          "max_ms": 842.323,
+          "stdev_ms": 53.888,
+          "runs_ms": [
+            726.48,
+            660.99,
+            721.06,
+            748.38,
+            728.98,
+            737.43,
+            842.32
+          ],
+          "rows_returned": 14297510
+        }
+      }
+    }
+  ]
+}
