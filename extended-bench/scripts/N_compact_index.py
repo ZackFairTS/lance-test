@@ -354,17 +354,16 @@ def ground_truth_count(ds: "lance.LanceDataset", spec: IndexSpec, q: dict) -> in
     Strategy differs by query type because Lance offers no runtime
     "force full scan" flag:
       - scalar filters: ds.to_table() then evaluate in PyArrow compute
-      - FTS: approximate via substring match on the first query term
-      - vector KNN: ground truth == k (we only assert result count, not
-        recall — recall verification would need a reference FLAT index)
+        (exact oracle)
+      - FTS: no reliable brute-force oracle (BM25 tokenization/stemming
+        differs from substring match). Return -1 to mark unknown.
+      - vector KNN: return -1; post == pre remains the correctness test,
+        recall verification would need a reference FLAT index.
     """
     if "nearest" in q:
-        return q.get("k", 10)
+        return -1
     if "fts" in q:
-        tbl = ds.to_table(columns=["text"])
-        first_term = q["fts"].split()[0]
-        matches = pc.match_substring(tbl["text"], first_term).to_numpy(zero_copy_only=False)
-        return int(matches.sum())
+        return -1
     tbl = ds.to_table()
     return _pyarrow_count(tbl, q["filter"])
 
@@ -544,12 +543,18 @@ def run_one_combo(*, index_spec: IndexSpec, compact_path: str,
                 cb = make_query_callable(ds, index_spec, q)
                 t = timed(cb, warmup=2, rounds=5 if not smoke else 3)
                 out: pa.Table = t.pop("_last_result")
+                gt_val = gt_counts.get(q["name"])
+                gt_is_numeric = isinstance(gt_val, int) and gt_val >= 0
+                matches_gt = gt_is_numeric and (out.num_rows == gt_val)
                 pre_query_results[q["name"]] = {
                     "latency": t, "rows_returned": out.num_rows,
-                    "expected": gt_counts.get(q["name"]),
+                    "expected": gt_val,
+                    "matches_ground_truth": matches_gt,
+                    "ground_truth_checkable": gt_is_numeric,
                 }
+                flag = "" if matches_gt or not gt_is_numeric else " [!! PRE != GT]"
                 print(f"[N]   {q['name']:<10}  p50={t['median_ms']:>8.2f}ms  "
-                      f"rows={out.num_rows}  (gt={gt_counts.get(q['name'])})")
+                      f"rows={out.num_rows}  (gt={gt_val}){flag}")
             except Exception as e:
                 pre_query_results[q["name"]] = {"error": str(e)}
                 print(f"[N]   {q['name']:<10}  ERROR: {e}")
@@ -627,9 +632,20 @@ def run_one_combo(*, index_spec: IndexSpec, compact_path: str,
 
         correctness_ok = True
         any_query_errored_post_compact = False
+        any_query_errored_pre_compact = False
+        pre_matches_gt_ok = True
+        pre_matches_gt_checked = False
         for q in index_spec.queries:
             pre = pre_query_results.get(q["name"], {})
             post = post_query_results.get(q["name"], {})
+            if isinstance(pre, dict) and "error" in pre:
+                any_query_errored_pre_compact = True
+                correctness_ok = False
+                A[f"correctness_{q['name']}"] = {
+                    "pass": False, "reason": "query errored pre-compact",
+                    "error": pre["error"],
+                }
+                continue
             if isinstance(post, dict) and "error" in post:
                 any_query_errored_post_compact = True
                 correctness_ok = False
@@ -638,8 +654,17 @@ def run_one_combo(*, index_spec: IndexSpec, compact_path: str,
                     "error": post["error"],
                 }
                 continue
-            if isinstance(pre, dict) and "error" in pre:
-                continue
+            if pre.get("ground_truth_checkable"):
+                pre_matches_gt_checked = True
+                if not pre.get("matches_ground_truth"):
+                    pre_matches_gt_ok = False
+                    A[f"pre_matches_gt_{q['name']}"] = {
+                        "pass": False,
+                        "pre_rows": pre.get("rows_returned"),
+                        "gt_rows": pre.get("expected"),
+                    }
+                else:
+                    A[f"pre_matches_gt_{q['name']}"] = {"pass": True}
             if pre.get("rows_returned") != post.get("rows_returned"):
                 correctness_ok = False
                 A[f"correctness_{q['name']}"] = {
@@ -652,8 +677,17 @@ def run_one_combo(*, index_spec: IndexSpec, compact_path: str,
                     "pass": True, "rows": pre.get("rows_returned"),
                 }
         A["correctness_all_queries"] = correctness_ok
+        A["any_query_errored_pre_compact"] = any_query_errored_pre_compact
         A["any_query_errored_post_compact"] = any_query_errored_post_compact
+        A["pre_matches_ground_truth_all"] = {
+            "pass": pre_matches_gt_ok if pre_matches_gt_checked else None,
+            "checked": pre_matches_gt_checked,
+        }
         print(f"[N]   a. Correctness (row counts preserved): {'PASS' if correctness_ok else 'FAIL'}")
+        if pre_matches_gt_checked:
+            print(f"[N]   a'. Pre-compact matches ground truth: {'PASS' if pre_matches_gt_ok else 'FAIL'}")
+        else:
+            print(f"[N]   a'. Pre-compact ground truth: N/A (FTS/vector — no brute-force oracle)")
 
         metrics_ok = (compact_metrics["fragments_removed"] or 0) > 0
         A["compact_ran"] = {"pass": metrics_ok, **compact_metrics}
@@ -698,13 +732,25 @@ def run_one_combo(*, index_spec: IndexSpec, compact_path: str,
 
         new_frag_ids = set(f.fragment_id for f in ds.get_fragments())
         if post_idx:
-            bitmap_covers = bool(new_frag_ids.intersection(set(post_fragment_bitmap)))
+            post_bitmap_set = set(post_fragment_bitmap)
+            all_new_covered = new_frag_ids.issubset(post_bitmap_set)
+            any_new_covered = bool(new_frag_ids & post_bitmap_set)
+            stale_frags = post_bitmap_set - new_frag_ids
             A["bitmap_updated"] = {
-                "pass": bitmap_covers,
+                "pass": all_new_covered,
+                "all_new_fragments_in_bitmap": all_new_covered,
+                "any_new_fragments_in_bitmap": any_new_covered,
                 "new_fragments": sorted(new_frag_ids),
-                "index_bitmap": sorted(post_fragment_bitmap),
+                "index_bitmap": sorted(post_bitmap_set),
+                "stale_frag_ids_in_bitmap": sorted(stale_frags),
             }
-            print(f"[N]   f. Fragment bitmap covers current fragments: {'PASS' if bitmap_covers else 'FAIL'}")
+            if all_new_covered:
+                verdict = "PASS"
+            elif any_new_covered:
+                verdict = "PARTIAL (bitmap covers some but not all new fragments)"
+            else:
+                verdict = "FAIL (bitmap does not cover any new fragments)"
+            print(f"[N]   f. Fragment bitmap covers current fragments: {verdict}")
 
         for q in index_spec.queries:
             pre = pre_query_results.get(q["name"], {})
@@ -837,7 +883,7 @@ def main():
     print(f"[N] Results: {args.out}")
 
     print("\n[N] === Assertion Summary ===")
-    print(f"{'Index':<14} {'Path':<8} {'Correct':<8} {'UUID':<8} {'FRI':<8} {'Bitmap':<8}")
+    print(f"{'Index':<14} {'Path':<8} {'Correct':<8} {'PreGT':<7} {'UUID':<8} {'FRI':<8} {'Bitmap':<8}")
     for c in all_results["combos"]:
         if c.get("errors"):
             err_msg = c['errors'][0]['error'][:40]
@@ -845,11 +891,18 @@ def main():
             continue
         A = c.get("assertions", {})
         corr = "PASS" if A.get("correctness_all_queries") else "FAIL"
+        pre_gt_a = A.get("pre_matches_ground_truth_all", {})
+        if not pre_gt_a.get("checked"):
+            pre_gt = "N/A"
+        elif pre_gt_a.get("pass"):
+            pre_gt = "PASS"
+        else:
+            pre_gt = "FAIL"
         uuid = "PASS" if A.get("uuid_invariant", {}).get("pass") else "FAIL"
         fri = "PASS" if A.get("fri_invariant", {}).get("pass") else "FAIL"
         bm = "PASS" if A.get("bitmap_updated", {}).get("pass") else "FAIL"
         print(f"{c['index_spec']['label']:<14} {c['compact_path']:<8} "
-              f"{corr:<8} {uuid:<8} {fri:<8} {bm:<8}")
+              f"{corr:<8} {pre_gt:<7} {uuid:<8} {fri:<8} {bm:<8}")
 
 
 if __name__ == "__main__":

@@ -1,14 +1,33 @@
 # N. Compaction × Scalar/Vector Index 交互审计
 
-**测试日期**: 2026-05-09
+**测试日期**: 2026-05-09（initial）+ 2026-05-09 reviewed rerun
 **Lance 版本**: **pylance 4.0.1**（PyPI 最新）+ **pylance 6.0.0-rc.4**（源码编译，commit `cadf921b`，2026-05-08 tag）
 **PyArrow**: 21.0.0
 **环境**: AWS EMR master r8g.2xlarge (Graviton ARM64), 本地 `/tmp`（避免 S3 网络噪声）
 **数据规模**: 100K 行 × 10 fragments，compact 到 1 fragment
-**脚本**: `extended-bench/scripts/N_compact_index.py`
+**脚本**: `extended-bench/scripts/N_compact_index.py` ✅ **已通过 opencode ai-slop-remover review**（2026-05-09，应用 4 处修正后重跑验证）
 **结果**:
-- `results/N_compact_index.json` — pylance 4.0.1
-- `results/N_compact_index_v6rc4.json` — pylance 6.0.0-rc.4（源码编译）
+- `results/N_compact_index_4.0.1_reviewed.json` — pylance 4.0.1 (reviewed)
+- `results/N_compact_index_6.0.0rc4_reviewed.json` — pylance 6.0.0-rc.4 源码编译 (reviewed)
+- 仓库镜像: `data/N_compact_index_pylance_4.0.1.json` + `data/N_compact_index_pylance_6.0.0rc4.json`
+
+---
+
+## 📋 opencode review 发现并修复的 4 处问题
+
+与项目 A/B/D/E/F/G/H/I/J/K/L2/M 系列一致，脚本现已通过 ai-slop-remover review：
+
+| # | 发现 | 修复 |
+|---|---|---|
+| 1 | `ground_truth_count` 的值只打印不 assert，pre-compact query 结果和 gt 不符也不报错 | 新增 `pre_matches_ground_truth_all` assertion，每个 scalar query 都要 pre == gt 才算 PASS |
+| 2 | Pre-compact query 报错 + post-compact query 正常 → `correctness_all_queries` 会**错误地 PASS** | 重构 correctness 循环：pre 报错或 post 报错都直接 FAIL，不再 silent skip |
+| 3 | INVERTED 的 ground truth 用"首词 substring match"做近似，**不等价于 BM25**，会产生假 FAIL | FTS 和 vector ground truth 都改为 `-1`（不可检查），改由 `ground_truth_checkable` flag 标记 N/A |
+| 4 | `bitmap_updated` 用 intersection（任意一个新 fragment 在 bitmap 里就 PASS），compact 到多 fragment 时弱于 containment | 改为 `new_frag_ids.issubset(post_bitmap)`（全部新 fragment 都必须覆盖），同时保留 `any_new_fragments_in_bitmap` 作为辅助指标 |
+
+**Review 后重跑确认**：
+- 上一次报告的**所有 5-6 个 bug 都在更严格断言下重现**（未被误判）
+- 未引入新的 false positive（原本 "全 PASS" 的 7 个 index 仍然全 PASS）
+- INVERTED 的 PreGT = N/A 替代了之前的 FAIL（那是**我的** bug，不是 Lance 的 bug）
 
 ---
 
@@ -39,36 +58,43 @@
 
 ---
 
-## 📊 实测结果（18 个 combo = 9 index × 2 path，**两个版本都测**）
+## 📊 实测结果（18 个 combo = 9 index × 2 path，**两个版本都测，review 后**）
+
+断言列：
+- **Correct**：pre-compact 和 post-compact 查询返回的行数一致
+- **PreGT**：pre-compact 查询结果和 ground truth（全表扫描 + PyArrow compute）匹配（仅对 scalar 查询可检查；FTS/vector 无可靠 brute-force oracle）
+- **UUID**：default 路径 UUID 必须换；defer 路径 UUID 必须保持（stable_row_ids=True 时 default 也可不换）
+- **FRI**：`__lance_frag_reuse` 系统索引的存在性 —— default 路径必无，defer 路径（非 stable）必有
+- **Bitmap**：post-compact 的 index `fragment_ids` 必须**完全包含**当前所有新 fragment IDs（containment, not intersection）
 
 ### pylance 4.0.1 (2026-04-30, PyPI latest)
 
-| Index 类型 | Path | a. 正确性 | b. Compact 生效 | c/d. UUID | e. FRI | f. Bitmap 更新 | 验证结论 |
+| Index 类型 | Path | Correct | PreGT | UUID | FRI | Bitmap | 验证结论 |
 |---|---|---|---|---|---|---|---|
-| BTREE | default | ✅ | ✅ | ✅ UUID 换新 | ✅ 无 FRI | ✅ | ✅ |
-| BTREE | defer | ✅ | ✅ | ✅ UUID 不变 | ✅ FRI 存在 | ✅ | ✅ |
+| BTREE | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| BTREE | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | BITMAP | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | BITMAP | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | LABEL_LIST | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | LABEL_LIST | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | NGRAM | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | NGRAM | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **BLOOMFILTER** | **default** | ✅ | ✅ | ❌ UUID 不变 | ✅ | ❌ Bitmap 未更新 | 🔴 |
-| **BLOOMFILTER** | **defer** | ❌ 查询返回 0 行 | ✅ | ✅ | ✅ | ✅ | 🔴 |
-| **ZONEMAP** | **default** | ✅ | ✅ | ❌ UUID 不变 | ✅ | ❌ Bitmap 未更新 | 🔴 |
-| **ZONEMAP** | **defer** | ❌ 查询返回 0 行 | ✅ | ✅ | ✅ | ✅ | 🔴 |
-| INVERTED | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| INVERTED | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| IVF_HNSW_SQ | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| IVF_HNSW_SQ | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| IVF_PQ | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **IVF_PQ** | **defer** | ❌ 查询抛 Rust 错误 | ✅ | ✅ | ✅ | ✅ | 🔴 |
+| **BLOOMFILTER** | **default** | ✅ | ✅ | ❌ UUID 不变 | ✅ | ❌ Bitmap 仍指旧 fragments | 🔴 |
+| **BLOOMFILTER** | **defer** | ❌ 0 rows | ✅ | ✅ | ✅ | ✅ | 🔴 |
+| **ZONEMAP** | **default** | ✅ | ✅ | ❌ UUID 不变 | ✅ | ❌ Bitmap 仍指旧 fragments | 🔴 |
+| **ZONEMAP** | **defer** | ❌ 0 rows | ✅ | ✅ | ✅ | ✅ | 🔴 |
+| INVERTED | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| INVERTED | defer | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| IVF_HNSW_SQ | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| IVF_HNSW_SQ | defer | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| IVF_PQ | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| **IVF_PQ** | **defer** | ❌ Rust error | N/A | ✅ | ✅ | ✅ | 🔴 |
 
 **13/18 ✅，5/18 🔴**
 
 ### pylance 6.0.0-rc.4 (2026-05-08, **源码编译**)
 
-| Index 类型 | Path | a. 正确性 | b. Compact 生效 | c/d. UUID | e. FRI | f. Bitmap 更新 | 验证结论 |
+| Index 类型 | Path | Correct | PreGT | UUID | FRI | Bitmap | 验证结论 |
 |---|---|---|---|---|---|---|---|
 | BTREE | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | BTREE | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -82,12 +108,12 @@
 | **BLOOMFILTER** | **defer** | ❌ 0 rows | ✅ | ✅ | ✅ | ✅ | 🔴 **相同 bug** |
 | **ZONEMAP** | **default** | ✅ | ✅ | ❌ | ✅ | ❌ | 🔴 **相同 bug** |
 | **ZONEMAP** | **defer** | ❌ 0 rows | ✅ | ✅ | ✅ | ✅ | 🔴 **相同 bug** |
-| INVERTED | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| INVERTED | defer | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| IVF_HNSW_SQ | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **IVF_HNSW_SQ** | **defer** | ❌ 查询抛 Rust 错误 | ✅ | ✅ | ✅ | ✅ | 🔴 **新回归** |
-| IVF_PQ | default | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **IVF_PQ** | **defer** | ❌ 查询抛 Rust 错误 | ✅ | ✅ | ✅ | ✅ | 🔴 **相同 bug** |
+| INVERTED | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| INVERTED | defer | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| IVF_HNSW_SQ | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| **IVF_HNSW_SQ** | **defer** | ❌ Rust error | N/A | ✅ | ✅ | ✅ | 🔴 **新回归** |
+| IVF_PQ | default | ✅ | N/A | ✅ | ✅ | ✅ | ✅ |
+| **IVF_PQ** | **defer** | ❌ Rust error | N/A | ✅ | ✅ | ✅ | 🔴 **相同 bug** |
 
 **12/18 ✅，6/18 🔴** — 情况**比 4.0.1 更糟**：多了一个 IVF_HNSW_SQ × defer 的回归。
 
@@ -101,6 +127,17 @@
 | ZONEMAP defer: 0 rows | 🔴 | 🔴 | **6 个月未修** |
 | IVF_PQ defer: Rust error | 🔴 | 🔴 | **6 个月未修** |
 | **IVF_HNSW_SQ defer: Rust error** | ✅ | 🔴 | **❗ v6 新回归** |
+
+### Default 路径 BLOOMFILTER/ZONEMAP 的根因补充
+
+Default 路径下 `Correct = PASS` 但 `UUID / Bitmap = FAIL`，看似矛盾。实际机制：
+- UUID 不变 + Bitmap 仍指向被 compact 消灭的旧 fragments `[0..9]`（当前只有 fragment `[10]`）
+- 查询时 Lance 的 scanner 发现 fragment_bitmap 里的 fragment 都不存在 → **静默 fallback 到全表扫描**
+- 全表扫描结果正确，所以 `Correct = PASS`；但索引**根本没被用**，性能和无索引一样
+
+这是一种**中间状态 bug**：既没跑 IndexRemapper（默认路径应该做的），也没写 FRI（defer 路径应该做的）。可能和 defer 路径的 0-row bug **共享根因**（BloomFilter/ZoneMap 没在 `IndexRemapper` dispatch 表里注册，走 fallback 分支时两个路径都坏）。只是表现形式不同：
+- default：query planner 发现 bitmap 不匹配 → 回退全扫 → 正确但无加速
+- defer：FRI 翻译不识别 BloomFilter/ZoneMap 地址 → 返回空 → 静默错误
 
 ---
 

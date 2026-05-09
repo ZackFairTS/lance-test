@@ -186,6 +186,8 @@ MIT, 原始测试数据按 AS-IS 提供。
 > **核心问题**: `compact_files()` 后，已有的标量/向量索引是否需要重建？
 >
 > **实测结论**: **大部分 index 不需要重建**（上游文档承诺为真），**但 ZONEMAP / BLOOMFILTER / IVF_* defer 路径有严重 bug，跨 pylance 4.0.1 + 6.0.0-rc.4 (源码编译) 都存在，6 个月未修**。
+>
+> **脚本已通过 opencode ai-slop-remover review**：review 发现并修复 4 处断言弱化（pre==gt 未 assert、pre-error 误 pass、FTS 用 substring 近似 BM25、bitmap 用 intersection 代替 containment），修复后所有 bug 结论保留，**未引入新的 false positive**。
 
 **核心数据** (100K 行 × 10 fragments → compact 到 1 fragment，基于 upstream Rust 测试的 6 条不变式 assertion)：
 
