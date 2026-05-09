@@ -5,6 +5,8 @@
 > **🎯 先看 [META_ANALYSIS.md](META_ANALYSIS.md)** —— 跨所有 5 个研究的综合分析与生产建议。
 >
 > **🐛 [issues/decimal_sorted_bloat.md](issues/decimal_sorted_bloat.md)** —— 本次研究发现的最大 bug，待提交到 lance-format/lance。
+>
+> **🔴 [extended-bench/REPORT_N_compact_index.md](extended-bench/REPORT_N_compact_index.md)** —— **NEW**：Compaction × Index 交互审计，发现 5 个 silent correctness bug + 1 个 v6 回归，跨 pylance 4.0.1 + 6.0.0-rc.4 确认。
 
 ---
 
@@ -176,3 +178,37 @@ MIT, 原始测试数据按 AS-IS 提供。
 - 纯 `take_blobs` (256 per-row workers) 最高 **4,391 rows/s**，是官方数字 ~20%
 - Lance 比 raw S3 files 快 10x（真实价值范围）
 - 官方 "20-25K" 对应的可能是小记录（KB 级 embedding），不是图片 blob
+
+---
+
+### 5️⃣ [Compaction × Index 交互审计 (N 系列)](extended-bench/REPORT_N_compact_index.md) ⭐⭐⭐ NEW — 9 index × 2 path × 2 version 矩阵
+
+> **核心问题**: `compact_files()` 后，已有的标量/向量索引是否需要重建？
+>
+> **实测结论**: **大部分 index 不需要重建**（上游文档承诺为真），**但 ZONEMAP / BLOOMFILTER / IVF_* defer 路径有严重 bug，跨 pylance 4.0.1 + 6.0.0-rc.4 (源码编译) 都存在，6 个月未修**。
+
+**核心数据** (100K 行 × 10 fragments → compact 到 1 fragment，基于 upstream Rust 测试的 6 条不变式 assertion)：
+
+| Index 类型 | default 路径 | defer 路径 | 状态 |
+|---|---|---|---|
+| BTREE / BITMAP / LABEL_LIST / NGRAM / INVERTED | ✅ | ✅ | 全部正确 |
+| IVF_HNSW_SQ | ✅ | ✅ (4.0.1) / 🔴 **v6 新回归** | 跨版本不稳定 |
+| IVF_PQ | ✅ | 🔴 Rust error "fragment id 0" | defer 路径崩溃 |
+| **ZONEMAP** | 🔴 UUID/bitmap 不更新 | 🔴 **查询返回 0 行** | 🔴 两个版本都坏 |
+| **BLOOMFILTER** | 🔴 UUID/bitmap 不更新 | 🔴 **查询返回 0 行** | 🔴 两个版本都坏 |
+
+**关键发现**:
+- 🔴 **ZONEMAP / BLOOMFILTER + `defer_index_remap=True` 静默返回错误结果**（silent correctness bug，生产环境最危险的一类 bug）
+- 🔴 Upstream `rust/lance/src/dataset/optimize.rs` 里 **没有 CI 测试** 的 index 类型（ZONEMAP、BLOOMFILTER、RTree）实测 bug 率 100%
+- 🔴 **IVF_HNSW_SQ defer 是 v6 新回归**（4.0.1 → 6.0.0-rc.4 期间某个 commit 引入）
+- ✅ 5/9 主流 index（BTREE/BITMAP/LABEL_LIST/NGRAM/INVERTED）在两条 compact 路径两个版本下都完全正确
+
+**实用建议**:
+- ✅ **不用手动 `create_index(replace=True)` 重建** —— 上游文档承诺是真实的（对能工作的 index）
+- ⛔ **不要把 `defer_index_remap=True` 带到生产环境**（节省时间极小，bug 暴露面大）
+- ⛔ **ZONEMAP / BLOOMFILTER + compact 任何路径都不安全**（哪怕文档说 supported）
+
+**文档**: [extended-bench/REPORT_N_compact_index.md](extended-bench/REPORT_N_compact_index.md) —— 包含可直接提交到 `lance-format/lance` 的 issue 草稿。
+
+**Raw data**: `extended-bench/data/N_compact_index_pylance_4.0.1.json`, `N_compact_index_pylance_6.0.0rc4.json`
+**脚本**: [extended-bench/scripts/N_compact_index.py](extended-bench/scripts/N_compact_index.py)

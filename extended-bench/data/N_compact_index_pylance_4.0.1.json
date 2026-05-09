@@ -1,0 +1,7166 @@
+{
+  "pylance_version": "4.0.1",
+  "pyarrow_version": "21.0.0",
+  "config": {
+    "work_dir": "/tmp/N_compact_final",
+    "region": null,
+    "n_rows": 100000,
+    "rows_per_fragment": 10000,
+    "smoke": false,
+    "compact_paths": [
+      "default",
+      "defer"
+    ],
+    "index_types": [
+      "BTREE",
+      "BITMAP",
+      "LABEL_LIST",
+      "NGRAM",
+      "BLOOMFILTER",
+      "ZONEMAP",
+      "INVERTED",
+      "IVF_HNSW_SQ",
+      "IVF_PQ"
+    ]
+  },
+  "combos": [
+    {
+      "index_spec": {
+        "label": "BTREE",
+        "method": "scalar",
+        "column": "id",
+        "index_type": "BTREE",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "id = 12345"
+          },
+          {
+            "name": "range",
+            "filter": "id >= 5000 AND id < 15000"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16085374,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16085374
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16096968,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.845,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 1,
+          "range": 10000
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16085374,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16085374
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11698
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1767
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 613426
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16712265,
+          "index_bytes_by_uuid": {
+            "b7e88c28-5f19-4049-a74f-7882a367b9bf": 613426
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "b7e88c28-5f19-4049-a74f-7882a367b9bf",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.007,
+          "pre_index_uuid": "b7e88c28-5f19-4049-a74f-7882a367b9bf",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.387,
+              "mean_ms": 1.412,
+              "min_ms": 1.36,
+              "max_ms": 1.51,
+              "stdev_ms": 0.06,
+              "runs_ms": [
+                1.51,
+                1.377,
+                1.36,
+                1.426,
+                1.387
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "range": {
+            "latency": {
+              "median_ms": 1.649,
+              "mean_ms": 1.66,
+              "min_ms": 1.536,
+              "max_ms": 1.762,
+              "stdev_ms": 0.085,
+              "runs_ms": [
+                1.649,
+                1.762,
+                1.71,
+                1.641,
+                1.536
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10000,
+            "expected": 10000
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16040630,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32126004
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14959
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2983
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1268068
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 33412014,
+          "index_bytes_by_uuid": {
+            "b7e88c28-5f19-4049-a74f-7882a367b9bf": 613426,
+            "23f40481-0350-42df-a9ad-f2ba7b5dccec": 654642
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "23f40481-0350-42df-a9ad-f2ba7b5dccec",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.047,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "23f40481-0350-42df-a9ad-f2ba7b5dccec",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.409,
+              "mean_ms": 1.403,
+              "min_ms": 1.351,
+              "max_ms": 1.463,
+              "stdev_ms": 0.043,
+              "runs_ms": [
+                1.463,
+                1.409,
+                1.375,
+                1.351,
+                1.415
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "range": {
+            "latency": {
+              "median_ms": 1.734,
+              "mean_ms": 1.679,
+              "min_ms": 1.497,
+              "max_ms": 1.775,
+              "stdev_ms": 0.112,
+              "runs_ms": [
+                1.734,
+                1.497,
+                1.646,
+                1.775,
+                1.742
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10000,
+            "expected": 10000
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16040630,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16040630
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1777
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1171
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 654642
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16698220,
+          "index_bytes_by_uuid": {
+            "23f40481-0350-42df-a9ad-f2ba7b5dccec": 654642
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "23f40481-0350-42df-a9ad-f2ba7b5dccec",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16713794,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": true,
+          "rows": 1
+        },
+        "correctness_range": {
+          "pass": true,
+          "rows": 10000
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "b7e88c28-5f19-4049-a74f-7882a367b9bf",
+          "post_uuid": "23f40481-0350-42df-a9ad-f2ba7b5dccec",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 1.387,
+          "post_ms": 1.409,
+          "ratio": 1.016,
+          "verdict": "neutral"
+        },
+        "latency_ratio_range": {
+          "pre_ms": 1.649,
+          "post_ms": 1.734,
+          "ratio": 1.052,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 613426,
+          "post_uuid_bytes": 654642,
+          "delta_bytes": 41216
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "BTREE",
+        "method": "scalar",
+        "column": "id",
+        "index_type": "BTREE",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "id = 12345"
+          },
+          {
+            "name": "range",
+            "filter": "id >= 5000 AND id < 15000"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16103678,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16103678
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16115273,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.818,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 1,
+          "range": 10000
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16103678,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16103678
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11699
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1767
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 613426
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16730570,
+          "index_bytes_by_uuid": {
+            "da7bc498-d94e-47bd-8dcd-9e2514dafb38": 613426
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.006,
+          "pre_index_uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.418,
+              "mean_ms": 1.438,
+              "min_ms": 1.316,
+              "max_ms": 1.585,
+              "stdev_ms": 0.109,
+              "runs_ms": [
+                1.585,
+                1.361,
+                1.316,
+                1.418,
+                1.509
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "range": {
+            "latency": {
+              "median_ms": 1.733,
+              "mean_ms": 1.702,
+              "min_ms": 1.62,
+              "max_ms": 1.734,
+              "stdev_ms": 0.049,
+              "runs_ms": [
+                1.733,
+                1.62,
+                1.691,
+                1.734,
+                1.733
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10000,
+            "expected": 10000
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16041014,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32144692
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97199
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2860
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 613426
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32858177,
+          "index_bytes_by_uuid": {
+            "da7bc498-d94e-47bd-8dcd-9e2514dafb38": 613426
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "82c31ffd-d2d4-4a32-8317-be4e35747ead",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.03,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.504,
+              "mean_ms": 1.491,
+              "min_ms": 1.379,
+              "max_ms": 1.601,
+              "stdev_ms": 0.083,
+              "runs_ms": [
+                1.601,
+                1.448,
+                1.504,
+                1.522,
+                1.379
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "range": {
+            "latency": {
+              "median_ms": 1.676,
+              "mean_ms": 1.647,
+              "min_ms": 1.533,
+              "max_ms": 1.705,
+              "stdev_ms": 0.07,
+              "runs_ms": [
+                1.705,
+                1.676,
+                1.627,
+                1.533,
+                1.693
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10000,
+            "expected": 10000
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16041014,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16041014
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84017
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 613426
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16739505,
+          "index_bytes_by_uuid": {
+            "da7bc498-d94e-47bd-8dcd-9e2514dafb38": 613426
+          },
+          "indexes": [
+            {
+              "name": "test_btree_idx",
+              "type": "BTree",
+              "uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "82c31ffd-d2d4-4a32-8317-be4e35747ead",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16118672,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": true,
+          "rows": 1
+        },
+        "correctness_range": {
+          "pass": true,
+          "rows": 10000
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+          "post_uuid": "da7bc498-d94e-47bd-8dcd-9e2514dafb38",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 1.418,
+          "post_ms": 1.504,
+          "ratio": 1.061,
+          "verdict": "neutral"
+        },
+        "latency_ratio_range": {
+          "pre_ms": 1.733,
+          "post_ms": 1.676,
+          "ratio": 0.967,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 613426,
+          "post_uuid_bytes": 613426,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "BITMAP",
+        "method": "scalar",
+        "column": "cat",
+        "index_type": "BITMAP",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "cat = 'B'"
+          },
+          {
+            "name": "in",
+            "filter": "cat IN ('A', 'C', 'E')"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16051902,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16051902
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16063496,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.805,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 19941,
+          "in": 59941
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16051902,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16051902
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11672
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1754
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 180412
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16245740,
+          "index_bytes_by_uuid": {
+            "7e9ce1b0-ca3a-4fc5-8df6-814903664101": 180412
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "7e9ce1b0-ca3a-4fc5-8df6-814903664101",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.017,
+          "pre_index_uuid": "7e9ce1b0-ca3a-4fc5-8df6-814903664101",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 4.448,
+              "mean_ms": 4.525,
+              "min_ms": 4.091,
+              "max_ms": 5.039,
+              "stdev_ms": 0.37,
+              "runs_ms": [
+                4.732,
+                4.448,
+                4.312,
+                4.091,
+                5.039
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 19941,
+            "expected": 19941
+          },
+          "in": {
+            "latency": {
+              "median_ms": 6.772,
+              "mean_ms": 6.777,
+              "min_ms": 6.297,
+              "max_ms": 7.243,
+              "stdev_ms": 0.375,
+              "runs_ms": [
+                6.297,
+                6.548,
+                7.026,
+                7.243,
+                6.772
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 59941,
+            "expected": 59941
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16035638,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32087540
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14893
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2956
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 263214
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32368603,
+          "index_bytes_by_uuid": {
+            "7e9ce1b0-ca3a-4fc5-8df6-814903664101": 180412,
+            "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad": 82802
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.042,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 5.313,
+              "mean_ms": 5.357,
+              "min_ms": 5.226,
+              "max_ms": 5.552,
+              "stdev_ms": 0.128,
+              "runs_ms": [
+                5.313,
+                5.41,
+                5.226,
+                5.282,
+                5.552
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 19941,
+            "expected": 19941
+          },
+          "in": {
+            "latency": {
+              "median_ms": 7.246,
+              "mean_ms": 7.222,
+              "min_ms": 6.895,
+              "max_ms": 7.633,
+              "stdev_ms": 0.273,
+              "runs_ms": [
+                7.254,
+                6.895,
+                7.08,
+                7.246,
+                7.633
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 59941,
+            "expected": 59941
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16035638,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16035638
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1750
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1157
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 82802
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16121347,
+          "index_bytes_by_uuid": {
+            "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad": 82802
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16247256,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": true,
+          "rows": 19941
+        },
+        "correctness_in": {
+          "pass": true,
+          "rows": 59941
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "7e9ce1b0-ca3a-4fc5-8df6-814903664101",
+          "post_uuid": "e335fa89-c850-4ba7-8a2c-4ecb0aa905ad",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 4.448,
+          "post_ms": 5.313,
+          "ratio": 1.194,
+          "verdict": "neutral"
+        },
+        "latency_ratio_in": {
+          "pre_ms": 6.772,
+          "post_ms": 7.246,
+          "ratio": 1.07,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 180412,
+          "post_uuid_bytes": 82802,
+          "delta_bytes": -97610
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "BITMAP",
+        "method": "scalar",
+        "column": "cat",
+        "index_type": "BITMAP",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "cat = 'B'"
+          },
+          {
+            "name": "in",
+            "filter": "cat IN ('A', 'C', 'E')"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16081854,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16081854
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16093449,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.792,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 19941,
+          "in": 59941
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16081854,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16081854
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11673
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1754
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 180412
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16275693,
+          "index_bytes_by_uuid": {
+            "e2992b4f-fb22-483d-9193-e55d357cc320": 180412
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.017,
+          "pre_index_uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 4.316,
+              "mean_ms": 4.303,
+              "min_ms": 3.923,
+              "max_ms": 4.591,
+              "stdev_ms": 0.254,
+              "runs_ms": [
+                4.227,
+                4.591,
+                3.923,
+                4.457,
+                4.316
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 19941,
+            "expected": 19941
+          },
+          "in": {
+            "latency": {
+              "median_ms": 6.081,
+              "mean_ms": 6.128,
+              "min_ms": 5.793,
+              "max_ms": 6.43,
+              "stdev_ms": 0.262,
+              "runs_ms": [
+                5.793,
+                6.081,
+                6.348,
+                6.43,
+                5.989
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 59941,
+            "expected": 59941
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16011702,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32093556
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97149
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2847
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 180412
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32373964,
+          "index_bytes_by_uuid": {
+            "e2992b4f-fb22-483d-9193-e55d357cc320": 180412
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5c4a1dc8-431e-446b-b80b-76e62fb6a4ff",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.031,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 5.028,
+              "mean_ms": 5.075,
+              "min_ms": 4.856,
+              "max_ms": 5.269,
+              "stdev_ms": 0.166,
+              "runs_ms": [
+                5.209,
+                5.269,
+                4.856,
+                5.011,
+                5.028
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 19941,
+            "expected": 19941
+          },
+          "in": {
+            "latency": {
+              "median_ms": 7.033,
+              "mean_ms": 6.906,
+              "min_ms": 6.423,
+              "max_ms": 7.175,
+              "stdev_ms": 0.297,
+              "runs_ms": [
+                6.834,
+                7.033,
+                7.175,
+                7.066,
+                6.423
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 59941,
+            "expected": 59941
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16011702,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16011702
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84005
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 180412
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16277167,
+          "index_bytes_by_uuid": {
+            "e2992b4f-fb22-483d-9193-e55d357cc320": 180412
+          },
+          "indexes": [
+            {
+              "name": "test_bitmap_idx",
+              "type": "Bitmap",
+              "uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+              "fields": [
+                "cat"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5c4a1dc8-431e-446b-b80b-76e62fb6a4ff",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16096797,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": true,
+          "rows": 19941
+        },
+        "correctness_in": {
+          "pass": true,
+          "rows": 59941
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+          "post_uuid": "e2992b4f-fb22-483d-9193-e55d357cc320",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 4.316,
+          "post_ms": 5.028,
+          "ratio": 1.165,
+          "verdict": "neutral"
+        },
+        "latency_ratio_in": {
+          "pre_ms": 6.081,
+          "post_ms": 7.033,
+          "ratio": 1.157,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 180412,
+          "post_uuid_bytes": 180412,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "LABEL_LIST",
+        "method": "scalar",
+        "column": "tags",
+        "index_type": "LABEL_LIST",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "has_any",
+            "filter": "array_has_any(tags, ['tag_03', 'tag_07'])"
+          },
+          {
+            "name": "has",
+            "filter": "array_has(tags, 'tag_01')"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16084222,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16084222
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10042
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16095815,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.781,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "has_any": 44804,
+          "has": 24956
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16084222,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16084222
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11685
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1761
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 525229
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16622897,
+          "index_bytes_by_uuid": {
+            "055d1de7-8ad5-4390-8b1f-6636f65a6b1c": 525229
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "055d1de7-8ad5-4390-8b1f-6636f65a6b1c",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.05,
+          "pre_index_uuid": "055d1de7-8ad5-4390-8b1f-6636f65a6b1c",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "has_any": {
+            "latency": {
+              "median_ms": 7.713,
+              "mean_ms": 7.672,
+              "min_ms": 7.146,
+              "max_ms": 7.982,
+              "stdev_ms": 0.314,
+              "runs_ms": [
+                7.146,
+                7.982,
+                7.713,
+                7.815,
+                7.702
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 44804,
+            "expected": 44804
+          },
+          "has": {
+            "latency": {
+              "median_ms": 6.121,
+              "mean_ms": 6.052,
+              "min_ms": 5.733,
+              "max_ms": 6.378,
+              "stdev_ms": 0.251,
+              "runs_ms": [
+                6.15,
+                6.121,
+                5.733,
+                5.88,
+                6.378
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 24956,
+            "expected": 24956
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16015030,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32099252
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14925
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2968
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 723216
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32840361,
+          "index_bytes_by_uuid": {
+            "055d1de7-8ad5-4390-8b1f-6636f65a6b1c": 525229,
+            "058d453e-4f42-4cd7-a087-dc83ae1c94ae": 197987
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "058d453e-4f42-4cd7-a087-dc83ae1c94ae",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.05,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "058d453e-4f42-4cd7-a087-dc83ae1c94ae",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "has_any": {
+            "latency": {
+              "median_ms": 7.861,
+              "mean_ms": 7.898,
+              "min_ms": 7.771,
+              "max_ms": 8.161,
+              "stdev_ms": 0.154,
+              "runs_ms": [
+                7.861,
+                7.811,
+                7.771,
+                7.887,
+                8.161
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 44804,
+            "expected": 44804
+          },
+          "has": {
+            "latency": {
+              "median_ms": 7.532,
+              "mean_ms": 7.645,
+              "min_ms": 7.399,
+              "max_ms": 8.058,
+              "stdev_ms": 0.274,
+              "runs_ms": [
+                7.399,
+                7.532,
+                7.452,
+                8.058,
+                7.782
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 24956,
+            "expected": 24956
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16015030,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16015030
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1762
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1162
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 197987
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16215941,
+          "index_bytes_by_uuid": {
+            "058d453e-4f42-4cd7-a087-dc83ae1c94ae": 197987
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "058d453e-4f42-4cd7-a087-dc83ae1c94ae",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16624420,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_has_any": {
+          "pass": true,
+          "rows": 44804
+        },
+        "correctness_has": {
+          "pass": true,
+          "rows": 24956
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "055d1de7-8ad5-4390-8b1f-6636f65a6b1c",
+          "post_uuid": "058d453e-4f42-4cd7-a087-dc83ae1c94ae",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_has_any": {
+          "pre_ms": 7.713,
+          "post_ms": 7.861,
+          "ratio": 1.019,
+          "verdict": "neutral"
+        },
+        "latency_ratio_has": {
+          "pre_ms": 6.121,
+          "post_ms": 7.532,
+          "ratio": 1.231,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 525229,
+          "post_uuid_bytes": 197987,
+          "delta_bytes": -327242
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "LABEL_LIST",
+        "method": "scalar",
+        "column": "tags",
+        "index_type": "LABEL_LIST",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "has_any",
+            "filter": "array_has_any(tags, ['tag_03', 'tag_07'])"
+          },
+          {
+            "name": "has",
+            "filter": "array_has(tags, 'tag_01')"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16065726,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16065726
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16077321,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.798,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "has_any": 44804,
+          "has": 24956
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16065726,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16065726
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11687
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1761
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 525229
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16604403,
+          "index_bytes_by_uuid": {
+            "40868e42-9e3e-466a-b2df-bb31fae8c6a7": 525229
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.05,
+          "pre_index_uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "has_any": {
+            "latency": {
+              "median_ms": 7.534,
+              "mean_ms": 7.515,
+              "min_ms": 7.431,
+              "max_ms": 7.605,
+              "stdev_ms": 0.067,
+              "runs_ms": [
+                7.431,
+                7.605,
+                7.534,
+                7.467,
+                7.536
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 44804,
+            "expected": 44804
+          },
+          "has": {
+            "latency": {
+              "median_ms": 5.869,
+              "mean_ms": 19.774,
+              "min_ms": 5.723,
+              "max_ms": 74.591,
+              "stdev_ms": 30.647,
+              "runs_ms": [
+                5.832,
+                74.591,
+                5.869,
+                6.854,
+                5.723
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 24956,
+            "expected": 24956
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15998710,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32064436
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97175
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2854
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 525229
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32689694,
+          "index_bytes_by_uuid": {
+            "40868e42-9e3e-466a-b2df-bb31fae8c6a7": 525229
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "7961092d-95d0-421f-92b7-fed23fc209a5",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.028,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "has_any": {
+            "latency": {
+              "median_ms": 10.131,
+              "mean_ms": 10.878,
+              "min_ms": 8.122,
+              "max_ms": 16.825,
+              "stdev_ms": 3.455,
+              "runs_ms": [
+                16.825,
+                8.122,
+                8.869,
+                10.131,
+                10.445
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 44804,
+            "expected": 44804
+          },
+          "has": {
+            "latency": {
+              "median_ms": 11.534,
+              "mean_ms": 11.652,
+              "min_ms": 8.56,
+              "max_ms": 14.054,
+              "stdev_ms": 2.379,
+              "runs_ms": [
+                10.188,
+                8.56,
+                14.054,
+                11.534,
+                13.924
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 24956,
+            "expected": 24956
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15998710,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 15998710
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84011
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 525229
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16608998,
+          "index_bytes_by_uuid": {
+            "40868e42-9e3e-466a-b2df-bb31fae8c6a7": 525229
+          },
+          "indexes": [
+            {
+              "name": "test_label_list_idx",
+              "type": "LabelList",
+              "uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+              "fields": [
+                "tags"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "7961092d-95d0-421f-92b7-fed23fc209a5",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16080696,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_has_any": {
+          "pass": true,
+          "rows": 44804
+        },
+        "correctness_has": {
+          "pass": true,
+          "rows": 24956
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+          "post_uuid": "40868e42-9e3e-466a-b2df-bb31fae8c6a7",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_has_any": {
+          "pre_ms": 7.534,
+          "post_ms": 10.131,
+          "ratio": 1.345,
+          "verdict": "neutral"
+        },
+        "latency_ratio_has": {
+          "pre_ms": 5.869,
+          "post_ms": 11.534,
+          "ratio": 1.965,
+          "verdict": "regressed"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 525229,
+          "post_uuid_bytes": 525229,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "NGRAM",
+        "method": "scalar",
+        "column": "text",
+        "index_type": "NGRAM",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "contains",
+            "filter": "contains(text, 'quick')"
+          },
+          {
+            "name": "contains_num",
+            "filter": "contains(text, 'number 42')"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16078270,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16078270
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16089864,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.812,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "contains": 23598,
+          "contains_num": 1101
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16078270,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16078270
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11660
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1748
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 1700765
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17792443,
+          "index_bytes_by_uuid": {
+            "b5cf1e4b-ae7d-4904-b148-709835e4c9fa": 1700765
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "b5cf1e4b-ae7d-4904-b148-709835e4c9fa",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.226,
+          "pre_index_uuid": "b5cf1e4b-ae7d-4904-b148-709835e4c9fa",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "contains": {
+            "latency": {
+              "median_ms": 5.614,
+              "mean_ms": 5.574,
+              "min_ms": 5.369,
+              "max_ms": 5.685,
+              "stdev_ms": 0.122,
+              "runs_ms": [
+                5.614,
+                5.567,
+                5.634,
+                5.685,
+                5.369
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "contains_num": {
+            "latency": {
+              "median_ms": 5.09,
+              "mean_ms": 5.059,
+              "min_ms": 4.864,
+              "max_ms": 5.199,
+              "stdev_ms": 0.127,
+              "runs_ms": [
+                5.018,
+                5.199,
+                5.122,
+                4.864,
+                5.09
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1101,
+            "expected": 1101
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16025718,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32103988
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14862
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2945
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 2678320
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 34800115,
+          "index_bytes_by_uuid": {
+            "b5cf1e4b-ae7d-4904-b148-709835e4c9fa": 1700765,
+            "13db710c-b976-4f2e-9e20-0425664a3882": 977555
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "13db710c-b976-4f2e-9e20-0425664a3882",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.117,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "13db710c-b976-4f2e-9e20-0425664a3882",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "contains": {
+            "latency": {
+              "median_ms": 6.467,
+              "mean_ms": 6.438,
+              "min_ms": 6.218,
+              "max_ms": 6.625,
+              "stdev_ms": 0.177,
+              "runs_ms": [
+                6.467,
+                6.625,
+                6.582,
+                6.297,
+                6.218
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "contains_num": {
+            "latency": {
+              "median_ms": 4.187,
+              "mean_ms": 4.277,
+              "min_ms": 4.109,
+              "max_ms": 4.468,
+              "stdev_ms": 0.166,
+              "runs_ms": [
+                4.187,
+                4.468,
+                4.109,
+                4.177,
+                4.443
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1101,
+            "expected": 1101
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16025718,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16025718
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1738
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1152
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 977555
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17006163,
+          "index_bytes_by_uuid": {
+            "13db710c-b976-4f2e-9e20-0425664a3882": 977555
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "13db710c-b976-4f2e-9e20-0425664a3882",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 17793952,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_contains": {
+          "pass": true,
+          "rows": 23598
+        },
+        "correctness_contains_num": {
+          "pass": true,
+          "rows": 1101
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "b5cf1e4b-ae7d-4904-b148-709835e4c9fa",
+          "post_uuid": "13db710c-b976-4f2e-9e20-0425664a3882",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_contains": {
+          "pre_ms": 5.614,
+          "post_ms": 6.467,
+          "ratio": 1.152,
+          "verdict": "neutral"
+        },
+        "latency_ratio_contains_num": {
+          "pre_ms": 5.09,
+          "post_ms": 4.187,
+          "ratio": 0.823,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 1700765,
+          "post_uuid_bytes": 977555,
+          "delta_bytes": -723210
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "NGRAM",
+        "method": "scalar",
+        "column": "text",
+        "index_type": "NGRAM",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "contains",
+            "filter": "contains(text, 'quick')"
+          },
+          {
+            "name": "contains_num",
+            "filter": "contains(text, 'number 42')"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16073598,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16073598
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16085193,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.787,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "contains": 23598,
+          "contains_num": 1101
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16073598,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16073598
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11661
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1748
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 1700765
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17787772,
+          "index_bytes_by_uuid": {
+            "c924ba9b-9d33-4429-894b-f19a3c76453c": 1700765
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.128,
+          "pre_index_uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "contains": {
+            "latency": {
+              "median_ms": 5.568,
+              "mean_ms": 5.606,
+              "min_ms": 5.321,
+              "max_ms": 5.866,
+              "stdev_ms": 0.218,
+              "runs_ms": [
+                5.568,
+                5.321,
+                5.772,
+                5.866,
+                5.502
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "contains_num": {
+            "latency": {
+              "median_ms": 5.109,
+              "mean_ms": 5.111,
+              "min_ms": 4.927,
+              "max_ms": 5.355,
+              "stdev_ms": 0.17,
+              "runs_ms": [
+                4.98,
+                4.927,
+                5.355,
+                5.109,
+                5.182
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1101,
+            "expected": 1101
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16033782,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32107380
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97125
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2841
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 1700765
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 33908111,
+          "index_bytes_by_uuid": {
+            "c924ba9b-9d33-4429-894b-f19a3c76453c": 1700765
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "9ad45362-3519-4e1e-a540-ab9d5add7def",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.028,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "contains": {
+            "latency": {
+              "median_ms": 6.395,
+              "mean_ms": 6.447,
+              "min_ms": 6.34,
+              "max_ms": 6.62,
+              "stdev_ms": 0.121,
+              "runs_ms": [
+                6.395,
+                6.524,
+                6.62,
+                6.355,
+                6.34
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "contains_num": {
+            "latency": {
+              "median_ms": 4.312,
+              "mean_ms": 4.341,
+              "min_ms": 4.287,
+              "max_ms": 4.425,
+              "stdev_ms": 0.063,
+              "runs_ms": [
+                4.292,
+                4.39,
+                4.312,
+                4.287,
+                4.425
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1101,
+            "expected": 1101
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16033782,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16033782
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 83999
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 1700765
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17819594,
+          "index_bytes_by_uuid": {
+            "c924ba9b-9d33-4429-894b-f19a3c76453c": 1700765
+          },
+          "indexes": [
+            {
+              "name": "test_ngram_idx",
+              "type": "NGram",
+              "uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "9ad45362-3519-4e1e-a540-ab9d5add7def",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16088517,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_contains": {
+          "pass": true,
+          "rows": 23598
+        },
+        "correctness_contains_num": {
+          "pass": true,
+          "rows": 1101
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+          "post_uuid": "c924ba9b-9d33-4429-894b-f19a3c76453c",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_contains": {
+          "pre_ms": 5.568,
+          "post_ms": 6.395,
+          "ratio": 1.149,
+          "verdict": "neutral"
+        },
+        "latency_ratio_contains_num": {
+          "pre_ms": 5.109,
+          "post_ms": 4.312,
+          "ratio": 0.844,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 1700765,
+          "post_uuid_bytes": 1700765,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "BLOOMFILTER",
+        "method": "scalar",
+        "column": "id",
+        "index_type": "BLOOMFILTER",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "id = 12345"
+          },
+          {
+            "name": "in",
+            "filter": "id IN (100, 5000, 99999)"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16097726,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16097726
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16109320,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.782,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 1,
+          "in": 3
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16097726,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16097726
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11683
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1760
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16768443,
+          "index_bytes_by_uuid": {
+            "23226ae7-4519-41b3-8e2d-509a6406753e": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.007,
+          "pre_index_uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.694,
+              "mean_ms": 1.718,
+              "min_ms": 1.676,
+              "max_ms": 1.769,
+              "stdev_ms": 0.045,
+              "runs_ms": [
+                1.769,
+                1.676,
+                1.694,
+                1.766,
+                1.687
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "in": {
+            "latency": {
+              "median_ms": 1.858,
+              "mean_ms": 1.887,
+              "min_ms": 1.808,
+              "max_ms": 1.986,
+              "stdev_ms": 0.072,
+              "runs_ms": [
+                1.933,
+                1.858,
+                1.847,
+                1.808,
+                1.986
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 3,
+            "expected": 3
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16047158,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32144884
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14825
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2853
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32819836,
+          "index_bytes_by_uuid": {
+            "23226ae7-4519-41b3-8e2d-509a6406753e": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.032,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+          "post_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.969,
+              "mean_ms": 1.952,
+              "min_ms": 1.784,
+              "max_ms": 2.123,
+              "stdev_ms": 0.123,
+              "runs_ms": [
+                1.969,
+                2.123,
+                1.905,
+                1.979,
+                1.784
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "in": {
+            "latency": {
+              "median_ms": 2.086,
+              "mean_ms": 2.118,
+              "min_ms": 2.05,
+              "max_ms": 2.21,
+              "stdev_ms": 0.074,
+              "runs_ms": [
+                2.21,
+                2.05,
+                2.059,
+                2.086,
+                2.183
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 3,
+            "expected": 3
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16047158,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16047158
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1665
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16707145,
+          "index_bytes_by_uuid": {
+            "23226ae7-4519-41b3-8e2d-509a6406753e": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16112691,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": true,
+          "rows": 1
+        },
+        "correctness_in": {
+          "pass": true,
+          "rows": 3
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": false,
+          "compact_path": "default",
+          "pre_uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+          "post_uuid": "23226ae7-4519-41b3-8e2d-509a6406753e",
+          "uuid_changed": false,
+          "reason": "UUID unchanged \u2014 UNEXPECTED for default path"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": false,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 1.694,
+          "post_ms": 1.969,
+          "ratio": 1.162,
+          "verdict": "neutral"
+        },
+        "latency_ratio_in": {
+          "pre_ms": 1.858,
+          "post_ms": 2.086,
+          "ratio": 1.123,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 657274,
+          "post_uuid_bytes": 657274,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "BLOOMFILTER",
+        "method": "scalar",
+        "column": "id",
+        "index_type": "BLOOMFILTER",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "eq",
+            "filter": "id = 12345"
+          },
+          {
+            "name": "in",
+            "filter": "id IN (100, 5000, 99999)"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16060158,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16060158
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16071752,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.821,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "eq": 1,
+          "in": 3
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16060158,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16060158
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11684
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1760
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16730876,
+          "index_bytes_by_uuid": {
+            "625c9003-4c0c-482b-8af0-a5b452bd82a5": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.007,
+          "pre_index_uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.718,
+              "mean_ms": 1.726,
+              "min_ms": 1.674,
+              "max_ms": 1.79,
+              "stdev_ms": 0.051,
+              "runs_ms": [
+                1.79,
+                1.674,
+                1.718,
+                1.681,
+                1.766
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 1,
+            "expected": 1
+          },
+          "in": {
+            "latency": {
+              "median_ms": 1.787,
+              "mean_ms": 1.816,
+              "min_ms": 1.741,
+              "max_ms": 1.907,
+              "stdev_ms": 0.066,
+              "runs_ms": [
+                1.785,
+                1.907,
+                1.741,
+                1.86,
+                1.787
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 3,
+            "expected": 3
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16008310,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32068468
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97172
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2853
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32825767,
+          "index_bytes_by_uuid": {
+            "625c9003-4c0c-482b-8af0-a5b452bd82a5": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "e5638bb3-27fb-4f68-b5d2-2c8dd041da15",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.027,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "eq": {
+            "latency": {
+              "median_ms": 1.226,
+              "mean_ms": 1.223,
+              "min_ms": 1.163,
+              "max_ms": 1.295,
+              "stdev_ms": 0.052,
+              "runs_ms": [
+                1.295,
+                1.245,
+                1.187,
+                1.226,
+                1.163
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 0,
+            "expected": 1
+          },
+          "in": {
+            "latency": {
+              "median_ms": 1.269,
+              "mean_ms": 1.263,
+              "min_ms": 1.157,
+              "max_ms": 1.379,
+              "stdev_ms": 0.08,
+              "runs_ms": [
+                1.379,
+                1.233,
+                1.277,
+                1.269,
+                1.157
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 0,
+            "expected": 3
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16008310,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16008310
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84011
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 657274
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16750643,
+          "index_bytes_by_uuid": {
+            "625c9003-4c0c-482b-8af0-a5b452bd82a5": 657274
+          },
+          "indexes": [
+            {
+              "name": "test_bloomfilter_idx",
+              "type": "BloomFilter",
+              "uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+              "fields": [
+                "id"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "e5638bb3-27fb-4f68-b5d2-2c8dd041da15",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16075124,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_eq": {
+          "pass": false,
+          "pre_rows": 1,
+          "post_rows": 0
+        },
+        "correctness_in": {
+          "pass": false,
+          "pre_rows": 3,
+          "post_rows": 0
+        },
+        "correctness_all_queries": false,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+          "post_uuid": "625c9003-4c0c-482b-8af0-a5b452bd82a5",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_eq": {
+          "pre_ms": 1.718,
+          "post_ms": 1.226,
+          "ratio": 0.714,
+          "verdict": "improved"
+        },
+        "latency_ratio_in": {
+          "pre_ms": 1.787,
+          "post_ms": 1.269,
+          "ratio": 0.71,
+          "verdict": "improved"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 657274,
+          "post_uuid_bytes": 657274,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "ZONEMAP",
+        "method": "scalar",
+        "column": "price",
+        "index_type": "ZONEMAP",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "lt",
+            "filter": "price < 50"
+          },
+          {
+            "name": "range",
+            "filter": "price >= 100 AND price < 200"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16071806,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16071806
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16083401,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.796,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "lt": 4936,
+          "range": 9969
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16071806,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16071806
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11653
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1744
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16087634,
+          "index_bytes_by_uuid": {
+            "483cea47-88f0-4703-bde8-ccff7b0d5c4e": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.004,
+          "pre_index_uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "lt": {
+            "latency": {
+              "median_ms": 3.621,
+              "mean_ms": 3.664,
+              "min_ms": 3.54,
+              "max_ms": 3.892,
+              "stdev_ms": 0.142,
+              "runs_ms": [
+                3.54,
+                3.699,
+                3.621,
+                3.892,
+                3.566
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 4936,
+            "expected": 4936
+          },
+          "range": {
+            "latency": {
+              "median_ms": 3.826,
+              "mean_ms": 10.0,
+              "min_ms": 3.686,
+              "max_ms": 34.736,
+              "stdev_ms": 13.828,
+              "runs_ms": [
+                34.736,
+                3.946,
+                3.686,
+                3.826,
+                3.806
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 9969,
+            "expected": 9969
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15990838,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32062644
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14763
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2837
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32082675,
+          "index_bytes_by_uuid": {
+            "483cea47-88f0-4703-bde8-ccff7b0d5c4e": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.032,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+          "post_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "6_post_compact_queries": {
+          "lt": {
+            "latency": {
+              "median_ms": 2.654,
+              "mean_ms": 2.657,
+              "min_ms": 2.522,
+              "max_ms": 2.741,
+              "stdev_ms": 0.089,
+              "runs_ms": [
+                2.733,
+                2.522,
+                2.741,
+                2.635,
+                2.654
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 4936,
+            "expected": 4936
+          },
+          "range": {
+            "latency": {
+              "median_ms": 2.738,
+              "mean_ms": 2.744,
+              "min_ms": 2.579,
+              "max_ms": 2.945,
+              "stdev_ms": 0.131,
+              "runs_ms": [
+                2.945,
+                2.738,
+                2.743,
+                2.579,
+                2.714
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 9969,
+            "expected": 9969
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15990838,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 15990838
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1649
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 15995966,
+          "index_bytes_by_uuid": {
+            "483cea47-88f0-4703-bde8-ccff7b0d5c4e": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16086709,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_lt": {
+          "pass": true,
+          "rows": 4936
+        },
+        "correctness_range": {
+          "pass": true,
+          "rows": 9969
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": false,
+          "compact_path": "default",
+          "pre_uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+          "post_uuid": "483cea47-88f0-4703-bde8-ccff7b0d5c4e",
+          "uuid_changed": false,
+          "reason": "UUID unchanged \u2014 UNEXPECTED for default path"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": false,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "latency_ratio_lt": {
+          "pre_ms": 3.621,
+          "post_ms": 2.654,
+          "ratio": 0.733,
+          "verdict": "improved"
+        },
+        "latency_ratio_range": {
+          "pre_ms": 3.826,
+          "post_ms": 2.738,
+          "ratio": 0.716,
+          "verdict": "improved"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 2431,
+          "post_uuid_bytes": 2431,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "ZONEMAP",
+        "method": "scalar",
+        "column": "price",
+        "index_type": "ZONEMAP",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "lt",
+            "filter": "price < 50"
+          },
+          {
+            "name": "range",
+            "filter": "price >= 100 AND price < 200"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16083582,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16083582
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16095176,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.775,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "lt": 4936,
+          "range": 9969
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16083582,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16083582
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11652
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1744
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16099409,
+          "index_bytes_by_uuid": {
+            "dce5a783-dd96-4033-ab70-80e82b6f00e1": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.003,
+          "pre_index_uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "lt": {
+            "latency": {
+              "median_ms": 3.604,
+              "mean_ms": 3.666,
+              "min_ms": 3.521,
+              "max_ms": 3.923,
+              "stdev_ms": 0.156,
+              "runs_ms": [
+                3.589,
+                3.923,
+                3.604,
+                3.521,
+                3.693
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 4936,
+            "expected": 4936
+          },
+          "range": {
+            "latency": {
+              "median_ms": 3.882,
+              "mean_ms": 3.808,
+              "min_ms": 3.618,
+              "max_ms": 3.977,
+              "stdev_ms": 0.152,
+              "runs_ms": [
+                3.882,
+                3.679,
+                3.977,
+                3.882,
+                3.618
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 9969,
+            "expected": 9969
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16068982,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32152564
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97108
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2837
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 32254940,
+          "index_bytes_by_uuid": {
+            "dce5a783-dd96-4033-ab70-80e82b6f00e1": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "c837c92c-3c2c-428f-a0ba-c208b9639933",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.028,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "lt": {
+            "latency": {
+              "median_ms": 1.25,
+              "mean_ms": 1.259,
+              "min_ms": 1.21,
+              "max_ms": 1.339,
+              "stdev_ms": 0.052,
+              "runs_ms": [
+                1.339,
+                1.276,
+                1.25,
+                1.21,
+                1.222
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 0,
+            "expected": 4936
+          },
+          "range": {
+            "latency": {
+              "median_ms": 1.307,
+              "mean_ms": 1.282,
+              "min_ms": 1.224,
+              "max_ms": 1.326,
+              "stdev_ms": 0.05,
+              "runs_ms": [
+                1.321,
+                1.307,
+                1.233,
+                1.224,
+                1.326
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 0,
+            "expected": 9969
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16068982,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16068982
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 83995
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 1,
+              "total_bytes": 2431
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16156456,
+          "index_bytes_by_uuid": {
+            "dce5a783-dd96-4033-ab70-80e82b6f00e1": 2431
+          },
+          "indexes": [
+            {
+              "name": "test_zonemap_idx",
+              "type": "ZoneMap",
+              "uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+              "fields": [
+                "price"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "c837c92c-3c2c-428f-a0ba-c208b9639933",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16098484,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_lt": {
+          "pass": false,
+          "pre_rows": 4936,
+          "post_rows": 0
+        },
+        "correctness_range": {
+          "pass": false,
+          "pre_rows": 9969,
+          "post_rows": 0
+        },
+        "correctness_all_queries": false,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+          "post_uuid": "dce5a783-dd96-4033-ab70-80e82b6f00e1",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_lt": {
+          "pre_ms": 3.604,
+          "post_ms": 1.25,
+          "ratio": 0.347,
+          "verdict": "improved"
+        },
+        "latency_ratio_range": {
+          "pre_ms": 3.882,
+          "post_ms": 1.307,
+          "ratio": 0.337,
+          "verdict": "improved"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 2431,
+          "post_uuid_bytes": 2431,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "INVERTED",
+        "method": "scalar",
+        "column": "text",
+        "index_type": "INVERTED",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "match",
+            "fts": "quick"
+          },
+          {
+            "name": "phrase",
+            "fts": "lazy fox"
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16077374,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16077374
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16088969,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.792,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "match": 23598,
+          "phrase": 23421
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16077374,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16077374
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11885
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1860
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1745489
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17836608,
+          "index_bytes_by_uuid": {
+            "e206387e-8c5d-48af-ae20-23dfea10d9f9": 1745489
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "e206387e-8c5d-48af-ae20-23dfea10d9f9",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.092,
+          "pre_index_uuid": "e206387e-8c5d-48af-ae20-23dfea10d9f9",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "match": {
+            "latency": {
+              "median_ms": 12.88,
+              "mean_ms": 12.94,
+              "min_ms": 12.847,
+              "max_ms": 13.068,
+              "stdev_ms": 0.101,
+              "runs_ms": [
+                12.88,
+                13.068,
+                13.027,
+                12.847,
+                12.876
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "phrase": {
+            "latency": {
+              "median_ms": 21.098,
+              "mean_ms": 21.287,
+              "min_ms": 20.685,
+              "max_ms": 21.971,
+              "stdev_ms": 0.53,
+              "runs_ms": [
+                21.696,
+                20.986,
+                21.098,
+                21.971,
+                20.685
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 41224,
+            "expected": 23421
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16060470,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32137844
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 15425
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 3169
+            },
+            "indices": {
+              "n_files": 8,
+              "total_bytes": 3531298
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 35687736,
+          "index_bytes_by_uuid": {
+            "e206387e-8c5d-48af-ae20-23dfea10d9f9": 1745489,
+            "8cce814d-7649-4024-a0e4-594244cb3cc1": 1785809
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "8cce814d-7649-4024-a0e4-594244cb3cc1",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.066,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "8cce814d-7649-4024-a0e4-594244cb3cc1",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "match": {
+            "latency": {
+              "median_ms": 13.35,
+              "mean_ms": 13.288,
+              "min_ms": 12.963,
+              "max_ms": 13.616,
+              "stdev_ms": 0.295,
+              "runs_ms": [
+                13.616,
+                12.963,
+                13.35,
+                13.508,
+                13.002
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "phrase": {
+            "latency": {
+              "median_ms": 20.913,
+              "mean_ms": 20.879,
+              "min_ms": 20.698,
+              "max_ms": 20.964,
+              "stdev_ms": 0.107,
+              "runs_ms": [
+                20.946,
+                20.698,
+                20.872,
+                20.913,
+                20.964
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 41224,
+            "expected": 23421
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16060470,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16060470
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1963
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1264
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1785809
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17849506,
+          "index_bytes_by_uuid": {
+            "8cce814d-7649-4024-a0e4-594244cb3cc1": 1785809
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "8cce814d-7649-4024-a0e4-594244cb3cc1",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 17838230,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_match": {
+          "pass": true,
+          "rows": 23598
+        },
+        "correctness_phrase": {
+          "pass": true,
+          "rows": 41224
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "e206387e-8c5d-48af-ae20-23dfea10d9f9",
+          "post_uuid": "8cce814d-7649-4024-a0e4-594244cb3cc1",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_match": {
+          "pre_ms": 12.88,
+          "post_ms": 13.35,
+          "ratio": 1.036,
+          "verdict": "neutral"
+        },
+        "latency_ratio_phrase": {
+          "pre_ms": 21.098,
+          "post_ms": 20.913,
+          "ratio": 0.991,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 1745489,
+          "post_uuid_bytes": 1785809,
+          "delta_bytes": 40320
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "INVERTED",
+        "method": "scalar",
+        "column": "text",
+        "index_type": "INVERTED",
+        "extra_kwargs": {},
+        "queries": [
+          {
+            "name": "match",
+            "fts": "quick"
+          },
+          {
+            "name": "phrase",
+            "fts": "lazy fox"
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16063358,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16063358
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16074953,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.785,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "match": 23598,
+          "phrase": 23421
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16063358,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16063358
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11884
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1860
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1746001
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17823103,
+          "index_bytes_by_uuid": {
+            "abc9cd61-d3d8-4518-8c0b-239336812623": 1746001
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 0.091,
+          "pre_index_uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "match": {
+            "latency": {
+              "median_ms": 12.697,
+              "mean_ms": 12.725,
+              "min_ms": 12.539,
+              "max_ms": 12.995,
+              "stdev_ms": 0.178,
+              "runs_ms": [
+                12.697,
+                12.791,
+                12.995,
+                12.539,
+                12.603
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "phrase": {
+            "latency": {
+              "median_ms": 20.438,
+              "mean_ms": 20.5,
+              "min_ms": 20.277,
+              "max_ms": 20.764,
+              "stdev_ms": 0.184,
+              "runs_ms": [
+                20.277,
+                20.764,
+                20.437,
+                20.586,
+                20.438
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 41224,
+            "expected": 23421
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16016054,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32079412
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97572
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2953
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1746001
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 33925938,
+          "index_bytes_by_uuid": {
+            "abc9cd61-d3d8-4518-8c0b-239336812623": 1746001
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5d618bc5-e54a-48b4-957a-3d69db7d36ec",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.029,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "match": {
+            "latency": {
+              "median_ms": 13.115,
+              "mean_ms": 13.087,
+              "min_ms": 12.896,
+              "max_ms": 13.301,
+              "stdev_ms": 0.154,
+              "runs_ms": [
+                13.136,
+                12.896,
+                12.986,
+                13.301,
+                13.115
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 23598,
+            "expected": 23598
+          },
+          "phrase": {
+            "latency": {
+              "median_ms": 20.824,
+              "mean_ms": 20.769,
+              "min_ms": 20.513,
+              "max_ms": 20.887,
+              "stdev_ms": 0.148,
+              "runs_ms": [
+                20.513,
+                20.824,
+                20.887,
+                20.785,
+                20.835
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 41224,
+            "expected": 23421
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16016054,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16016054
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84111
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1746001
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 17847214,
+          "index_bytes_by_uuid": {
+            "abc9cd61-d3d8-4518-8c0b-239336812623": 1746001
+          },
+          "indexes": [
+            {
+              "name": "test_inverted_idx",
+              "type": "Inverted",
+              "uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+              "fields": [
+                "text"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5d618bc5-e54a-48b4-957a-3d69db7d36ec",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16078724,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_match": {
+          "pass": true,
+          "rows": 23598
+        },
+        "correctness_phrase": {
+          "pass": true,
+          "rows": 41224
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+          "post_uuid": "abc9cd61-d3d8-4518-8c0b-239336812623",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_match": {
+          "pre_ms": 12.697,
+          "post_ms": 13.115,
+          "ratio": 1.033,
+          "verdict": "neutral"
+        },
+        "latency_ratio_phrase": {
+          "pre_ms": 20.438,
+          "post_ms": 20.824,
+          "ratio": 1.019,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 1746001,
+          "post_uuid_bytes": 1746001,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "IVF_HNSW_SQ",
+        "method": "vector",
+        "column": "vec",
+        "index_type": "IVF_HNSW_SQ",
+        "extra_kwargs": {
+          "num_partitions": 4
+        },
+        "queries": [
+          {
+            "name": "ann_k10",
+            "nearest": true,
+            "k": 10
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16075966,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16075966
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10044
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16087561,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.784,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "ann_k10": 10
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16075966,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16075966
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11698
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1767
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 20939858
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 37029289,
+          "index_bytes_by_uuid": {
+            "7a00e406-9150-4727-bc6d-d03018d7bd4c": 20939858
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "7a00e406-9150-4727-bc6d-d03018d7bd4c",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 2.116,
+          "pre_index_uuid": "7a00e406-9150-4727-bc6d-d03018d7bd4c",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 2.202,
+              "mean_ms": 2.27,
+              "min_ms": 2.094,
+              "max_ms": 2.631,
+              "stdev_ms": 0.213,
+              "runs_ms": [
+                2.631,
+                2.283,
+                2.094,
+                2.142,
+                2.202
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16002678,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32078644
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14955
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2979
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 41944740
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 74041318,
+          "index_bytes_by_uuid": {
+            "7a00e406-9150-4727-bc6d-d03018d7bd4c": 20939858,
+            "78fde79e-8269-43c9-b9cd-5c11e4e55781": 21004882
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "78fde79e-8269-43c9-b9cd-5c11e4e55781",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 2.04,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "78fde79e-8269-43c9-b9cd-5c11e4e55781",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 1.945,
+              "mean_ms": 1.941,
+              "min_ms": 1.889,
+              "max_ms": 1.983,
+              "stdev_ms": 0.038,
+              "runs_ms": [
+                1.97,
+                1.945,
+                1.983,
+                1.889,
+                1.92
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16002678,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16002678
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1773
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1167
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 21004882
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 37010500,
+          "index_bytes_by_uuid": {
+            "78fde79e-8269-43c9-b9cd-5c11e4e55781": 21004882
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "78fde79e-8269-43c9-b9cd-5c11e4e55781",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 37030818,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_ann_k10": {
+          "pass": true,
+          "rows": 10
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "7a00e406-9150-4727-bc6d-d03018d7bd4c",
+          "post_uuid": "78fde79e-8269-43c9-b9cd-5c11e4e55781",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_ann_k10": {
+          "pre_ms": 2.202,
+          "post_ms": 1.945,
+          "ratio": 0.883,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 20939858,
+          "post_uuid_bytes": 21004882,
+          "delta_bytes": 65024
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "IVF_HNSW_SQ",
+        "method": "vector",
+        "column": "vec",
+        "index_type": "IVF_HNSW_SQ",
+        "extra_kwargs": {
+          "num_partitions": 4
+        },
+        "queries": [
+          {
+            "name": "ann_k10",
+            "nearest": true,
+            "k": 10
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16068606,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16068606
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10042
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16080199,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.778,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "ann_k10": 10
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16068606,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16068606
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11697
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1767
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 20979410
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 37061480,
+          "index_bytes_by_uuid": {
+            "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8": 20979410
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 2.132,
+          "pre_index_uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 2.43,
+              "mean_ms": 2.398,
+              "min_ms": 2.208,
+              "max_ms": 2.578,
+              "stdev_ms": 0.148,
+              "runs_ms": [
+                2.483,
+                2.291,
+                2.208,
+                2.43,
+                2.578
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15988342,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32056948
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97199
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2860
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 20979410
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 53136417,
+          "index_bytes_by_uuid": {
+            "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8": 20979410
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5070eda1-1fd6-4032-82ca-fa5a5c1c69cc",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.028,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 2.008,
+              "mean_ms": 2.013,
+              "min_ms": 1.969,
+              "max_ms": 2.098,
+              "stdev_ms": 0.051,
+              "runs_ms": [
+                1.981,
+                1.969,
+                2.098,
+                2.01,
+                2.008
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15988342,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 15988342
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84018
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 20979410
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 37052818,
+          "index_bytes_by_uuid": {
+            "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8": 20979410
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_hnsw_sq_idx",
+              "type": "IVF_HNSW_SQ",
+              "uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "5070eda1-1fd6-4032-82ca-fa5a5c1c69cc",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16083599,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_ann_k10": {
+          "pass": true,
+          "rows": 10
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+          "post_uuid": "6ca12b14-73ba-41e0-b3ef-d2b0a640d6b8",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_ann_k10": {
+          "pre_ms": 2.43,
+          "post_ms": 2.008,
+          "ratio": 0.826,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 20979410,
+          "post_uuid_bytes": 20979410,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "IVF_PQ",
+        "method": "vector",
+        "column": "vec",
+        "index_type": "IVF_PQ",
+        "extra_kwargs": {
+          "num_partitions": 4,
+          "num_sub_vectors": 4
+        },
+        "queries": [
+          {
+            "name": "ann_k10",
+            "nearest": true,
+            "k": 10
+          }
+        ]
+      },
+      "compact_path": "default",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16063998,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16063998
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16075592,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.79,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "ann_k10": 10
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16063998,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16063998
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11681
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1759
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 855384
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16932822,
+          "index_bytes_by_uuid": {
+            "d4de6897-8663-42c3-9fea-d68da1375677": 855384
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "d4de6897-8663-42c3-9fea-d68da1375677",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 2.965,
+          "pre_index_uuid": "d4de6897-8663-42c3-9fea-d68da1375677",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 2.403,
+              "mean_ms": 2.392,
+              "min_ms": 2.308,
+              "max_ms": 2.459,
+              "stdev_ms": 0.061,
+              "runs_ms": [
+                2.434,
+                2.358,
+                2.308,
+                2.459,
+                2.403
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15989302,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32053300
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 14919
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2968
+            },
+            "indices": {
+              "n_files": 4,
+              "total_bytes": 1744688
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 33815875,
+          "index_bytes_by_uuid": {
+            "d4de6897-8663-42c3-9fea-d68da1375677": 855384,
+            "0d7022a1-69ea-41f1-9b90-2fbd91828934": 889304
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "0d7022a1-69ea-41f1-9b90-2fbd91828934",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.045,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "0d7022a1-69ea-41f1-9b90-2fbd91828934",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 1.995,
+              "mean_ms": 1.994,
+              "min_ms": 1.939,
+              "max_ms": 2.044,
+              "stdev_ms": 0.041,
+              "runs_ms": [
+                2.044,
+                1.939,
+                1.972,
+                1.995,
+                2.021
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 15989302,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 15989302
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 1762
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1164
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 889304
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16881532,
+          "index_bytes_by_uuid": {
+            "0d7022a1-69ea-41f1-9b90-2fbd91828934": 889304
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "0d7022a1-69ea-41f1-9b90-2fbd91828934",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16934343,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_ann_k10": {
+          "pass": true,
+          "rows": 10
+        },
+        "correctness_all_queries": true,
+        "any_query_errored_post_compact": false,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "default",
+          "pre_uuid": "d4de6897-8663-42c3-9fea-d68da1375677",
+          "post_uuid": "0d7022a1-69ea-41f1-9b90-2fbd91828934",
+          "uuid_changed": true,
+          "reason": "UUID changed (as expected)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": false,
+          "reason": "FRI absent (expected for default path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "latency_ratio_ann_k10": {
+          "pre_ms": 2.403,
+          "post_ms": 1.995,
+          "ratio": 0.83,
+          "verdict": "neutral"
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 855384,
+          "post_uuid_bytes": 889304,
+          "delta_bytes": 33920
+        }
+      },
+      "errors": []
+    },
+    {
+      "index_spec": {
+        "label": "IVF_PQ",
+        "method": "vector",
+        "column": "vec",
+        "index_type": "IVF_PQ",
+        "extra_kwargs": {
+          "num_partitions": 4,
+          "num_sub_vectors": 4
+        },
+        "queries": [
+          {
+            "name": "ann_k10",
+            "nearest": true,
+            "k": 10
+          }
+        ]
+      },
+      "compact_path": "defer",
+      "phases": {
+        "1_after_write": {
+          "version": 10,
+          "n_versions": 10,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16088190,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16088190
+            },
+            "versions": {
+              "n_files": 10,
+              "total_bytes": 10043
+            },
+            "transactions": {
+              "n_files": 10,
+              "total_bytes": 1551
+            },
+            "indices": {
+              "n_files": 0,
+              "total_bytes": 0
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16099784,
+          "index_bytes_by_uuid": {},
+          "indexes": [],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "write_info": {
+            "n_fragments": 10,
+            "n_rows": 100000,
+            "elapsed_s": 3.803,
+            "version": 10
+          }
+        },
+        "2_ground_truth_counts": {
+          "ann_k10": 10
+        },
+        "3_after_index_build": {
+          "version": 11,
+          "n_versions": 11,
+          "n_fragments": 10,
+          "n_rows": 100000,
+          "active_data_bytes": 16088190,
+          "buckets": {
+            "data": {
+              "n_files": 10,
+              "total_bytes": 16088190
+            },
+            "versions": {
+              "n_files": 11,
+              "total_bytes": 11681
+            },
+            "transactions": {
+              "n_files": 11,
+              "total_bytes": 1759
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 857688
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16959318,
+          "index_bytes_by_uuid": {
+            "6d976258-ec37-4b20-b286-ec1c73321be9": 857688
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": false,
+          "has_stable_row_ids": false,
+          "build_time_s": 2.965,
+          "pre_index_uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+          "pre_index_fragment_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "4_pre_compact_queries": {
+          "ann_k10": {
+            "latency": {
+              "median_ms": 2.153,
+              "mean_ms": 2.167,
+              "min_ms": 2.133,
+              "max_ms": 2.226,
+              "stdev_ms": 0.037,
+              "runs_ms": [
+                2.226,
+                2.177,
+                2.146,
+                2.153,
+                2.133
+              ],
+              "rounds": 5
+            },
+            "rows_returned": 10,
+            "expected": 10
+          }
+        },
+        "5_after_compact_preclean": {
+          "version": 13,
+          "n_versions": 13,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16000822,
+          "buckets": {
+            "data": {
+              "n_files": 11,
+              "total_bytes": 32089012
+            },
+            "versions": {
+              "n_files": 13,
+              "total_bytes": 97167
+            },
+            "transactions": {
+              "n_files": 13,
+              "total_bytes": 2852
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 857688
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 33046719,
+          "index_bytes_by_uuid": {
+            "6d976258-ec37-4b20-b286-ec1c73321be9": 857688
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "793b60b9-98a9-4570-81c0-23a21f7ec26b",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "compact_time_s": 0.028,
+          "compact_metrics": {
+            "fragments_removed": 10,
+            "fragments_added": 1,
+            "files_removed": 10,
+            "files_added": 1
+          },
+          "post_index_uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+          "post_index_fragment_ids": [
+            10
+          ]
+        },
+        "6_post_compact_queries": {
+          "ann_k10": {
+            "error": "External error: Query Execution error: Execution error: The input to a take operation specified fragment id 0 but this fragment does not exist in the dataset (uri=/tmp/N_compact_final/ivf_pq__defer, version=13, manifest=mnt/tmp/N_compact_final/ivf_pq__defer/_versions/18446744073709551602.manifest, branch=main), /home/runner/work/lance/lance/rust/lance/src/dataset/scanner.rs:4524:66"
+          }
+        },
+        "7_after_cleanup": {
+          "version": 13,
+          "n_versions": 1,
+          "n_fragments": 1,
+          "n_rows": 100000,
+          "active_data_bytes": 16000822,
+          "buckets": {
+            "data": {
+              "n_files": 1,
+              "total_bytes": 16000822
+            },
+            "versions": {
+              "n_files": 1,
+              "total_bytes": 84010
+            },
+            "transactions": {
+              "n_files": 1,
+              "total_bytes": 1048
+            },
+            "indices": {
+              "n_files": 2,
+              "total_bytes": 857688
+            },
+            "other": {
+              "n_files": 0,
+              "total_bytes": 0
+            }
+          },
+          "total_bytes_on_disk": 16943568,
+          "index_bytes_by_uuid": {
+            "6d976258-ec37-4b20-b286-ec1c73321be9": 857688
+          },
+          "indexes": [
+            {
+              "name": "test_ivf_pq_idx",
+              "type": "IVF_PQ",
+              "uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+              "fields": [
+                "vec"
+              ],
+              "version": 10,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            },
+            {
+              "name": "__lance_frag_reuse",
+              "type": "FragmentReuse",
+              "uuid": "793b60b9-98a9-4570-81c0-23a21f7ec26b",
+              "fields": [],
+              "version": 11,
+              "fragment_ids": [
+                10
+              ],
+              "base_id": null
+            }
+          ],
+          "has_frag_reuse_index": true,
+          "has_stable_row_ids": false,
+          "cleanup_metrics": {
+            "bytes_removed": 16103151,
+            "old_versions": 12
+          }
+        }
+      },
+      "assertions": {
+        "correctness_ann_k10": {
+          "pass": false,
+          "reason": "query errored post-compact",
+          "error": "External error: Query Execution error: Execution error: The input to a take operation specified fragment id 0 but this fragment does not exist in the dataset (uri=/tmp/N_compact_final/ivf_pq__defer, version=13, manifest=mnt/tmp/N_compact_final/ivf_pq__defer/_versions/18446744073709551602.manifest, branch=main), /home/runner/work/lance/lance/rust/lance/src/dataset/scanner.rs:4524:66"
+        },
+        "correctness_all_queries": false,
+        "any_query_errored_post_compact": true,
+        "compact_ran": {
+          "pass": true,
+          "fragments_removed": 10,
+          "fragments_added": 1,
+          "files_removed": 10,
+          "files_added": 1
+        },
+        "uuid_invariant": {
+          "pass": true,
+          "compact_path": "defer",
+          "pre_uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+          "post_uuid": "6d976258-ec37-4b20-b286-ec1c73321be9",
+          "uuid_changed": false,
+          "reason": "UUID preserved (as expected for defer)"
+        },
+        "fri_invariant": {
+          "pass": true,
+          "has_fri": true,
+          "reason": "FRI present (expected for defer path)"
+        },
+        "bitmap_updated": {
+          "pass": true,
+          "new_fragments": [
+            10
+          ],
+          "index_bitmap": [
+            10
+          ]
+        },
+        "index_bytes_delta": {
+          "pre_uuid_bytes": 857688,
+          "post_uuid_bytes": 857688,
+          "delta_bytes": 0
+        }
+      },
+      "errors": []
+    }
+  ],
+  "timestamp": 1778297982.6379771,
+  "total_elapsed_s": 95.78
+}
