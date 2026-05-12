@@ -96,13 +96,13 @@ while time.perf_counter() < deadline:
 |---|---|---|---|
 | **S1** baseline | `ds.delete("id=X")` | ❌ | *"多个 writer 并发 delete 自己会不会因为 manifest CAS 竞争而失败？"* —— 只有 delete 互竞争，无 compact 介入。给后三个 scenario 提供"无 compact 时的失败基线" |
 | **S2** delete + compact | `ds.delete("id=X")` | ✅ | *"加入 compactor 后，delete 的失败率会上升吗？compactor 本身会因为 delete 抢同 fragment 而失败吗？"* —— 相对 S1 只加了一个 compactor process，差异完全可归因于 compact 介入 |
-| **S3** update + compact | `ds.update({"value":v}, where="id=X")` | ✅ | *"换成 update 后（重写整个 fragment 而非只加 deletion vector），竞争窗口变大，失败率会变化吗？"* —— 相对 S2 只换了 mutation 类型，compactor 不变 |
+| **S3** update + compact | `ds.update({"value":v}, where="id=X")` | ✅ | *"换成 update 后（对匹配行加 tombstone + 把修改后的行物化为新 fragment 追加到尾部，而不只是像 delete 那样写个 deletion vector），竞争窗口变大，失败率会变化吗？"* —— 相对 S2 只换了 mutation 类型，compactor 不变。详见[附录 C](#附录-c-update-的物理执行粒度) |
 | **S4** merge_insert + compact | `merge_insert("id") ... .execute(upsert_tbl)` | ✅ | *"生产最常见的 upsert 路径，与 update 行为一致，还是因为额外的 scan+match 开销有显著差异？"* —— 相对 S3 再换 mutation 类型 |
 
 这样设计后，**每两行之间的差**可以单独归因：
 
 - **S1 → S2 的差**：加一个 compactor 进来 → 揭示 compactor 对 writer 的干扰强度 + compact 自身的失败率
-- **S2 → S3 的差**：mutation 从"轻量 deletion vector"换成"重写整个 fragment" → 揭示竞争窗口长度的影响
+- **S2 → S3 的差**：mutation 从"轻量 deletion vector"换成"对匹配行加 tombstone + 把修改行物化为新 fragment 追加"（详见[附录 C](#附录-c-update-的物理执行粒度)）→ 揭示竞争窗口长度的影响
 - **S3 → S4 的差**：update vs merge_insert → 揭示 upsert 的 scan+match 开销是否显著改变冲突模式
 
 ### 并发度 N ∈ {1, 2, 4, 8} —— 为什么这四档
@@ -145,7 +145,7 @@ while time.perf_counter() < deadline:
 
 **为什么 S2 从不失败**：`delete` 写入极小（只写 deletion vector），双方同时持有同 fragment 旧视图的竞争窗口太短，在这个 workload 节奏下碰不上。源码层面**应该**可以竞争，但实测跑不出来。
 
-**为什么 S3/S4 在 N≥4 开始失败**：`update` 会重写整个 fragment（重新物化被修改的行），竞争窗口大幅拉长。`merge_insert` 命中 matched 行时也走相同路径。N=4 时 update 频率 ~70/s，compactor 的 20 次内层重试在这个强度下被耗尽。
+**为什么 S3/S4 在 N≥4 开始失败**：`update` 不是原地重写 fragment —— 它**只对匹配到的行加 tombstone，同时把修改后的行按 full schema 物化为新 fragment 追加到尾部**（见 [`update.rs#L255-L353`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/update.rs#L255-L353)，详见[附录 C](#附录-c-update-的物理执行粒度)）。但相比 delete 只写 deletion vector（几十 bytes），update 要完整写出 matched rows 的所有列数据 —— 竞争窗口大幅拉长。`merge_insert` 命中 matched 行时也走相同路径（产生同样的 `Operation::Update` 事务）。N=4 时 update 频率 ~70/s，compactor 的 20 次内层重试在这个强度下被耗尽。
 
 ### 冲突下的延迟
 
@@ -200,3 +200,245 @@ Writer p99 延迟（毫秒），注意尾部增长：
 - **Writer 端：不用加冲突处理** —— retry 预算在此 workload 下足够。但要评估单次操作的尾延是否可接受（最大可达数十秒）。
 - **Compaction 端：必须处理 `RuntimeError`**（错误消息含 "preempted" / "retryable" / "conflict"）—— 实现应用层重试 + 指数退避。更简单的替代方案：只在低写入时段跑 compact。
 - **`merge_insert` 当 upsert 用**（常见场景）：建议走**单线程串行** writer，不要多 process 并发；冲突率随并发度增长，即使有 10-retry 预算，N≥8 时预算也显得吃紧。
+
+---
+
+## 附录 A. `compact_files()` 失败时的文件系统状态
+
+接上面的"未观察到静默数据损坏"论断做**源码级验证**。当 `compact_files()` 以 `RetryableCommitConflict` 抛出 `RuntimeError` 时，文件系统实际残留什么、读/写会不会受影响、需不需要手工清理？
+
+### A.1 执行顺序：写 data 文件 → 写 .txn → 写 manifest
+
+`compact_files()` 内部分两步（[optimize.rs#L1252-L1263](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/optimize.rs#L1252-L1263) 和 [#L1473-L1631](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/optimize.rs#L1473-L1631)）：
+
+1. **`rewrite_files()`** 先把压缩后的数据写成新的 fragment 文件到 `data/<uuid>.lance` —— **这一步在 commit 之前就已经落盘**
+2. **`commit_compaction()`** 然后构造 `Operation::Rewrite` 事务，经过 `commit_transaction`（[commit.rs#L912-L1136](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/io/commit.rs#L912-L1136)）：
+   - 先写 `_transactions/<read_version>-<uuid>.txn`
+   - 再通过 CommitHandler（S3/local 各有不同实现）原子提交 `_versions/<version>.manifest`
+
+### A.2 失败时的文件系统残留
+
+| 文件类型 | 路径前缀 | 失败后是否残留 | 为什么 |
+|---|---|---|---|
+| 新 fragment（`.lance`） | `data/` | **是** | rewrite_files 在 commit 之前写入，冲突发生时已经落盘，无自动回滚 |
+| 事务文件（`.txn`） | `_transactions/` | **否** | PR #6319（2026-04 合入）引入了 `cleanup_transaction_file` best-effort 清理，在所有 3 个失败分支调用 |
+| Manifest（`.manifest`） | `_versions/` | **否** | Manifest 提交是原子的（CAS / put-if-absent / rename），不存在"半写" |
+
+**`.txn` 清理的源码证据**（[commit.rs#L93-L117](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/io/commit.rs#L93-L117)）：
+
+```rust
+/// Best-effort delete of a transaction file that is no longer needed.
+async fn cleanup_transaction_file(object_store: &ObjectStore, base_path: &Path,
+                                  transaction_file: &str) {
+    // ... delete + log::warn on failure
+}
+```
+
+这个函数在 `rust/lance/src/io/commit.rs` 里**至少 8 处**被调用（`CommitConflict` retry 耗尽、`OtherError`、retry 间隙等所有失败路径）。
+
+### A.3 Manifest 不会损坏
+
+Manifest 提交的原子性由 `CommitHandler` 保证 —— 不同对象存储有不同实现：
+
+- **本地文件系统**：`rename` 系统调用原子
+- **S3**：conditional PUT + If-Match 或 DynamoDB CAS（取决于 Lance 的配置）
+- **其它**：各 namespace impl 自行实现
+
+`write_manifest_file`（[commit.rs#L1036-L1091](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/io/commit.rs#L1036-L1091)）要么整个成功返回 `ManifestLocation` 要么整体失败，不会留下 partial manifest。
+
+### A.4 孤儿 fragment 的清理
+
+**没有专门清理失败 compact 孤儿的 API。** 唯一入口是 `cleanup_old_versions()`（[cleanup.rs#L1019-L1025](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/cleanup.rs#L1019-L1025)），它扫描 5 个子目录删除任何不被有效 manifest 引用的文件。
+
+**关键：默认 7 天 UNVERIFIED_THRESHOLD_DAYS 保护期** ([cleanup.rs#L130-L131](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/cleanup.rs#L130-L131))：
+
+```rust
+const UNVERIFIED_THRESHOLD_DAYS: i64 = 7;
+```
+
+没被任何 manifest 引用、但写入时间在 7 天内的文件会被**保留**（可能是正在进行的 writer）。除非 `delete_unverified=true`，否则失败 compact 的孤儿 fragment 要等 7 天才会被 GC。
+
+### A.5 测试证据：`cleanup_failed_commit_data_file`
+
+[cleanup.rs#L2398-L2435](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/cleanup.rs#L2398-L2435) 的测试精确呈现失败 commit 的残留状态：
+
+```rust
+#[tokio::test]
+async fn cleanup_failed_commit_data_file() {
+    let mut fixture = MockDatasetFixture::try_new().unwrap();
+    fixture.create_some_data().await.unwrap();
+    fixture.block_commits();
+    assert!(fixture.append_some_data().await.is_err());
+    // ...
+    let before_count = fixture.count_files().await.unwrap();
+    assert_eq!(before_count.num_data_files, 2);      // ← 孤儿 data 文件残留
+    assert_eq!(before_count.num_manifest_files, 1);
+    assert_eq!(before_count.num_tx_files, 1);        // ← .txn 已主动清理
+    // ...
+    let removed = fixture.run_cleanup(...).await.unwrap();
+    assert_eq!(removed.data_files_removed, 1);       // ← GC 删除了孤儿
+}
+```
+
+失败 compact 走同一条 `commit_transaction` 路径，行为完全一致。
+
+### A.6 对后续操作的影响
+
+| 影响面 | 结论 |
+|---|---|
+| **读路径** | 无影响（reader 只看 manifest，孤儿 fragment 不在 manifest 里，透明） |
+| **后续 compact** | 无正确性影响（新 compact 生成新 UUID，不会碰撞） |
+| **后续 writer** | 无影响 |
+| **存储计费** | **直接影响**（孤儿按正常文件计费直到被 GC，默认 7 天） |
+| **listing 延迟** | 若孤儿多，`ds.list_fragments()` / `cleanup_old_versions` 的 S3 listing 时间会上升 |
+
+### A.7 实操建议
+
+- **本项目 Q benchmark 16 个 scenario 累计产生的失败 compact 孤儿**：S3/S4 里每次失败（总计 14 次）都留下一组新 fragment 文件，总计 MB 量级 → 测试结束后建议对测试目录跑一次 `cleanup_old_versions(delete_unverified=True)` 回收空间
+- **生产环境**：如果业务上允许 1% compact 失败率，要么定期（每天或每小时）跑 `cleanup_old_versions(older_than=timedelta(hours=1), delete_unverified=True)`；要么把 compact 改成"成功即 cleanup"的封装模式
+
+---
+
+## 附录 B. `merge_insert` 的两阶段语义
+
+这是给文档里 S4 scenario 的补充说明 —— `merge_insert` 在原文只出现为一行 Python 调用。
+
+### B.1 SQL 语义：MERGE INTO
+
+Merge_insert 直接对应 SQL 标准的 `MERGE INTO`（[merge_insert.rs#L1-L37](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L1-L37) 文件头注释）：
+
+> *"The merge insert operation merges a batch of new data into an existing batch of old data. This can be used to implement a bulk update-or-insert (upsert), bulk delete or find-or-create operation."*
+
+是 Lance 的"瑞士军刀"混合操作 —— 一次 transaction 可以同时做 update + insert + delete，语义由三组 builder 枚举控制。
+
+### B.2 三组 builder
+
+**`WhenMatched`** —— source 和 target 都有此 key（[merge_insert.rs#L260-L281](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L260-L281)）：
+
+| 值 | 行为 | 常见用途 |
+|---|---|---|
+| `UpdateAll` | 删 target 对应行 + 用 source 插入 | **upsert** |
+| `DoNothing` | 保留 target 原值 | **find-or-create** |
+| `UpdateIf(expr)` | 条件更新 | upsert with condition |
+| `Fail` | 抛错 | 严格 insert-only |
+| `Delete` | 删 target 对应行 | bulk delete with source |
+
+**`WhenNotMatched`** —— source 有，target 没有：`InsertAll` / `DoNothing`
+
+**`WhenNotMatchedBySource`** —— target 有，source 没有：`Keep` / `Delete` / `DeleteIf(expr)`
+
+Python 绑定把最常见组合（`UpdateAll + InsertAll`）暴露为 `when_matched_update_all().when_not_matched_insert_all()` —— 这就是本实验 S4 里用的形式，等价于**标准 upsert**。
+
+### B.3 物理执行：Hash-Join + Fragment rewrite + OCC retry
+
+`execute()` 的物理流程（[merge_insert.rs#L1326-L1438](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L1326-L1438)）：
+
+1. Scan target dataset + read source stream
+2. DataFusion **hash join** on key（join 类型随 params 取 Inner/Left/Right/Full）
+3. Join 后每行打 `MERGE_ACTION_COLUMN` 标签（Update/Insert/Delete/Skip）
+4. 自定义 `MergeInsertWriteNode` 写新 fragment + 对 matched 行在原 fragment 加 tombstone
+5. 最终提交**单个 `Operation::Update` 事务**（不是独立的 Merge 事务！）
+6. 整个流程被 `execute_with_retry` 包装（默认 `max_retries=10`, `retry_timeout=30s`）
+
+### B.4 最终事务类型：`Operation::Update`（两条路径）
+
+Merge_insert 根据 source schema 是否是 target schema 的子集走两条路径：
+
+| 路径 | 触发条件 | `update_mode` | 物理行为 |
+|---|---|---|---|
+| **RewriteColumns** | source schema 严格小于 target schema（只改某几列） | `Some(RewriteColumns)` | 原地修改现有 fragment 的部分列文件（[merge_insert.rs#L1637-L1657](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L1637-L1657)） |
+| **RewriteRows** | source 与 target schema 相同 | `Some(RewriteRows)` | 同 `Dataset.update` —— 对 matched 行 tombstone + 新 fragment 追加（[#L1658-L1733](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L1658-L1733)） |
+
+本项目 S4 scenario 使用 full schema 的 single-row upsert → 走 **RewriteRows 路径**，和 Dataset.update 的物理成本相同。这解释了为什么 S3（update）和 S4（merge_insert）的 compactor 失败率分布几乎一致（都是 N≥4 时 2-3%）。
+
+### B.5 并发控制：OCC + affected_rows-level 冲突检测
+
+Merge_insert **不使用悲观锁**：
+- 走 `execute_with_retry`（[merge_insert.rs#L1326-L1344](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/merge_insert.rs#L1326-L1344)）
+- 通过 `CommitBuilder::with_affected_rows` 让 `TransactionRebase` 做**行级别**冲突检查（不只是 fragment 级）
+- 如果中间有其它 txn 改了同一些行 → `RetryableCommitConflict` → 自动 rebase + 重试
+- 重试耗尽或超时 → `TooMuchWriteContention` 错误
+
+### B.6 与 update / delete / insert 的关系
+
+| API | 事务类型 | 语义子集 |
+|---|---|---|
+| `Dataset.insert` (Append) | `Operation::Append` | 只插入（无 join） |
+| `Dataset.delete(where)` | `Operation::Delete` | 仅 `WhenMatched=Delete`（无 source） |
+| `Dataset.update(where, set)` | `Operation::Update` / `RewriteRows` | 仅 `WhenMatched=UpdateAll` + 用 filter 代替 source join |
+| **`merge_insert`** | `Operation::Update` / `RewriteColumns` or `RewriteRows` | **超集**：同时可做 upsert / find-or-create / bulk delete / 区域替换 |
+
+---
+
+## 附录 C. `update` 的物理执行粒度
+
+回答"update 是重写整个 fragment 吗？"的精确答案：**不是**。实际粒度是**行级 tombstone + 匹配行的全列重写**。
+
+### C.1 算法概述
+
+`UpdateJob::execute_impl`（[update.rs#L255-L353](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/update.rs#L255-L353)）四步：
+
+```
+1. scanner.filter_expr(WHERE).with_row_id()   ← 只扫匹配行 + 捕获 row_id
+       ↓
+2. apply_updates()                             ← 对匹配行应用 SET 表达式
+       ↓
+3. write_fragments_internal()                  ← 把"匹配 + 已更新"的行写成新 fragment
+       ↓                                         （按 full schema 全列写入）
+4. apply_deletions()                           ← 对原 fragment 加 deletion file
+                                                 （原 data 文件完全不动）
+```
+
+最终产生 `Operation::Update` with `update_mode: Some(RewriteRows)` 事务。
+
+### C.2 关键点：原 fragment 的 data 文件完全不动
+
+`apply_deletions()`（[update.rs#L410-L454](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/update.rs#L410-L454)）调用 `fragment.extend_deletions()`，后者（[fragment.rs#L1883-L1930](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1883-L1930)）只**追加 deletion vector 并写出新 deletion file**，原 `data/<uuid>.lance` 文件不动。如果 deletion vector 覆盖全部物理行 → 原 fragment 进 `removed_fragment_ids`。
+
+### C.3 测试实证
+
+`test_update_conditional`（[update.rs#L631-L709](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/write/update.rs#L631-L709)）用 3 个 10-row fragment，对 `id >= 15` 的行 UPDATE，精确断言了物理行为：
+
+```rust
+// Fragment 0（id 0-9）：完全未命中
+assert_eq!(fragments[0].metadata.files, original_fragments[0].metadata.files);
+// Fragment 1（id 10-14）：部分命中 5 行
+assert_eq!(fragments[1].metadata.files, original_fragments[1].metadata.files);  // ← 原文件不动
+assert_eq!(
+    fragments[1].metadata.deletion_file.as_ref().and_then(|f| f.num_deleted_rows),
+    Some(5)                                                                      // ← 只多了 deletion file
+);
+// Fragment 2（新的，含 15 行 updated）
+assert_eq!(fragments[2].metadata.physical_rows, Some(15));
+```
+
+### C.4 对"1M 行 fragment × 10 行 match"场景的精确回答
+
+| 项 | 成本 |
+|---|---|
+| **读 I/O** | 整个 dataset scan（pushdown 过滤），但只物化 10 行的所有列 |
+| **写 I/O** | 1 个新 fragment（**10 行 × 全 schema**）+ 1 个 deletion file（~几十 bytes 记录 10 个位置） |
+| **不发生** | 不会重写原 fragment 的 1M 行 data 文件 |
+
+所以"10 行 update 对 1M-row fragment"的实际写盘量是 **~10 行大小**，**不是 1M 行大小**。这是非显而易见的关键优化。
+
+### C.5 "部分列重写"的限制
+
+`Dataset.update` 总是按 **full schema** 写新 fragment（哪怕只改一列，未改的列也会被原样拷贝）—— 这是"**行级**重写 + 全列"，不是"按列重写"。
+
+**真正的按列重写**只存在于 `merge_insert` 的 `RewriteColumns` 模式（见附录 B.4）—— 仅当 source 是 target schema 的严格子集时才触发。Dataset.update 没有这条优化路径。
+
+### C.6 MVCC / 版本语义
+
+- 原 fragment 进 `updated_fragments` 列表 → 新 manifest 里**仍然存在**（只是带了新 deletion file 引用），原 data 文件保留
+- Checkout 旧版本时可以完整读回（旧 deletion file 或无 deletion 都还在）
+- 清理靠 `cleanup_old_versions`（见附录 A）
+
+### C.7 这对 Q 实验的意义
+
+S3（update）和 S4（merge_insert RewriteRows 路径）的 compactor 失败率都在 N≥4 时 2-3%，远高于 S2（delete 只写 deletion vector，deletion file 小，fragment 不动）的 0% —— 因为：
+
+- **Delete** 的竞争窗口：写一个 ~几十 bytes 的 deletion file
+- **Update/MergeInsert** 的竞争窗口：写一个完整的新 fragment（matched_rows × all_columns）+ deletion file
+
+竞争窗口大了数个量级，compactor 的 20 次内层 manifest-race 重试在这个强度下被耗尽的概率显著上升。
