@@ -1,0 +1,53 @@
+{
+  "run_id": "20260512-130957",
+  "pylance_version": "4.0.1",
+  "base_rows": 500000,
+  "args": {
+    "smoke": true,
+    "window": 30,
+    "concurrencies": [
+      1
+    ],
+    "scenarios": [
+      "S1_delete_noc"
+    ],
+    "skip": [],
+    "workspace": "/tmp/Q_concurrent"
+  },
+  "results": [
+    {
+      "scenario": "S1_delete_noc",
+      "concurrency": 1,
+      "window_s": 30,
+      "wall_s": 30.49,
+      "writers": {
+        "total_ops": 1717,
+        "success": 1717,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 56.31,
+        "duration_ms": {
+          "p50": 17.369,
+          "p99": 23.768,
+          "max": 108.851
+        }
+      },
+      "compactor": null,
+      "per_writer": [
+        {
+          "total": 1717,
+          "success": 1717,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 17.369,
+            "p99_all": 23.768,
+            "max_all": 108.851,
+            "p50_ok": 17.369,
+            "p99_ok": 23.768
+          }
+        }
+      ]
+    }
+  ]
+}

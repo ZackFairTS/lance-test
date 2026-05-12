@@ -1,0 +1,1317 @@
+{
+  "run_id": "20260512-133710_merged",
+  "pylance_version": "4.0.1",
+  "base_rows": 500000,
+  "args": {
+    "smoke": false,
+    "window": 60.0,
+    "concurrencies": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "scenarios": [
+      "S4_merge_insert_compact"
+    ],
+    "skip": [],
+    "workspace": "/tmp/Q_concurrent"
+  },
+  "results": [
+    {
+      "scenario": "S1_delete_noc",
+      "concurrency": 1,
+      "window_s": 60.0,
+      "wall_s": 60.52,
+      "writers": {
+        "total_ops": 2801,
+        "success": 2801,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 46.29,
+        "duration_ms": {
+          "p50": 20.15,
+          "p99": 31.94,
+          "max": 142.229
+        }
+      },
+      "compactor": null,
+      "per_writer": [
+        {
+          "total": 2801,
+          "success": 2801,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 20.15,
+            "p99_all": 31.94,
+            "max_all": 142.229,
+            "p50_ok": 20.15,
+            "p99_ok": 31.94
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S1_delete_noc",
+      "concurrency": 2,
+      "window_s": 60.0,
+      "wall_s": 60.61,
+      "writers": {
+        "total_ops": 4302,
+        "success": 4302,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 70.98,
+        "duration_ms": {
+          "p50": 25.615,
+          "p99": 115.532,
+          "max": 292.492
+        }
+      },
+      "compactor": null,
+      "per_writer": [
+        {
+          "total": 2164,
+          "success": 2164,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 25.652,
+            "p99_all": 111.0,
+            "max_all": 292.492,
+            "p50_ok": 25.652,
+            "p99_ok": 111.0
+          }
+        },
+        {
+          "total": 2138,
+          "success": 2138,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 25.605,
+            "p99_all": 120.196,
+            "max_all": 223.988,
+            "p50_ok": 25.605,
+            "p99_ok": 120.196
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S1_delete_noc",
+      "concurrency": 4,
+      "window_s": 60.0,
+      "wall_s": 79.16,
+      "writers": {
+        "total_ops": 4465,
+        "success": 4465,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 56.4,
+        "duration_ms": {
+          "p50": 27.93,
+          "p99": 175.382,
+          "max": 73075.968
+        }
+      },
+      "compactor": null,
+      "per_writer": [
+        {
+          "total": 1681,
+          "success": 1681,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 31.853,
+            "p99_all": 158.995,
+            "max_all": 1045.422,
+            "p50_ok": 31.853,
+            "p99_ok": 158.995
+          }
+        },
+        {
+          "total": 238,
+          "success": 238,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 12.0,
+            "p99_all": 327.191,
+            "max_all": 73075.968,
+            "p50_ok": 12.0,
+            "p99_ok": 327.191
+          }
+        },
+        {
+          "total": 799,
+          "success": 799,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 23.18,
+            "p99_all": 266.116,
+            "max_all": 33377.052,
+            "p50_ok": 23.18,
+            "p99_ok": 266.116
+          }
+        },
+        {
+          "total": 1747,
+          "success": 1747,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 30.364,
+            "p99_all": 158.24,
+            "max_all": 607.46,
+            "p50_ok": 30.364,
+            "p99_ok": 158.24
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S1_delete_noc",
+      "concurrency": 8,
+      "window_s": 60.0,
+      "wall_s": 154.23,
+      "writers": {
+        "total_ops": 5071,
+        "success": 5071,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 32.88,
+        "duration_ms": {
+          "p50": 33.248,
+          "p99": 275.214,
+          "max": 153418.554
+        }
+      },
+      "compactor": null,
+      "per_writer": [
+        {
+          "total": 340,
+          "success": 340,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 51.136,
+            "p99_all": 373.828,
+            "max_all": 41666.749,
+            "p50_ok": 51.136,
+            "p99_ok": 373.828
+          }
+        },
+        {
+          "total": 16,
+          "success": 16,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 11.207,
+            "p99_all": 130408.812,
+            "max_all": 153418.554,
+            "p50_ok": 11.207,
+            "p99_ok": 130408.812
+          }
+        },
+        {
+          "total": 81,
+          "success": 81,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 12.076,
+            "p99_all": 16063.997,
+            "max_all": 74717.303,
+            "p50_ok": 12.076,
+            "p99_ok": 16063.997
+          }
+        },
+        {
+          "total": 48,
+          "success": 48,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 10.353,
+            "p99_all": 61106.186,
+            "max_all": 115162.723,
+            "p50_ok": 10.353,
+            "p99_ok": 61106.186
+          }
+        },
+        {
+          "total": 298,
+          "success": 298,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 15.411,
+            "p99_all": 498.706,
+            "max_all": 88232.722,
+            "p50_ok": 15.411,
+            "p99_ok": 498.706
+          }
+        },
+        {
+          "total": 1436,
+          "success": 1436,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 34.984,
+            "p99_all": 263.557,
+            "max_all": 749.865,
+            "p50_ok": 34.984,
+            "p99_ok": 263.557
+          }
+        },
+        {
+          "total": 1463,
+          "success": 1463,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.715,
+            "p99_all": 225.808,
+            "max_all": 975.006,
+            "p50_ok": 33.715,
+            "p99_ok": 225.808
+          }
+        },
+        {
+          "total": 1389,
+          "success": 1389,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 34.654,
+            "p99_all": 263.031,
+            "max_all": 2313.648,
+            "p50_ok": 34.654,
+            "p99_ok": 263.031
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S2_delete_compact",
+      "concurrency": 1,
+      "window_s": 60.0,
+      "wall_s": 60.64,
+      "writers": {
+        "total_ops": 2794,
+        "success": 2794,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 46.07,
+        "duration_ms": {
+          "p50": 20.098,
+          "p99": 64.255,
+          "max": 121.295
+        }
+      },
+      "compactor": {
+        "total": 120,
+        "success": 120,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 0.69,
+          "p99_all": 0.863,
+          "max_all": 2.686,
+          "p50_ok": 0.69,
+          "p99_ok": 0.863
+        },
+        "fragments_removed_total": 0,
+        "fragments_added_total": 0
+      },
+      "per_writer": [
+        {
+          "total": 2794,
+          "success": 2794,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 20.098,
+            "p99_all": 64.255,
+            "max_all": 121.295,
+            "p50_ok": 20.098,
+            "p99_ok": 64.255
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S2_delete_compact",
+      "concurrency": 2,
+      "window_s": 60.0,
+      "wall_s": 60.69,
+      "writers": {
+        "total_ops": 4135,
+        "success": 4135,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 68.13,
+        "duration_ms": {
+          "p50": 24.504,
+          "p99": 152.101,
+          "max": 473.883
+        }
+      },
+      "compactor": {
+        "total": 120,
+        "success": 120,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 0.868,
+          "p99_all": 1.109,
+          "max_all": 1.597,
+          "p50_ok": 0.868,
+          "p99_ok": 1.109
+        },
+        "fragments_removed_total": 0,
+        "fragments_added_total": 0
+      },
+      "per_writer": [
+        {
+          "total": 2087,
+          "success": 2087,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 24.325,
+            "p99_all": 153.005,
+            "max_all": 446.361,
+            "p50_ok": 24.325,
+            "p99_ok": 153.005
+          }
+        },
+        {
+          "total": 2048,
+          "success": 2048,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 24.816,
+            "p99_all": 145.878,
+            "max_all": 473.883,
+            "p50_ok": 24.816,
+            "p99_ok": 145.878
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S2_delete_compact",
+      "concurrency": 4,
+      "window_s": 60.0,
+      "wall_s": 60.75,
+      "writers": {
+        "total_ops": 5220,
+        "success": 5220,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 85.92,
+        "duration_ms": {
+          "p50": 35.353,
+          "p99": 265.531,
+          "max": 4769.553
+        }
+      },
+      "compactor": {
+        "total": 120,
+        "success": 120,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 0.954,
+          "p99_all": 1.34,
+          "max_all": 1.478,
+          "p50_ok": 0.954,
+          "p99_ok": 1.34
+        },
+        "fragments_removed_total": 0,
+        "fragments_added_total": 0
+      },
+      "per_writer": [
+        {
+          "total": 1348,
+          "success": 1348,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 35.014,
+            "p99_all": 273.951,
+            "max_all": 2331.741,
+            "p50_ok": 35.014,
+            "p99_ok": 273.951
+          }
+        },
+        {
+          "total": 1290,
+          "success": 1290,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 37.346,
+            "p99_all": 256.656,
+            "max_all": 3055.075,
+            "p50_ok": 37.346,
+            "p99_ok": 256.656
+          }
+        },
+        {
+          "total": 1454,
+          "success": 1454,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.966,
+            "p99_all": 233.308,
+            "max_all": 1806.373,
+            "p50_ok": 33.966,
+            "p99_ok": 233.308
+          }
+        },
+        {
+          "total": 1128,
+          "success": 1128,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 36.156,
+            "p99_all": 417.845,
+            "max_all": 4769.553,
+            "p50_ok": 36.156,
+            "p99_ok": 417.845
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S2_delete_compact",
+      "concurrency": 8,
+      "window_s": 60.0,
+      "wall_s": 105.62,
+      "writers": {
+        "total_ops": 5274,
+        "success": 5274,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 49.93,
+        "duration_ms": {
+          "p50": 36.762,
+          "p99": 418.665,
+          "max": 104053.78
+        }
+      },
+      "compactor": {
+        "total": 120,
+        "success": 120,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 0.957,
+          "p99_all": 6.221,
+          "max_all": 56.374,
+          "p50_ok": 0.957,
+          "p99_ok": 6.221
+        },
+        "fragments_removed_total": 0,
+        "fragments_added_total": 0
+      },
+      "per_writer": [
+        {
+          "total": 26,
+          "success": 26,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 12.721,
+            "p99_all": 78061.874,
+            "max_all": 104053.78,
+            "p50_ok": 12.721,
+            "p99_ok": 78061.874
+          }
+        },
+        {
+          "total": 179,
+          "success": 179,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 14.524,
+            "p99_all": 409.746,
+            "max_all": 59614.708,
+            "p50_ok": 14.524,
+            "p99_ok": 409.746
+          }
+        },
+        {
+          "total": 80,
+          "success": 80,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 11.277,
+            "p99_all": 16074.061,
+            "max_all": 75719.845,
+            "p50_ok": 11.277,
+            "p99_ok": 16074.061
+          }
+        },
+        {
+          "total": 1250,
+          "success": 1250,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 31.605,
+            "p99_all": 357.269,
+            "max_all": 2666.517,
+            "p50_ok": 31.605,
+            "p99_ok": 357.269
+          }
+        },
+        {
+          "total": 401,
+          "success": 401,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 48.197,
+            "p99_all": 854.157,
+            "max_all": 22720.881,
+            "p50_ok": 48.197,
+            "p99_ok": 854.157
+          }
+        },
+        {
+          "total": 967,
+          "success": 967,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 43.032,
+            "p99_all": 339.643,
+            "max_all": 7257.843,
+            "p50_ok": 43.032,
+            "p99_ok": 339.643
+          }
+        },
+        {
+          "total": 1299,
+          "success": 1299,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 32.009,
+            "p99_all": 375.597,
+            "max_all": 889.697,
+            "p50_ok": 32.009,
+            "p99_ok": 375.597
+          }
+        },
+        {
+          "total": 1072,
+          "success": 1072,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 34.1,
+            "p99_all": 467.911,
+            "max_all": 2317.867,
+            "p50_ok": 34.1,
+            "p99_ok": 467.911
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S3_update_compact",
+      "concurrency": 1,
+      "window_s": 60.0,
+      "wall_s": 60.87,
+      "writers": {
+        "total_ops": 2424,
+        "success": 2424,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 39.82,
+        "duration_ms": {
+          "p50": 23.152,
+          "p99": 85.966,
+          "max": 141.923
+        }
+      },
+      "compactor": {
+        "total": 111,
+        "success": 110,
+        "success_rate": 0.991,
+        "errors_by_type": {
+          "RetryableCommitConflict": 1
+        },
+        "duration_ms": {
+          "p50_all": 34.275,
+          "p99_all": 161.901,
+          "max_all": 190.248,
+          "p50_ok": 33.913,
+          "p99_ok": 162.012
+        },
+        "fragments_removed_total": 2525,
+        "fragments_added_total": 110
+      },
+      "per_writer": [
+        {
+          "total": 2424,
+          "success": 2424,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 23.152,
+            "p99_all": 85.966,
+            "max_all": 141.923,
+            "p50_ok": 23.152,
+            "p99_ok": 85.966
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S3_update_compact",
+      "concurrency": 2,
+      "window_s": 60.0,
+      "wall_s": 60.61,
+      "writers": {
+        "total_ops": 3755,
+        "success": 3755,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 61.95,
+        "duration_ms": {
+          "p50": 28.025,
+          "p99": 138.036,
+          "max": 363.795
+        }
+      },
+      "compactor": {
+        "total": 103,
+        "success": 103,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 63.556,
+          "p99_all": 293.328,
+          "max_all": 645.576,
+          "p50_ok": 63.556,
+          "p99_ok": 293.328
+        },
+        "fragments_removed_total": 3829,
+        "fragments_added_total": 103
+      },
+      "per_writer": [
+        {
+          "total": 1866,
+          "success": 1866,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 27.862,
+            "p99_all": 155.218,
+            "max_all": 363.795,
+            "p50_ok": 27.862,
+            "p99_ok": 155.218
+          }
+        },
+        {
+          "total": 1889,
+          "success": 1889,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 28.138,
+            "p99_all": 132.233,
+            "max_all": 248.617,
+            "p50_ok": 28.138,
+            "p99_ok": 132.233
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S3_update_compact",
+      "concurrency": 4,
+      "window_s": 60.0,
+      "wall_s": 74.3,
+      "writers": {
+        "total_ops": 4298,
+        "success": 4298,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 57.85,
+        "duration_ms": {
+          "p50": 36.153,
+          "p99": 273.985,
+          "max": 42298.132
+        }
+      },
+      "compactor": {
+        "total": 100,
+        "success": 98,
+        "success_rate": 0.98,
+        "errors_by_type": {
+          "RetryableCommitConflict": 2
+        },
+        "duration_ms": {
+          "p50_all": 74.043,
+          "p99_all": 385.523,
+          "max_all": 391.073,
+          "p50_ok": 74.043,
+          "p99_ok": 338.687
+        },
+        "fragments_removed_total": 4377,
+        "fragments_added_total": 98
+      },
+      "per_writer": [
+        {
+          "total": 383,
+          "success": 383,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.175,
+            "p99_all": 477.47,
+            "max_all": 42298.132,
+            "p50_ok": 33.175,
+            "p99_ok": 477.47
+          }
+        },
+        {
+          "total": 1365,
+          "success": 1365,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 36.555,
+            "p99_all": 238.073,
+            "max_all": 796.344,
+            "p50_ok": 36.555,
+            "p99_ok": 238.073
+          }
+        },
+        {
+          "total": 1270,
+          "success": 1270,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 37.022,
+            "p99_all": 279.352,
+            "max_all": 1240.528,
+            "p50_ok": 37.022,
+            "p99_ok": 279.352
+          }
+        },
+        {
+          "total": 1280,
+          "success": 1280,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 37.115,
+            "p99_all": 276.45,
+            "max_all": 1835.347,
+            "p50_ok": 37.115,
+            "p99_ok": 276.45
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S3_update_compact",
+      "concurrency": 8,
+      "window_s": 60.0,
+      "wall_s": 96.76,
+      "writers": {
+        "total_ops": 4330,
+        "success": 4330,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 44.75,
+        "duration_ms": {
+          "p50": 37.005,
+          "p99": 388.841,
+          "max": 94995.324
+        }
+      },
+      "compactor": {
+        "total": 100,
+        "success": 97,
+        "success_rate": 0.97,
+        "errors_by_type": {
+          "RetryableCommitConflict": 3
+        },
+        "duration_ms": {
+          "p50_all": 75.414,
+          "p99_all": 532.746,
+          "max_all": 535.31,
+          "p50_ok": 74.864,
+          "p99_ok": 532.824
+        },
+        "fragments_removed_total": 4378,
+        "fragments_added_total": 97
+      },
+      "per_writer": [
+        {
+          "total": 1157,
+          "success": 1157,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 37.001,
+            "p99_all": 304.354,
+            "max_all": 3673.347,
+            "p50_ok": 37.001,
+            "p99_ok": 304.354
+          }
+        },
+        {
+          "total": 58,
+          "success": 58,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 27.426,
+            "p99_all": 30675.357,
+            "max_all": 70736.008,
+            "p50_ok": 27.426,
+            "p99_ok": 30675.357
+          }
+        },
+        {
+          "total": 295,
+          "success": 295,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 25.709,
+            "p99_all": 249.521,
+            "max_all": 81501.41,
+            "p50_ok": 25.709,
+            "p99_ok": 249.521
+          }
+        },
+        {
+          "total": 28,
+          "success": 28,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.79,
+            "p99_all": 64626.174,
+            "max_all": 88494.039,
+            "p50_ok": 33.79,
+            "p99_ok": 64626.174
+          }
+        },
+        {
+          "total": 27,
+          "success": 27,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.758,
+            "p99_all": 70314.521,
+            "max_all": 94995.324,
+            "p50_ok": 33.758,
+            "p99_ok": 70314.521
+          }
+        },
+        {
+          "total": 578,
+          "success": 578,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 45.279,
+            "p99_all": 582.983,
+            "max_all": 13052.468,
+            "p50_ok": 45.279,
+            "p99_ok": 582.983
+          }
+        },
+        {
+          "total": 1057,
+          "success": 1057,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 35.386,
+            "p99_all": 295.705,
+            "max_all": 9209.09,
+            "p50_ok": 35.386,
+            "p99_ok": 295.705
+          }
+        },
+        {
+          "total": 1130,
+          "success": 1130,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 37.148,
+            "p99_all": 380.011,
+            "max_all": 1859.303,
+            "p50_ok": 37.148,
+            "p99_ok": 380.011
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S4_merge_insert_compact",
+      "concurrency": 1,
+      "window_s": 60.0,
+      "wall_s": 60.51,
+      "writers": {
+        "total_ops": 1943,
+        "success": 1943,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 32.11,
+        "duration_ms": {
+          "p50": 30.663,
+          "p99": 81.726,
+          "max": 127.999
+        }
+      },
+      "compactor": {
+        "total": 114,
+        "success": 114,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 24.239,
+          "p99_all": 114.152,
+          "max_all": 134.264,
+          "p50_ok": 24.239,
+          "p99_ok": 114.152
+        },
+        "fragments_removed_total": 2041,
+        "fragments_added_total": 113
+      },
+      "per_writer": [
+        {
+          "total": 1943,
+          "success": 1943,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 30.663,
+            "p99_all": 81.726,
+            "max_all": 127.999,
+            "p50_ok": 30.663,
+            "p99_ok": 81.726
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S4_merge_insert_compact",
+      "concurrency": 2,
+      "window_s": 60.0,
+      "wall_s": 60.62,
+      "writers": {
+        "total_ops": 3249,
+        "success": 3249,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 53.6,
+        "duration_ms": {
+          "p50": 33.246,
+          "p99": 144.879,
+          "max": 380.705
+        }
+      },
+      "compactor": {
+        "total": 108,
+        "success": 108,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "duration_ms": {
+          "p50_all": 46.102,
+          "p99_all": 182.522,
+          "max_all": 579.963,
+          "p50_ok": 46.102,
+          "p99_ok": 182.522
+        },
+        "fragments_removed_total": 3330,
+        "fragments_added_total": 107
+      },
+      "per_writer": [
+        {
+          "total": 1614,
+          "success": 1614,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.286,
+            "p99_all": 148.971,
+            "max_all": 380.705,
+            "p50_ok": 33.286,
+            "p99_ok": 148.971
+          }
+        },
+        {
+          "total": 1635,
+          "success": 1635,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 33.216,
+            "p99_all": 135.22,
+            "max_all": 276.413,
+            "p50_ok": 33.216,
+            "p99_ok": 135.22
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S4_merge_insert_compact",
+      "concurrency": 4,
+      "window_s": 60.0,
+      "wall_s": 65.81,
+      "writers": {
+        "total_ops": 3891,
+        "success": 3891,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 59.12,
+        "duration_ms": {
+          "p50": 39.44,
+          "p99": 224.701,
+          "max": 56582.867
+        }
+      },
+      "compactor": {
+        "total": 102,
+        "success": 99,
+        "success_rate": 0.9706,
+        "errors_by_type": {
+          "RetryableCommitConflict": 3
+        },
+        "duration_ms": {
+          "p50_all": 60.536,
+          "p99_all": 445.942,
+          "max_all": 1253.611,
+          "p50_ok": 59.372,
+          "p99_ok": 463.417
+        },
+        "fragments_removed_total": 3969,
+        "fragments_added_total": 98
+      },
+      "per_writer": [
+        {
+          "total": 1189,
+          "success": 1189,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 41.246,
+            "p99_all": 253.61,
+            "max_all": 776.623,
+            "p50_ok": 41.246,
+            "p99_ok": 253.61
+          }
+        },
+        {
+          "total": 261,
+          "success": 261,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 28.366,
+            "p99_all": 118.899,
+            "max_all": 56582.867,
+            "p50_ok": 28.366,
+            "p99_ok": 118.899
+          }
+        },
+        {
+          "total": 1246,
+          "success": 1246,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 39.525,
+            "p99_all": 222.469,
+            "max_all": 1058.273,
+            "p50_ok": 39.525,
+            "p99_ok": 222.469
+          }
+        },
+        {
+          "total": 1195,
+          "success": 1195,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 41.055,
+            "p99_all": 198.824,
+            "max_all": 2104.453,
+            "p50_ok": 41.055,
+            "p99_ok": 198.824
+          }
+        }
+      ]
+    },
+    {
+      "scenario": "S4_merge_insert_compact",
+      "concurrency": 8,
+      "window_s": 60.0,
+      "wall_s": 79.42,
+      "writers": {
+        "total_ops": 4132,
+        "success": 4132,
+        "success_rate": 1.0,
+        "errors_by_type": {},
+        "qps": 52.02,
+        "duration_ms": {
+          "p50": 45.632,
+          "p99": 392.216,
+          "max": 77764.458
+        }
+      },
+      "compactor": {
+        "total": 96,
+        "success": 94,
+        "success_rate": 0.9792,
+        "errors_by_type": {
+          "RetryableCommitConflict": 2
+        },
+        "duration_ms": {
+          "p50_all": 74.697,
+          "p99_all": 863.585,
+          "max_all": 1742.692,
+          "p50_ok": 74.48,
+          "p99_ok": 882.092
+        },
+        "fragments_removed_total": 4212,
+        "fragments_added_total": 94
+      },
+      "per_writer": [
+        {
+          "total": 927,
+          "success": 927,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 49.316,
+            "p99_all": 343.957,
+            "max_all": 2596.315,
+            "p50_ok": 49.316,
+            "p99_ok": 343.957
+          }
+        },
+        {
+          "total": 952,
+          "success": 952,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 45.663,
+            "p99_all": 423.484,
+            "max_all": 1464.961,
+            "p50_ok": 45.663,
+            "p99_ok": 423.484
+          }
+        },
+        {
+          "total": 935,
+          "success": 935,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 44.915,
+            "p99_all": 419.988,
+            "max_all": 1967.471,
+            "p50_ok": 44.915,
+            "p99_ok": 419.988
+          }
+        },
+        {
+          "total": 38,
+          "success": 38,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 35.722,
+            "p99_all": 48558.287,
+            "max_all": 76992.953,
+            "p50_ok": 35.722,
+            "p99_ok": 48558.287
+          }
+        },
+        {
+          "total": 1030,
+          "success": 1030,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 45.897,
+            "p99_all": 276.859,
+            "max_all": 753.499,
+            "p50_ok": 45.897,
+            "p99_ok": 276.859
+          }
+        },
+        {
+          "total": 70,
+          "success": 70,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 35.918,
+            "p99_all": 23461.817,
+            "max_all": 73584.291,
+            "p50_ok": 35.918,
+            "p99_ok": 23461.817
+          }
+        },
+        {
+          "total": 173,
+          "success": 173,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 34.554,
+            "p99_all": 306.477,
+            "max_all": 66746.87,
+            "p50_ok": 34.554,
+            "p99_ok": 306.477
+          }
+        },
+        {
+          "total": 7,
+          "success": 7,
+          "success_rate": 1.0,
+          "errors_by_type": {},
+          "duration_ms": {
+            "p50_all": 36.433,
+            "p99_all": 73103.171,
+            "max_all": 77764.458,
+            "p50_ok": 36.433,
+            "p99_ok": 73103.171
+          }
+        }
+      ]
+    }
+  ],
+  "notes": "S1-S3 from initial run (2026-05-12 13:10); S4 rerun after fixing scenario_mutation bug (initial S4 raised ValueError('unknown mutation merge') because scenario.split('_')[1] returned 'merge' not 'merge_insert'). All 16 rows reflect actual Lance API behavior."
+}
