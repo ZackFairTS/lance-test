@@ -17,16 +17,106 @@
 - **脚本**：[`scripts/Q_concurrent_mutation_compact.py`](https://github.com/ZackFairTS/lance-test/blob/main/extended-bench/scripts/Q_concurrent_mutation_compact.py)
 - **原始数据**：[`results/Q_concurrent_mutation_compact.json`](https://github.com/ZackFairTS/lance-test/blob/main/extended-bench/results/Q_concurrent_mutation_compact.json)
 
-### Scenario 矩阵
+### 测试的执行流程
 
-| Scenario | Mutation 操作 | 并发 compact？ | 测试意图 |
+每一轮（即每个 scenario × 并发度组合）都严格按以下步骤执行：
+
+```
+Step 1 [setup]   主 process 创建全新 dataset（500k 行，10 fragments，固定 schema），
+                 前一轮产物全部 rm -rf 清理，保证每轮独立起点一致
+                   │
+Step 2 [fork]    主 process fork 出 N 个 writer process + 1 个 compactor process
+                 （仅 S2/S3/S4 有 compactor，S1 基线没有）
+                   │
+Step 3 [barrier] 所有 process 在 multiprocessing.Event 上等待，主 process sleep 1s
+                 后 set event，所有 process 同一瞬间开始跑 —— 排除启动顺序对
+                 前几秒数据的污染
+                   │
+Step 4 [loop]    每个 writer process 独立跑 60s 循环（见下方伪代码）
+                 compactor process 并行跑 60s 循环
+                   │
+Step 5 [drain]   deadline 到后所有 process 自然退出，主 process join 每一个
+                   │
+Step 6 [aggregate] 主 process 读取所有 per-process JSONL，聚合成 scenario 级别
+                 的 success_count / conflict_count / error_classification / 延迟分布
+```
+
+**Writer 循环的核心逻辑**（所有 N 个 process 并发执行同样的代码）：
+
+```python
+while time.perf_counter() < deadline:
+    target_id = random(0, 500000)       # 随机选 id，意味着 N 个 writer 可能命中同一 fragment
+    t0 = time.perf_counter()
+    try:
+        ds = lance.dataset(path)         # 每轮都重新打开 ← 读最新 manifest
+        if mutation == "delete":
+            ds.delete(f"id = {target_id}")
+        elif mutation == "update":
+            ds.update({"value": rand_float()}, where=f"id = {target_id}")
+        elif mutation == "merge_insert":
+            ds.merge_insert("id") \
+              .when_matched_update_all() \
+              .when_not_matched_insert_all() \
+              .execute(single_row_table(target_id))
+    except BaseException as e:
+        err_type = classify(e)           # RetryableCommitConflict / IncompatibleTransaction / ...
+    record(op_id, duration_ms, err_type) # 逐条记录到 JSONL
+```
+
+**Compactor 循环**（独立 process，与 writer 完全并行）：
+
+```python
+while time.perf_counter() < deadline:
+    try:
+        ds = lance.dataset(path)
+        m = ds.optimize.compact_files(target_rows_per_fragment=50000)
+        # 成功则记录 fragments_removed / fragments_added
+    except BaseException as e:
+        err_type = classify(e)           # 这里是本实验的核心观察对象
+    record(iter_id, duration_ms, err_type)
+    time.sleep(0.5)                      # 避免连续尝试 compact 空表
+```
+
+**错误分类函数 `classify_error`**（按 Rust 抛出的错误消息 pattern 匹配）：
+
+| Python 异常消息包含 | 分类 | 含义 |
+|---|---|---|
+| `retryable` / `preempted` | `RetryableCommitConflict` | 语义冲突，本应 retry 但 compact 无外层 retry |
+| `incompatible` | `IncompatibleTransaction` | 不可重试的冲突（如 Overwrite vs 任意 mutation） |
+| `too many concurrent writers` | `TooMuchWriteContention` | 外层 retry 预算耗尽 |
+| `commit conflict` / `failed to commit` | `CommitConflict` | 内层 20 次 manifest-race 耗尽 |
+| `timeout` / `retry_timeout` | `RetryTimeout` | 达到 `retry_timeout=30s` 上限 |
+| 其它 | `Other:<ExceptionClass>` | 非冲突类异常（脚本 bug / Lance bug） |
+
+### Scenario 矩阵 —— 为什么是这 4 个
+
+本实验是**单变量对照 + 递进对比**：每个 scenario 只改一件事，这样两两对比就能精确归因。
+
+| Scenario | Writer 操作 | 并发 compact？ | 设计意图（可证伪的假设）|
 |---|---|---|---|
-| **S1_delete_noc** | `ds.delete("id=X")` | 否 | 基线 —— 只测 delete 自身的 contention，不与 compact 交互 |
-| **S2_delete_compact** | `ds.delete("id=X")` | 是 | delete 与 compact 在同 fragment 上的竞争 |
-| **S3_update_compact** | `ds.update({"value": v}, where="id=X")` | 是 | update 与 compact 的竞争（code path 与 S2 不同） |
-| **S4_merge_insert_compact** | `ds.merge_insert("id").when_matched_update_all().when_not_matched_insert_all().execute(tbl)` | 是 | upsert 与 compact 的竞争 —— 生产最常见场景 |
+| **S1** baseline | `ds.delete("id=X")` | ❌ | *"多个 writer 并发 delete 自己会不会因为 manifest CAS 竞争而失败？"* —— 只有 delete 互竞争，无 compact 介入。给后三个 scenario 提供"无 compact 时的失败基线" |
+| **S2** delete + compact | `ds.delete("id=X")` | ✅ | *"加入 compactor 后，delete 的失败率会上升吗？compactor 本身会因为 delete 抢同 fragment 而失败吗？"* —— 相对 S1 只加了一个 compactor process，差异完全可归因于 compact 介入 |
+| **S3** update + compact | `ds.update({"value":v}, where="id=X")` | ✅ | *"换成 update 后（重写整个 fragment 而非只加 deletion vector），竞争窗口变大，失败率会变化吗？"* —— 相对 S2 只换了 mutation 类型，compactor 不变 |
+| **S4** merge_insert + compact | `merge_insert("id") ... .execute(upsert_tbl)` | ✅ | *"生产最常见的 upsert 路径，与 update 行为一致，还是因为额外的 scan+match 开销有显著差异？"* —— 相对 S3 再换 mutation 类型 |
 
-并发度 **N ∈ {1, 2, 4, 8}**，共 16 次运行。
+这样设计后，**每两行之间的差**可以单独归因：
+
+- **S1 → S2 的差**：加一个 compactor 进来 → 揭示 compactor 对 writer 的干扰强度 + compact 自身的失败率
+- **S2 → S3 的差**：mutation 从"轻量 deletion vector"换成"重写整个 fragment" → 揭示竞争窗口长度的影响
+- **S3 → S4 的差**：update vs merge_insert → 揭示 upsert 的 scan+match 开销是否显著改变冲突模式
+
+### 并发度 N ∈ {1, 2, 4, 8} —— 为什么这四档
+
+按 2 倍梯度选择，覆盖"单 writer（基线）→ 轻度并发 → 硬件核数（8 vCPU）上限"：
+
+| N | 意图 |
+|---|---|
+| **N=1** | 单 writer 基线 —— 无 writer × writer 竞争，只可能有 writer × compactor 竞争。隔离出"单 writer 的语义冲突率" |
+| **N=2** | 最小并发 —— writer × writer 竞争首次出现。对比 N=1 揭示 writer 间竞争是否有显著贡献 |
+| **N=4** | 中等并发 —— 对应硬件一半并发度，接近现实中的生产 writer pool 规模 |
+| **N=8** | 打满 vCPU —— 看 retry 预算是否还够；若 compactor 此时失败率急剧上升，证明 retry 机制接近饱和 |
+
+**总运行成本**：4 scenarios × 4 并发度 × 60s ≈ 16 分钟纯测试时间 + dataset 重建开销 ≈ 25 分钟实际 wall clock。规模足够显示统计显著的失败率（1% 量级），但不会在单台机器上跑一整天。
 
 ---
 
