@@ -1,4 +1,4 @@
-# Q — 并发 mutation × compaction 冲突实测
+# 并发 mutation × compaction 冲突实测
 
 **研究问题**：当 `delete` / `update` / `merge_insert` 和 `optimize.compact_files()` 并发执行时，是否会出现用户可见的任务失败？
 
