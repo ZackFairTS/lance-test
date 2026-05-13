@@ -155,14 +155,38 @@
 
 **观察**: `count_rows()`（无 filter 时）是**纯 metadata 操作** —— 对 manifest 中每个 fragment 的 `physical_rows` 字段求和（减去缓存的 `num_deleted_rows`），**不读 data file，不读 deletion file**。5000 fragments 也只要 3.4 ms；延迟完美线性（每 fragment ~0.7 μs），与"只是 `Arc<Manifest>` 字段累加"的预期吻合。
 
-**源码证据**：
-- [`Dataset::count_rows` (`dataset.rs#L1367-L1393`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset.rs#L1367-L1393) doc comment 原话："*It offers a fast path of counting rows by just computing via metadata.*" 无 filter 时走 `count_all_rows` = `stream::iter(fragments).map(|f| f.count_rows(None)).buffer_unordered(16).sum()`
-- [`FileFragment::count_rows(None)` (`fragment.rs#L1116-L1138`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1116-L1138) = `physical_rows() - count_deletions()`
-- [`physical_rows()` (`fragment.rs#L1207-L1243`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1207-L1243) 对现代（`writer_version.is_some()`）写入的数据直接返回 `self.metadata.physical_rows`（manifest 字段）。只有 pre-[issue #1531](https://github.com/lance-format/lance/issues/1531) 的遗留数据才 fallback 到打开 data file
-- [`count_deletions()` (`fragment.rs#L1140-L1156`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1140-L1156) 先查 manifest 里的 `deletion_file.num_deleted_rows`（Lance 现代版本总会预存）；只有该字段为 `None` 时才真正去读 deletion file
-- [`Fragment.physical_rows` (`lance-table/fragment.rs#L494-L497`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance-table/src/format/fragment.rs#L494-L497) 是 manifest protobuf 里的 `Option<usize>` 字段，写入时落盘、读取时加载进 `Arc<Manifest>`
+**源码证据**（pylance 4.0.1 / lance-core 0.39.0 @ `443f2da`）：
 
-**例外场景**：① pre-#1531 遗留数据（无 `writer_version`）会打开任意一个 data file 读 length；② deletion file 写入时未记录 `num_deleted_rows`（旧版本 Lance）会读 deletion file 解码 RoaringBitmap。两者在 pylance 4.0.1 新写入数据上都不会触发，但可能在迁移来的老数据集上出现 —— 这时 `count_rows` 不再 metadata-only。
+**① 调用链**
+
+```
+Dataset.count_rows(filter=None)              ← Python
+    ↓
+count_all_rows()                             ← 对每 fragment 16 并行
+    ↓
+FileFragment.count_rows(None)
+    = physical_rows() - count_deletions()
+```
+
+**② 每一步到底读什么**
+
+| 步骤 | 读哪里 | 是 I/O 吗？ |
+|---|---|---|
+| `physical_rows()` | manifest 里的 `Fragment.physical_rows: Option<usize>` 字段 | 否（`Arc<Manifest>` 已在内存） |
+| `count_deletions()` | manifest 里的 `DeletionFile.num_deleted_rows: Option<usize>` 字段 | 否（同上） |
+
+**③ 代码位置**
+
+- `Dataset::count_rows` — [`dataset.rs#L1367-L1393`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset.rs#L1367-L1393)（doc comment 原话："*offers a fast path of counting rows by just computing via metadata*"）
+- `FileFragment::count_rows` — [`fragment.rs#L1116-L1138`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1116-L1138)
+- `physical_rows()` — [`fragment.rs#L1207-L1243`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1207-L1243)
+- `count_deletions()` — [`fragment.rs#L1140-L1156`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1140-L1156)
+- `Fragment.physical_rows` 字段定义 — [`lance-table/fragment.rs#L494-L497`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance-table/src/format/fragment.rs#L494-L497)
+
+**什么情况会退化成 I/O 操作**（两种遗留场景，pylance 4.0.1 新写入不会触发）：
+
+1. **Pre-[#1531](https://github.com/lance-format/lance/issues/1531) 老数据**（无 `writer_version`）→ `physical_rows()` fallback 到打开一个 data file 读 length
+2. **老版本 Lance 写的 deletion file 未记 `num_deleted_rows`** → `count_deletions()` fallback 到读 deletion file 解码 RoaringBitmap
 
 ---
 
