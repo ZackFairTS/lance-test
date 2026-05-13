@@ -40,29 +40,9 @@
 
 所有版本的 **行数、读取字节数完全相同**。Compaction 只是重新组织 fragment，不改数据。
 
-### "MB/s" 这个指标的解读（必读）
-
-`read_bench.py` 里：
-
-```python
-throughput_mbps = bytes_read / 1e6 / (mean_ms / 1000)
-```
-
-- `bytes_read` = `pyarrow.Table.nbytes` = **Arrow 在内存里的字节数（解压、解码后）**
-- **不是** 从 S3 传输的实际字节数
-- **不是** S3 网络带宽
-
-**为什么 1 GB 能在 845 ms 读完 = 1182 MB/s？**
-
-1. Lance 默认开 **64 并行 S3 GET 请求**（`LANCE_IO_THREADS=64`），不是单连接
-2. Lance on-disk 用 LZ4/Zstd 压缩 + mini-block 编码，**实际 S3 字节数比 Arrow 字节数小 2-5 倍**（真正的 S3 网络传输大约只有 200-500 MB/s）
-3. 重复读可能命中 OS page cache / Lance metadata cache（第一次总最慢，见 warm-up 观察）
-
-**所以报告中的 "MB/s" 是 "Arrow 材料化吞吐"，不是 S3 带宽**。Lance 官方 benchmark（`python/python/benchmarks/`）和 arXiv 论文（2504.15247）**从不用 MB/s**，而是用 **ms 延迟 + rows/sec**。
-
 ### 主指标：延迟 (ms) + rows/sec
 
-为避免 MB/s 歧义，下面的表格**主用 ms 和 rows/sec**，MB/s 仅作参考。
+下面的表格主用 **wall-clock 延迟 (ms)** 和 **rows/sec 吞吐**。Lance 官方 benchmark（`python/python/benchmarks/`）和 arXiv 论文（2504.15247）的 scan 测量同样用这两个维度，不用 "MB/s" —— 因为 Lance 默认 64 并行 S3 GET + 压缩 + 编码解码等多层 pipeline 之后，"MB/s" 会随 schema / 压缩率 / 缓存状态剧烈漂移，不是一个稳定可比指标。
 
 ---
 
@@ -96,15 +76,13 @@ throughput_mbps = bytes_read / 1e6 / (mean_ms / 1000)
 
 ## 2. 全表扫描（Python 单进程, `ds.to_table()`）
 
-| 版本 | Fragments | p50 (ms) | mean (ms) | rows/sec | Arrow-MB/s† | 相对 A (p50) |
-|---|---|---|---|---|---|---|
-| A | 1 | **804** | 845 | **12.4 M** | 1183 | 1.00x |
-| B | 10 | 760 | 794 | 13.2 M | 1260 | 0.95x |
-| C | 100 | 765 | 791 | 13.1 M | 1264 | 0.95x |
-| D | 1,000 | 1723 | 1904 | 5.80 M | 525 | **2.14x 慢** |
-| E | 5,000 | **8003** | 8463 | **1.25 M** | 118 | 🔴 **9.96x 慢** |
-
-† "Arrow-MB/s" = `Table.nbytes / 1e6 / 秒`；**不是 S3 网络带宽**，见上面的解读章节
+| 版本 | Fragments | p50 (ms) | mean (ms) | rows/sec | 相对 A (p50) |
+|---|---|---|---|---|---|
+| A | 1 | **804** | 845 | **12.4 M** | 1.00x |
+| B | 10 | 760 | 794 | 13.2 M | 0.95x |
+| C | 100 | 765 | 791 | 13.1 M | 0.95x |
+| D | 1,000 | 1723 | 1904 | 5.80 M | **2.14x 慢** |
+| E | 5,000 | **8003** | 8463 | **1.25 M** | 🔴 **9.96x 慢** |
 
 **观察**:
 - A/B/C (1-100 fragments) 都是 ~13M rows/sec，几乎一样
@@ -325,7 +303,7 @@ samples (ms): [10346, 8003, 8023, 7975, 7967]
 
 - **Lance 官方小文件问题讨论**: [lancedb/lance#1215](https://github.com/lancedb/lance/issues/1215)
 - **Per-fragment open 开销**: [lancedb/lance#4090](https://github.com/lancedb/lance/issues/4090)
-- **Lance paper**（scan 用 rows/sec 不用 MB/s）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
+- **Lance paper**（scan 测量用 rows/sec）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
 - **Lance I/O 并行配置**: [`LANCE_IO_THREADS`](https://lance.org/integrations/spark/performance/)
 - **Pyarrow Table.nbytes 定义**: [arrow docs](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html#pyarrow.Table.nbytes)
 
