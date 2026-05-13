@@ -331,10 +331,6 @@ samples (ms): [10346, 8003, 8023, 7975, 7967]
 
 ---
 
-## 图表
-
-见 `plots/performance_plot.png`（6 个子图：fragment 数 vs 每种读操作延迟，log-log 轴）。
-
 ## 参考
 
 - **Lance 官方小文件问题讨论**: [lancedb/lance#1215](https://github.com/lancedb/lance/issues/1215)
@@ -342,14 +338,3 @@ samples (ms): [10346, 8003, 8023, 7975, 7967]
 - **Lance paper**（§6.3 Full Scan 方法学同时用 MiB/s 磁盘吞吐 + iterations/sec）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
 - **Lance I/O 并行配置**: [`LANCE_IO_THREADS`](https://lance.org/integrations/spark/performance/)
 - **Pyarrow Table.nbytes 定义**: [arrow docs](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html#pyarrow.Table.nbytes)
-
-## 原始数据位置
-
-`data/` 目录（仓库里）或 `/home/hadoop/lance-read-bench/results/`（压测机器）:
-- `read_A.json` ~ `read_E.json` — 5 个版本的 Python 读测试完整结果
-- `spark_A.json`, `spark_E.json` — Spark count/agg
-- `spark_full_A.json`, `spark_full_E.json` — Spark 真实读取数据
-- `compact_plan.json` — compaction 执行记录
-- `E_dataset_info.json` — E 数据集构建统计
-- `build_E.log.gz` — 36 分钟构建过程日志（含 append 速率退化证据）
-- `performance_plot.png` — 可视化
