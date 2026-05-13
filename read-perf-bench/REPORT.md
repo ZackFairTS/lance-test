@@ -51,7 +51,8 @@
 ## 数据集生成
 
 - **E** 生成方式: 5,000 次 `lance.write_dataset(mode="append")`，每次 2000 行 → **耗时 36.0 分钟**
-  - Append 速率从 **3.5/s 退化到 2.4/s**（31% 下降），因为 `write_dataset` 每次要 open dataset 读 manifest
+  - Append 速率从 **3.5 append/s 退化到 2.4 append/s**（单次调用 285 ms → 417 ms，**+46%**）
+  - 根因：每次 `write_dataset(mode="append")` 需要 ① 读最新 manifest（`lance.dataset(path)` 自身从 80 ms 退化到 134 ms，见 §1 表格）；② 写一个包含**所有**历史 fragment metadata 的新 manifest snapshot —— manifest 不是增量 delta，随 fragment 累积线性变大。从 0 → 4999 fragment 累积期间，读 + 写 manifest 的成本都在上升
   - **这已经是小文件影响写入性能的证据**
 - **D/C/B/A** 通过 `compact_files(target_rows_per_fragment=...)` 从 E 逐步合并
   - E → D: 5000 → 1000 fragments, 37.2s
@@ -234,7 +235,7 @@
 | **Python 点查/少量行** | fragment 10-100 反而是甜区，不急着 compact |
 | **Spark/分布式并行读** | fragment 数几乎不影响读，但 manifest version 多了会拖慢 `open` |
 | **LanceDB vector search** | 类似 Spark（内部并行），但 index build 会慢 |
-| **Flink streaming 追加** | **必须** compact，否则 write 性能也受影响（见 append 从 3.5/s 退化到 2.4/s）|
+| **Flink streaming 追加** | **必须** compact，否则 write 性能也受影响（见 append 从 3.5 → 2.4 append/s，单次 +46%）|
 
 ### 推荐的 compaction 触发条件
 
