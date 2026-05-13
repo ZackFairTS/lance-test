@@ -1,7 +1,6 @@
 # Lance 小文件对读性能影响 - 压测报告
 
-**测试日期**: 2026-04-29
-**环境**: AWS EMR master (r8g.2xlarge Graviton, 8vCPU 64GiB), S3 ap-northeast-1
+**环境**: r8g.2xlarge（Graviton ARM64，8 vCPU / 64 GiB），本地 NVMe + S3 ap-northeast-1（单机、无分布式）
 **Lance version**: pylance 4.0.1 (lance-core 0.39.0 native), lance-spark 0.0.15
 
 ---
