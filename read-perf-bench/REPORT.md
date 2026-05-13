@@ -227,7 +227,7 @@ throughput_mbps = bytes_read / 1e6 / (mean_ms / 1000)
 **ROI 结论**:
 - **Python/Arrow 单进程读** → 每次高频 commit 后都值得 compact
 - **Spark/分布式读** → compaction 对读性能影响不大，但减少 manifest 有助于 `Dataset.open()` 和 write（减少冲突）
-- **复杂 streaming write**（如 Flink） → compaction 同时改善 write-side 冲突率（见 [本 repo 的另一份 Flink 压测](../REPORT_01_lance_0.23.3.md)）
+- **复杂 streaming write**（如 Flink） → compaction 同时改善 write-side 冲突率（见 [本 repo 的另一份 Flink 压测报告](https://github.com/ZackFairTS/lance-test/blob/main/01_REPORT_lance_0.23.3.md)）
 
 ---
 
