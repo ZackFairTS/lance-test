@@ -153,7 +153,16 @@
 | D | 1,000 | 0.67 | 0.70 |
 | E | 5,000 | 3.43 | 3.45 |
 
-**观察**: count 是 metadata 操作，即使 5000 fragments 也只要 3.4ms（每个 fragment 读一个 row_count 字段求和）。
+**观察**: `count_rows()`（无 filter 时）是**纯 metadata 操作** —— 对 manifest 中每个 fragment 的 `physical_rows` 字段求和（减去缓存的 `num_deleted_rows`），**不读 data file，不读 deletion file**。5000 fragments 也只要 3.4 ms；延迟完美线性（每 fragment ~0.7 μs），与"只是 `Arc<Manifest>` 字段累加"的预期吻合。
+
+**源码证据**：
+- [`Dataset::count_rows` (`dataset.rs#L1367-L1393`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset.rs#L1367-L1393) doc comment 原话："*It offers a fast path of counting rows by just computing via metadata.*" 无 filter 时走 `count_all_rows` = `stream::iter(fragments).map(|f| f.count_rows(None)).buffer_unordered(16).sum()`
+- [`FileFragment::count_rows(None)` (`fragment.rs#L1116-L1138`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1116-L1138) = `physical_rows() - count_deletions()`
+- [`physical_rows()` (`fragment.rs#L1207-L1243`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1207-L1243) 对现代（`writer_version.is_some()`）写入的数据直接返回 `self.metadata.physical_rows`（manifest 字段）。只有 pre-[issue #1531](https://github.com/lance-format/lance/issues/1531) 的遗留数据才 fallback 到打开 data file
+- [`count_deletions()` (`fragment.rs#L1140-L1156`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/src/dataset/fragment.rs#L1140-L1156) 先查 manifest 里的 `deletion_file.num_deleted_rows`（Lance 现代版本总会预存）；只有该字段为 `None` 时才真正去读 deletion file
+- [`Fragment.physical_rows` (`lance-table/fragment.rs#L494-L497`)](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance-table/src/format/fragment.rs#L494-L497) 是 manifest protobuf 里的 `Option<usize>` 字段，写入时落盘、读取时加载进 `Arc<Manifest>`
+
+**例外场景**：① pre-#1531 遗留数据（无 `writer_version`）会打开任意一个 data file 读 length；② deletion file 写入时未记录 `num_deleted_rows`（旧版本 Lance）会读 deletion file 解码 RoaringBitmap。两者在 pylance 4.0.1 新写入数据上都不会触发，但可能在迁移来的老数据集上出现 —— 这时 `count_rows` 不再 metadata-only。
 
 ---
 
