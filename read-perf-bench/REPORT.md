@@ -42,7 +42,9 @@
 
 ### 主指标：延迟 (ms) + rows/sec
 
-下面的表格主用 **wall-clock 延迟 (ms)** 和 **rows/sec 吞吐**。Lance 官方 benchmark（`python/python/benchmarks/`）和 arXiv 论文（2504.15247）的 scan 测量同样用这两个维度，不用 "MB/s" —— 因为 Lance 默认 64 并行 S3 GET + 压缩 + 编码解码等多层 pipeline 之后，"MB/s" 会随 schema / 压缩率 / 缓存状态剧烈漂移，不是一个稳定可比指标。
+下面的表格主用 **wall-clock 延迟 (ms)** 和 **rows/sec 吞吐**。选择这两个维度的原因：Lance 默认 64 并行 S3 GET + 压缩 + 编码解码等多层 pipeline 之后，"MB/s" 会随 schema / 压缩率 / 缓存状态剧烈漂移，作为对外对比指标不够稳定；而 rows/sec 对固定 schema 的 workload 是线性稳定的。
+
+> **作为参考**：Lance 官方的 Python benchmark（[`python/python/benchmarks/test_scan.py`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/python/python/benchmarks/test_scan.py)）基于 `pytest-benchmark`，默认只报每次调用的**耗时**（μs/ms/s）和 **OPS**（iterations/sec），不直接计算 rows/sec 或 MB/s。Rust benchmark（[`rust/lance/benches/scan.rs`](https://github.com/lance-format/lance/blob/443f2daab80d10a35c9d6444ad8daa9cba37c6ba/rust/lance/benches/scan.rs)）基于 `criterion`，scan 也只报耗时；但 Lance 其它子系统（如 mem-wal 系列）的 Rust benchmark 会用 criterion 的 `Throughput::Bytes` 输出 MiB/s。[arXiv 论文 2504.15247](https://arxiv.org/abs/2504.15247) §6.3 Full Scan 同时用 **MiB/s 磁盘吞吐**（衡量硬件利用率）和 **iterations/file-reads per second**（跨格式对比）两种维度。
 
 ---
 
@@ -303,7 +305,7 @@ samples (ms): [10346, 8003, 8023, 7975, 7967]
 
 - **Lance 官方小文件问题讨论**: [lancedb/lance#1215](https://github.com/lancedb/lance/issues/1215)
 - **Per-fragment open 开销**: [lancedb/lance#4090](https://github.com/lancedb/lance/issues/4090)
-- **Lance paper**（scan 测量用 rows/sec）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
+- **Lance paper**（§6.3 Full Scan 方法学同时用 MiB/s 磁盘吞吐 + iterations/sec）: [arXiv 2504.15247](https://arxiv.org/abs/2504.15247)
 - **Lance I/O 并行配置**: [`LANCE_IO_THREADS`](https://lance.org/integrations/spark/performance/)
 - **Pyarrow Table.nbytes 定义**: [arrow docs](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html#pyarrow.Table.nbytes)
 
